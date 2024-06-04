@@ -1,0 +1,155 @@
+nav {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.top-bar {
+  width: 100%;
+  background-color: #030522;
+  color: rgb(255, 255, 255);
+  padding: 5px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 30px; /* Altura del top-bar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.top-bar.hidden {
+  top: -50px;
+}
+
+.top-bar.visible {
+  top: 0;
+}
+
+.top-bar .contact-info {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.top-bar .contact-info a {
+  color: rgb(255, 255, 255); /* Color del texto */
+  text-decoration: none; /* Quita la subraya del enlace */
+  margin-right: 10px; /* Añade separación entre el email y el teléfono */
+}
+
+.top-bar .contact-info a:hover {
+  color: orange; /* Cambia el color al pasar el mouse */
+}
+
+.top-bar .social-icons {
+  display: flex;
+  align-items: center;
+}
+
+.top-bar .social-icons a {
+  color: rgb(255, 255, 255); /* Color del texto */
+  text-decoration: none; /* Quita la subraya del enlace */
+  margin-right: 10px; /* Añade separación entre el email y el teléfono */
+}
+
+.top-bar .social-icons a:hover {
+  color: rgb(7, 90, 233); /* Cambia el color al pasar el mouse */
+}
+
+.main-navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e3a601;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: top 0.3s;
+  z-index: 999;
+  position: fixed;
+  top: 30px; /* Justo debajo del top-bar */
+}
+
+.menu-section {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.menu-text {
+  margin-left: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: black;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  flex-grow: 2;
+  justify-content: center;
+  color: black;
+}
+
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.navbar-icons .MuiBadge-badge {
+  background-color: black;
+  color: white;
+}
+
+/* Estilo para el icono de menú */
+.menu-section .MuiIconButton-root {
+  color: black;
+}
+
+.MuiInputBase-root {
+  background-color: white;
+  border: 1px solid orange;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .top-bar,
+  .main-navbar {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .menu-section,
+  .search-section,
+  .navbar-icons {
+    margin: 10px 0;
+  }
+
+  .menu-section {
+    justify-content: center;
+  }
+
+  .search-section {
+    width: 100%;
+  }
+
+  .navbar-icons {
+    justify-content: center;
+  }
+}
+
+body {
+  margin: 0;
+  padding-top: 90px; /* Altura combinada del top-bar y el main-navbar */
+}
+
+.main-navbar.fixed {
+  top: 0;
+}
