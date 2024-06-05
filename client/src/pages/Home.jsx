@@ -1,19 +1,23 @@
+import { useAuth } from "../auth/AuthProvider";
 import "../styles/Home.css";
-import NavBar from "../components/Common/Navbar";
-import Main from "../components/Common/Main";
+// import Main from "../components/Common/Main";
 
 function Home() {
+  const auth = useAuth();
+
   return (
     <>
       <header>
         {/* <!-- Navbar --> */}
-        <NavBar />
+        {/* <NavBar /> */}
 
         {/* <!-- Banner --> */}
         <div className="banner">
           <div className="overlay">
             <div className="TextContainer">
-              <h1 className="title">NAME ENTERPRISE</h1>
+              <h1 className="title">
+                Bienvenido {auth.getUser()?.firstName || ""}
+              </h1>
               <p className="subtitle">
                 Lorem Ipsumes simplemente el texto de relleno de las imprentas y
                 archivos de texto. Lorem Ipsum ha sido el texto de relleno
@@ -28,7 +32,7 @@ function Home() {
       </header>
 
       {/* <!-- Contenido principal --> */}
-      <Main />
+      {/* <Main /> */}
     </>
   );
 }

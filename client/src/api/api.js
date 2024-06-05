@@ -1,7 +1,38 @@
-import axios from 'axios';
 
-export const getProductsRequest = async () =>
-    await axios.get('http://localhost:4000/products');
+export const createUserRequest = async (data) =>
+    await fetch('http://localhost:4000/api/signup', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
 
-export const getCategoriesRequest = async () =>
-    await axios.get('http://localhost:4000/categories');
+export const accesUserRequest = async (data) =>
+    await fetch('http://localhost:4000/api/login', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+
+export const refreshTokenRequest = async (refreshToken) => {
+    return await fetch('http://localhost:4000/api/refresh-token', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${refreshToken}`,
+        },
+    });
+};
+
+export const accessTokenRequest = async (accessToken) => {
+    return await fetch('http://localhost:4000/api/user', {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+};
