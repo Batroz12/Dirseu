@@ -4,14 +4,17 @@ import { refreshTokenRequest, accessTokenRequest } from "../api/api";
 
 const AuthContext = createContext({
   isAuthenticated: false,
+  isAdmin: false,
   getAccesToken: () => {},
   getRefreshToken: () => {},
   saveUser: (userData) => {},
   getUser: () => {},
+  signOut: () => {},
 });
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [accesToken, setAccesToken] = useState("");
   const [user, setUser] = useState();
 
@@ -62,6 +65,10 @@ export function AuthProvider({ children }) {
   async function checkAuth() {
     if (accesToken) {
       //El usuario ya esta autenticado
+      const userInfo = await getUserInfo(accesToken);
+      if (userInfo) {
+        saveSessionInfo(userInfo, accesToken, getRefreshToken());
+      }
     }
 
     //El usuario no esta autenticado
@@ -72,9 +79,18 @@ export function AuthProvider({ children }) {
         const userInfo = await getUserInfo(newAccessToken);
         if (userInfo) {
           saveSessionInfo(userInfo, newAccessToken, token);
+          return;
         }
       }
     }
+  }
+
+  function signOut() {
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    setAccesToken("");
+    setUser(undefined);
+    localStorage.removeItem("token");
   }
 
   function saveSessionInfo(userInfo, accessToken, refreshToken) {
@@ -82,6 +98,10 @@ export function AuthProvider({ children }) {
     localStorage.setItem("token", JSON.stringify(refreshToken));
     setIsAuthenticated(true);
     setUser(userInfo);
+
+    if (userInfo.role && userInfo.role === "admin") {
+      setIsAdmin(true);
+    }
   }
 
   function getAccesToken() {
@@ -110,10 +130,12 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        isAdmin,
         getAccesToken,
         saveUser,
         getRefreshToken,
         getUser,
+        signOut,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ import SideNav from "./SideNav";
 import MenuButton from "./MenuButton";
 import NavbarBreadcrumbs from "./NavbarBreadcrumbs";
 import OptionsMenu from "./OptionsMenu";
+import { useAuth } from "../../auth/AuthProvider";
 
 const Toolbar = styled(MuiToolbar)({
   maxWidth: 1538,
@@ -42,6 +43,8 @@ function a11yProps(index) {
 
 function Navbar({ mode, toggleColorMode }) {
   const [open, setOpen] = React.useState(false);
+
+  const auth = useAuth();
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -102,7 +105,7 @@ function Navbar({ mode, toggleColorMode }) {
           />
         </Stack>
         <Tabs value={value} onChange={handleChange} aria-label="navbar tabs">
-          <Tab label="Home" {...a11yProps(0)} />
+          {auth.isAdmin ? <Tab label="Home" {...a11yProps(0)} /> : ""}
           <Tab label="Analytics" {...a11yProps(1)} />
           <Tab label="Clients" {...a11yProps(2)} />
         </Tabs>

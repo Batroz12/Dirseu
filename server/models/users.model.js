@@ -10,7 +10,7 @@ export const registerUser = async ({ firstName, lastName, email, password }) => 
         const hashedPassword = await bcrypt.hash(password, 10);
 
 
-        await pool.query('INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)', [firstName, lastName, email, hashedPassword]);
+        await pool.query('INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', [firstName, lastName, email, hashedPassword, 'student']);
 
         // Devuelve una respuesta de éxito
         return { success: true, message: 'User registered successfully.' };

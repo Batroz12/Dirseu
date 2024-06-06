@@ -8,6 +8,6 @@ export const refreshUser = async (req, res) => {
                 user: req.user
             });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ error: error.message });
     }
 }

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { saveToken } from '../models/tokens.model.js';
+import { getToken, saveToken } from '../models/tokens.model.js';
 
 dotenv.config();
 
@@ -25,7 +25,14 @@ export function generateAccessToken(user) {
 export async function generateRefreshToken(user) {
     const refreshToken = sign({ user }, false);
     try {
-        await saveToken(refreshToken);
+        const existsToken = await getToken(refreshToken);
+
+        if (!existsToken) {
+            await saveToken(refreshToken);
+        } else {
+            console.log("Token ya registrado");
+        }
+
         return refreshToken;
     } catch (error) {
         console.log(error);

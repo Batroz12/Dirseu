@@ -45,6 +45,7 @@ export const accessUser = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            role: user.role,
             id: user.id
         });
 
@@ -52,6 +53,7 @@ export const accessUser = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            role: user.role,
             id: user.id
         });
 

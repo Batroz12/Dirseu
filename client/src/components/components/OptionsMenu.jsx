@@ -6,10 +6,29 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
+import { useAuth } from "../../auth/AuthProvider";
+import { signOutRequest } from "../../api/api";
 
 export default function OptionsMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const auth = useAuth();
+
+  async function handleSignOut(e) {
+    e.preventDefault();
+
+    try {
+      const response = await signOutRequest(auth.getRefreshToken());
+
+      if (response.ok) {
+        auth.signOut();
+      }
+    } catch (error) {}
+
+    setAnchorEl(null);
+  }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -42,7 +61,7 @@ export default function OptionsMenu() {
             }}
           />
           <Typography component="p" variant="subtitle2">
-            Riley Carter
+            {auth.getUser()?.firstName || ""}
           </Typography>
         </MenuItem>
         <Divider />
@@ -51,7 +70,7 @@ export default function OptionsMenu() {
         <Divider />
         <MenuItem onClick={handleClose}>Add another account</MenuItem>
         <MenuItem onClick={handleClose}>Settings</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleSignOut}>Logout</MenuItem>
       </Menu>
     </React.Fragment>
   );

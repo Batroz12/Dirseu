@@ -36,3 +36,14 @@ export const accessTokenRequest = async (accessToken) => {
         },
     });
 };
+
+export const signOutRequest = async (refreshToken) => {
+    return await fetch('http://localhost:4000/api/signout', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${refreshToken}`,
+        },
+    });
+};
+
