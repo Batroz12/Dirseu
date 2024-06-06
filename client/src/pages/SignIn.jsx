@@ -45,10 +45,8 @@ export default function SignIn() {
         if (json.accessToken && json.refreshToken) {
           console.log(json);
           auth.saveUser(json);
-          // goTo("/Home");
+          // goTo("/analytics", { replace: true });
         }
-
-        //
       } else {
         console.log("Algo Ocurrio");
         const json = await response.json();
@@ -61,7 +59,7 @@ export default function SignIn() {
   }
 
   if (auth.isAuthenticated) {
-    return <Navigate to="/Home" />;
+    return <Navigate to="/Home" replace />;
   }
 
   return (

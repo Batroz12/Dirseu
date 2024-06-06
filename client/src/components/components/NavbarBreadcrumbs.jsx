@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { SitemarkIcon } from "../internals/components/CustomIcons";
+import { Avatar } from "@mui/material";
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   "& .MuiBreadcrumbs-separator": {
@@ -16,9 +16,12 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
 export default function NavbarBreadcrumbs() {
   return (
     <StyledBreadcrumbs aria-label="breadcrumb">
-      <SitemarkIcon />
+      <Avatar
+        src="https://upload.wikimedia.org/wikipedia/commons/e/e4/CRSL_01.png"
+        sx={{ marginTop: -2, width: 50, height: 50 }}
+      />
       <Typography fontWeight="medium" color="text.primary">
-        Project (Production)
+        DIRSEU
       </Typography>
     </StyledBreadcrumbs>
   );

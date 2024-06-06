@@ -15,6 +15,7 @@ import MenuButton from "./MenuButton";
 import NavbarBreadcrumbs from "./NavbarBreadcrumbs";
 import OptionsMenu from "./OptionsMenu";
 import { useAuth } from "../../auth/AuthProvider";
+import { Link } from "react-router-dom";
 
 const Toolbar = styled(MuiToolbar)({
   maxWidth: 1538,
@@ -105,9 +106,29 @@ function Navbar({ mode, toggleColorMode }) {
           />
         </Stack>
         <Tabs value={value} onChange={handleChange} aria-label="navbar tabs">
-          {auth.isAdmin ? <Tab label="Home" {...a11yProps(0)} /> : ""}
-          <Tab label="Analytics" {...a11yProps(1)} />
-          <Tab label="Clients" {...a11yProps(2)} />
+          <Tab label="Home" {...a11yProps(0)} component={Link} to=""></Tab>
+
+          {auth.isAdmin ? (
+            <Tab
+              label="Administrator"
+              {...a11yProps(2)}
+              component={Link}
+              to="administrator"
+            />
+          ) : (
+            ""
+          )}
+
+          {auth.isAdmin ? (
+            <Tab
+              label="Analytics"
+              {...a11yProps(1)}
+              component={Link}
+              to="analytics"
+            />
+          ) : (
+            ""
+          )}
         </Tabs>
       </Toolbar>
     </AppBar>

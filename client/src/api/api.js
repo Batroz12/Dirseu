@@ -47,3 +47,14 @@ export const signOutRequest = async (refreshToken) => {
     });
 };
 
+
+// API´s TO TABLES
+export const getTableRequest = async (table) => {
+    return await fetch('http://localhost:4000/api/table/get-table', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(table)
+    });
+};

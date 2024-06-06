@@ -11,28 +11,28 @@ import StatCard from "./StatCard";
 
 const data = [
   {
-    title: "Users",
+    title: "Taller",
     value: "14k",
     interval: "Last 30 days",
     trend: "up",
     data: [2, 4, 3, 5, 7, 6, 8, 10],
   },
   {
-    title: "Conversions",
+    title: "Capacitacion",
     value: "325",
     interval: "Last 30 days",
     trend: "down",
     data: [10, 7, 6, 8, 5, 4, 4, 2],
   },
   {
-    title: "Event count",
+    title: "Oferta Laboral",
     value: "200k",
     interval: "Last 30 days",
     trend: "neutral",
     data: [5, 4, 6, 3, 4, 3, 7, 6],
   },
   {
-    title: "Engagements",
+    title: "Voluntariado",
     value: "30k",
     interval: "Last 30 days",
     trend: "up",

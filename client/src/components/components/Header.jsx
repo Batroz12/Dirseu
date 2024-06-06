@@ -15,10 +15,11 @@ export default function Header() {
     >
       <Stack sx={{ maxWidth: 500 }}>
         <Typography variant="h4" component="h1">
-          Dashboard
+          Analytics
         </Typography>
         <Typography color="text.secondary">
-          Real-time analytics to improve user engagement and guide strategy.
+          Análisis en tiempo real para mejorar el control de usuarios y guiar la
+          estrategia.
         </Typography>
       </Stack>
       <Stack direction="row" gap={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
