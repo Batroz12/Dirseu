@@ -20,5 +20,5 @@ pool.on("error", (err) => {
 
 // Evento para manejar conexiones exitosas
 pool.on("acquire", (connection) => {
-    console.log(`Conexión ${connection.threadId} adquirida del pool`);
+    // console.log(`Conexión ${connection.threadId} adquirida del pool`);
 });

@@ -58,7 +58,7 @@ export default function SignUp() {
   }
 
   if (auth.isAuthenticated) {
-    return <Navigate to="/Home" />;
+    return <Navigate to="/" replace />;
   }
 
   return (

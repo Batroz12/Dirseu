@@ -10,6 +10,7 @@ const AuthContext = createContext({
   saveUser: (userData) => {},
   getUser: () => {},
   signOut: () => {},
+  loading: true,
 });
 
 export function AuthProvider({ children }) {
@@ -17,6 +18,7 @@ export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [accesToken, setAccesToken] = useState("");
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     checkAuth();
@@ -68,6 +70,7 @@ export function AuthProvider({ children }) {
       const userInfo = await getUserInfo(accesToken);
       if (userInfo) {
         saveSessionInfo(userInfo, accesToken, getRefreshToken());
+        return;
       }
     }
 
@@ -83,6 +86,7 @@ export function AuthProvider({ children }) {
         }
       }
     }
+    setLoading(false);
   }
 
   function signOut() {
@@ -102,6 +106,7 @@ export function AuthProvider({ children }) {
     if (userInfo.role && userInfo.role === "admin") {
       setIsAdmin(true);
     }
+    setLoading(false);
   }
 
   function getAccesToken() {
@@ -136,6 +141,7 @@ export function AuthProvider({ children }) {
         getRefreshToken,
         getUser,
         signOut,
+        loading,
       }}
     >
       {children}
@@ -143,4 +149,10 @@ export function AuthProvider({ children }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+
+  return context;
+};

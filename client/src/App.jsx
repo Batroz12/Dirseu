@@ -1,7 +1,8 @@
 import React from "react";
-import { AuthProvider } from "./auth/AuthProvider.jsx";
+import { useAuth } from "./auth/AuthProvider.jsx";
 
 import { Routes, Route } from "react-router-dom";
+
 import SignIn from "./pages/SignIn.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
@@ -14,25 +15,21 @@ import ListModule from "./pages/ListModule.jsx";
 import Administrator from "./pages/Administrator.jsx";
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <Routes>
-        <Route path="sigin" element={<SignIn />} />
+  const { isAuthenticated } = useAuth();
 
-        <Route
-          path="/"
-          element={<ProtectedRoute />}
-          errorElement={<ErrorPage />}
-        >
-          <Route path="Home" element={<Home />}>
-            <Route path="" element={<Modules />}>
-              <Route path="list/:module/:table" element={<ListModule />} />
-            </Route>
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="administrator" element={<Administrator />} />
+  return (
+    <Routes>
+      <Route path="sigin" element={<SignIn />} errorElement={<ErrorPage />} />
+
+      <Route element={<ProtectedRoute validate={isAuthenticated} to="sigin" />}>
+        <Route path="" element={<Home />}>
+          <Route path="" element={<Modules />}>
+            <Route path="list/:module/:table" element={<ListModule />} />
           </Route>
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="administrator" element={<Administrator />} />
         </Route>
-      </Routes>
-    </AuthProvider>
+      </Route>
+    </Routes>
   );
 }

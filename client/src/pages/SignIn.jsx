@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
 
 import { accesUserRequest } from "../api/api";
+import { useEffect } from "react";
 
 const defaultTheme = createTheme();
 
@@ -25,8 +26,13 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
 
-  const auth = useAuth();
+  const { isAuthenticated, saveUser } = useAuth();
   const goTo = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) goTo("/", { replace: true });
+    // return <Navigate to="/Home" replace />;
+  }, [isAuthenticated]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -44,8 +50,8 @@ export default function SignIn() {
 
         if (json.accessToken && json.refreshToken) {
           console.log(json);
-          auth.saveUser(json);
-          // goTo("/analytics", { replace: true });
+          saveUser(json);
+          // goTo("/", { replace: true });
         }
       } else {
         console.log("Algo Ocurrio");
@@ -56,10 +62,6 @@ export default function SignIn() {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  if (auth.isAuthenticated) {
-    return <Navigate to="/Home" replace />;
   }
 
   return (
