@@ -80,7 +80,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
@@ -90,21 +89,17 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
 import AddressForm from "../components/administrator/AddressForm";
 import getCheckoutTheme from "../components/administrator/getCheckoutTheme";
-import Info from "../components/administrator/Info";
 import InfoMobile from "../components/administrator/InfoMobile";
 import PaymentForm from "../components/administrator/PaymentForm";
 import Review from "../components/administrator/Review";
-import ToggleColorMode from "../components/administrator/ToggleColorMode";
-import SitemarkIcon from "../components/administrator/SitemarkIcon";
 import ButtonImgBase from "../components/components/ButtonImgBase";
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {

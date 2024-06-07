@@ -1,64 +1,44 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Alert from "@mui/material/Alert";
 
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAuth } from "../auth/AuthProvider";
+import { Outlet } from "react-router-dom";
 
-import { createUserRequest } from "../api/api";
+import UserForm from "../components/administrator/UserForm";
+import PaymentForm from "../components/administrator/PaymentForm";
+import Review from "../components/administrator/Review";
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const [firstName, setFirtsName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorResponse, setErrorResponse] = useState("");
+  const [activeStep, setActiveStep] = React.useState(0);
 
-  const auth = useAuth();
-  const goTo = useNavigate();
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
 
-    try {
-      const response = await createUserRequest({
-        firstName,
-        lastName,
-        email,
-        password,
-      });
+  const steps = ["Datos de Cuenta", "Datos de Usuario", "Review your order"];
 
-      if (response.ok) {
-        console.log("Usuario Creado Exitosamente");
-        setErrorResponse("");
-
-        goTo("/SignIn");
-      } else {
-        console.log("Algo Ocurrio");
-        const json = await response.json();
-        setErrorResponse(json.error);
-        return;
-      }
-    } catch (error) {
-      console.error(error);
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <UserForm />;
+      case 1:
+        return <PaymentForm />;
+      case 2:
+        return <Review />;
+      default:
+        throw new Error("Unknown step");
     }
-  }
-
-  if (auth.isAuthenticated) {
-    return <Navigate to="/" replace />;
   }
 
   return (
@@ -119,18 +99,9 @@ export default function SignUp() {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            {!!errorResponse && (
-              <Alert severity="error" sx={{ width: "90%", my: 2 }}>
-                {errorResponse}
-              </Alert>
-            )}
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 3 }}
-            >
-              <Grid container spacing={2}>
+            <Box sx={{ mt: 3 }}>
+              <Outlet />
+              {/* <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     autoComplete="given-name"
@@ -200,9 +171,9 @@ export default function SignUp() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link to={"/SignIn"}>Already have an account? Sign in</Link>
+                  <Link to={"/login"}>Already have an account? Sign in</Link>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </Box>
           </Box>
         </Grid>

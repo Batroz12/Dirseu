@@ -51,7 +51,6 @@ export default function SignIn() {
         if (json.accessToken && json.refreshToken) {
           console.log(json);
           saveUser(json);
-          // goTo("/", { replace: true });
         }
       } else {
         console.log("Algo Ocurrio");
@@ -176,7 +175,9 @@ export default function SignIn() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link to={"/SignUp"}>{"Don't have an account? Sign Up"}</Link>
+                  <Link to={"/register"}>
+                    {"Don't have an account? Sign Up"}
+                  </Link>
                 </Grid>
               </Grid>
             </Box>

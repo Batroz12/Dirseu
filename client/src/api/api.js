@@ -8,6 +8,24 @@ export const createUserRequest = async (data) =>
         body: JSON.stringify(data)
     });
 
+export const createStudentRequest = async (data) =>
+    await fetch('http://localhost:4000/api/signup/student', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+
+export const createDocenteRequest = async (data) =>
+    await fetch('http://localhost:4000/api/signup/docente', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+
 export const accesUserRequest = async (data) =>
     await fetch('http://localhost:4000/api/login', {
         method: 'POST',
