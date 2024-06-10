@@ -12,43 +12,38 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 
-import {
-  IndiaFlag,
-  UsaFlag,
-  BrazilFlag,
-  GlobeFlag,
-} from "../internals/components/CustomIcons";
-
 const data = [
-  { label: "India", value: 50000 },
-  { label: "USA", value: 35000 },
-  { label: "Brazil", value: 10000 },
-  { label: "Other", value: 5000 },
+  { label: "Facultad de Ciencias y Humanidades", value: 69 },
+  { label: "Facultad de Ciencias de la Salud", value: 56 },
+  { label: "Facultad Ciencias Económicas Administrativas y Contables", value: 99 },
+  { label: "Facultad de Derecho y Ciencia Política", value: 35 },
+  { label: "Facultad de Ingeniería y Arquitectura", value: 78 },
 ];
 
 const countries = [
   {
-    name: "India",
+    name: "Facultad de Ciencias y Humanidades",
     value: 50,
-    flag: <IndiaFlag />,
     color: "hsl(220, 25%, 65%)",
   },
   {
-    name: "USA",
+    name: "Facultad de Ciencias de la Salud",
     value: 35,
-    flag: <UsaFlag />,
     color: "hsl(220, 25%, 45%)",
   },
   {
-    name: "Brazil",
+    name: "Facultad Ciencias Económicas Administrativas y Contables",
     value: 10,
-    flag: <BrazilFlag />,
     color: "hsl(220, 25%, 30%)",
   },
   {
-    name: "Other",
+    name: "Facultad de Derecho y Ciencia Política",
     value: 5,
-    flag: <GlobeFlag />,
+    color: "hsl(220, 25%, 20%)",
+  },
+  {
+    name: "Facultad de Ingeniería y Arquitectura",
+    value: 5,
     color: "hsl(220, 25%, 20%)",
   },
 ];
@@ -96,16 +91,17 @@ const colors = [
   "hsl(220, 25%, 45%)",
   "hsl(220, 25%, 30%)",
   "hsl(220, 25%, 20%)",
+  "hsl(220, 25%, 20%)",
 ];
 
-export default function ChartUserByCountry() {
+export default function ChartUserByFaculty() {
   return (
-    <Card variant="outlined" sx={{ pb: "8px" }}>
+    <Card variant="outlined">
       <CardContent>
         <Typography component="h2" variant="subtitle2">
-          Users by country
+          Users by faculty
         </Typography>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", pb: "8px" }}>
           <PieChart
             colors={colors}
             margin={{
@@ -129,7 +125,7 @@ export default function ChartUserByCountry() {
               legend: { hidden: true },
             }}
           >
-            <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
+            <PieCenterLabel primaryText="337" secondaryText="Total" />
           </PieChart>
         </Box>
         {countries.map((country, index) => (
@@ -138,7 +134,7 @@ export default function ChartUserByCountry() {
             direction="row"
             alignItems="center"
             gap={2}
-            sx={{ pb: 2 }}
+            sx={{ pb: 2, px: 2 }}
           >
             {country.flag}
             <Stack gap={1} sx={{ flexGrow: 1 }}>
@@ -148,7 +144,7 @@ export default function ChartUserByCountry() {
                 alignItems="center"
                 gap={2}
               >
-                <Typography variant="body2" fontWeight="500">
+                <Typography variant="body2" fontWeight="500" fontSize="0.8rem">
                   {country.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">

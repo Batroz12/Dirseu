@@ -24,43 +24,29 @@ import { useTheme } from "@mui/material/styles";
 const ITEMS = [
   {
     id: "1",
-    label: "Website",
+    label: "Modulos",
     children: [
-      { id: "1.1", label: "Home", color: "green" },
-      { id: "1.2", label: "Pricing", color: "green" },
-      { id: "1.3", label: "About us", color: "green" },
-      {
-        id: "1.4",
-        label: "Blog",
-        children: [
-          { id: "1.1.1", label: "Announcements", color: "blue" },
-          { id: "1.1.2", label: "April lookahead", color: "blue" },
-          { id: "1.1.3", label: "What's new", color: "blue" },
-          { id: "1.1.4", label: "Meet the team", color: "blue" },
-        ],
-      },
+      { id: "1.1", label: "Talleres", color: "green" },
+      { id: "1.2", label: "Capacitaciones", color: "green" },
+      { id: "1.3", label: "Bolsa Laboral", color: "green" },
+      { id: "1.4", label: "Voluntariado", color: "green" },
+
     ],
   },
   {
     id: "2",
-    label: "Store",
+    label: "Facultades",
     children: [
-      { id: "2.1", label: "All products", color: "green" },
+      { id: "2.1", label: "Facultad de Ciencias y Humanidades", color: "blue" },
       {
         id: "2.2",
-        label: "Categories",
-        children: [
-          { id: "2.2.1", label: "Gadgets", color: "blue" },
-          { id: "2.2.2", label: "Phones", color: "blue" },
-          { id: "2.2.3", label: "Wearables", color: "blue" },
-        ],
+        label: "Facultad de Ciencias de la Salud", color: "blue"
       },
-      { id: "2.3", label: "Bestsellers", color: "green" },
-      { id: "2.4", label: "Sales", color: "green" },
+      { id: "2.3", label: "Facultad de Ingeniería y Arquitectura", color: "blue" },
+      { id: "2.4", label: "Facultad de Derecho y Ciencia Política", color: "blue" },
     ],
   },
-  { id: "4", label: "Contact", color: "blue" },
-  { id: "5", label: "Help", color: "blue" },
+  
 ];
 
 function DotIcon({ color }) {
@@ -206,7 +192,7 @@ export default function CustomizedTreeView() {
       sx={{ display: "flex", flexDirection: "column", gap: "8px" }}
     >
       <CardContent>
-        <Typography variant="subtitle2">Product tree</Typography>
+        <Typography variant="subtitle2">Vista Detallada</Typography>
         <RichTreeView
           items={ITEMS}
           aria-label="pages"

@@ -11,29 +11,29 @@ import StatCard from "./StatCard";
 
 const data = [
   {
-    title: "Taller",
-    value: "14k",
+    title: "Talleres",
+    value: "280",
     interval: "Last 30 days",
     trend: "up",
     data: [2, 4, 3, 5, 7, 6, 8, 10],
   },
   {
     title: "Capacitacion",
-    value: "325",
+    value: "327",
     interval: "Last 30 days",
-    trend: "down",
-    data: [10, 7, 6, 8, 5, 4, 4, 2],
+    trend: "up",
+    data: [1, 4, 3, 5, 7, 6, 8],
   },
   {
     title: "Oferta Laboral",
-    value: "200k",
+    value: "200",
     interval: "Last 30 days",
     trend: "neutral",
     data: [5, 4, 6, 3, 4, 3, 7, 6],
   },
   {
     title: "Voluntariado",
-    value: "30k",
+    value: "150",
     interval: "Last 30 days",
     trend: "up",
     data: [2, 4, 3, 4, 5, 4, 7, 8],
@@ -47,13 +47,10 @@ export default function MainGrid() {
 
       <Grid container spacing={2} columns={12}>
         {data.map((card, index) => (
-          <Grid xs={6} sm={3} md={2} lg={2.25}>
+          <Grid xs={3} >
             <StatCard key={index} {...card} />
           </Grid>
         ))}
-        <Grid xs={12} md={4} lg={3}>
-          <HighlightedCard />
-        </Grid>
       </Grid>
 
       <Grid
@@ -65,7 +62,7 @@ export default function MainGrid() {
         <Grid xs={12} md={8} lg={9}>
           <Stack spacing={2}>
             <PageViewsBarChart />
-            <PageViewsChart />
+            {/* <PageViewsChart /> */}
             <CustomizedDataGrid />
           </Stack>
         </Grid>
