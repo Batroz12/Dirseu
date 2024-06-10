@@ -30,3 +30,48 @@ export const comparePassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 };
 
+
+export const getDataByEmail = async (email) => {
+    try {
+
+        // Probar si es estudiante
+        let [rows] = await pool.query('SELECT * FROM users u INNER JOIN estudiantes e ON e.user_id = u.id WHERE u.email = ?', [email]);
+        if (rows[0]) {
+            return { type: 'estudiante', ...rows[0] };
+        }
+
+        // Probar si es docente
+        [rows] = await pool.query('SELECT * FROM users u INNER JOIN docentes d ON d.user_id = u.id WHERE u.email = ?', [email]);
+
+        if (rows[0]) {
+            return { type: 'estudiante', ...rows[0] };
+        }
+
+    } catch (error) {
+        throw new Error('Failed to obtain info user.');
+    }
+}
+
+
+
+export const registerStudent = async ({ codigo, matricula, carrera, semestre, fecha_nacimiento, telefono, direccion, user_id }) => {
+    try {
+        // Insertar datos en la tabla de estudiantes
+        await pool.query('INSERT INTO estudiantes (codigo, matricula, carrera, semestre, fecha_nacimiento, telefono, direccion, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [codigo, matricula, carrera, semestre, fecha_nacimiento, telefono, direccion, user_id]);
+
+        // Devuelve una respuesta de éxito
+        return { success: true, message: 'Student registered successfully.' };
+    } catch (error) {
+        throw new Error('Failed to register student.');
+    }
+};
+
+export const registerDocente = async ({ codigo_docente, departamento, telefono, direccion, user_id }) => {
+    try {
+        await pool.query('INSERT INTO docentes (codigo_docente, departamento, telefono, direccion, user_id) VALUES (?, ?, ?, ?, ?)', [codigo_docente, departamento, telefono, direccion, user_id]);
+        return { success: true, message: 'Docente registrado exitosamente.' };
+    } catch (error) {
+        throw new Error('Error al registrar el docente.');
+    }
+};
+

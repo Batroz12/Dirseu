@@ -14,7 +14,7 @@ import SideNav from "./SideNav";
 import MenuButton from "./MenuButton";
 import NavbarBreadcrumbs from "./NavbarBreadcrumbs";
 import OptionsMenu from "./OptionsMenu";
-import { useAuth } from "../../auth/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { Link } from "react-router-dom";
 
 const Toolbar = styled(MuiToolbar)({

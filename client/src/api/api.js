@@ -1,6 +1,7 @@
+const BASE_URL = 'http://localhost:4000/api';
 
 export const createUserRequest = async (data) =>
-    await fetch('http://localhost:4000/api/signup', {
+    await fetch(`${BASE_URL}/signup`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -9,7 +10,7 @@ export const createUserRequest = async (data) =>
     });
 
 export const createStudentRequest = async (data) =>
-    await fetch('http://localhost:4000/api/signup/student', {
+    await fetch(`${BASE_URL}/signup/student`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -18,7 +19,7 @@ export const createStudentRequest = async (data) =>
     });
 
 export const createDocenteRequest = async (data) =>
-    await fetch('http://localhost:4000/api/signup/docente', {
+    await fetch(`${BASE_URL}/signup/docente`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -27,7 +28,7 @@ export const createDocenteRequest = async (data) =>
     });
 
 export const accesUserRequest = async (data) =>
-    await fetch('http://localhost:4000/api/login', {
+    await fetch(`${BASE_URL}/login`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export const accesUserRequest = async (data) =>
     });
 
 export const refreshTokenRequest = async (refreshToken) => {
-    return await fetch('http://localhost:4000/api/refresh-token', {
+    return await fetch(`${BASE_URL}/refresh-token`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export const refreshTokenRequest = async (refreshToken) => {
 };
 
 export const accessTokenRequest = async (accessToken) => {
-    return await fetch('http://localhost:4000/api/user', {
+    return await fetch(`${BASE_URL}/user`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +57,7 @@ export const accessTokenRequest = async (accessToken) => {
 };
 
 export const signOutRequest = async (refreshToken) => {
-    return await fetch('http://localhost:4000/api/signout', {
+    return await fetch(`${BASE_URL}/signout`, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
@@ -66,9 +67,20 @@ export const signOutRequest = async (refreshToken) => {
 };
 
 
+// API's TO USERS
+export const getUserInfoRequest = async (accessToken) => {
+    return await fetch(`${BASE_URL}/user/info`, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+};
+
 // API´s TO TABLES
 export const getTableRequest = async (table) => {
-    return await fetch('http://localhost:4000/api/table/get-table', {
+    return await fetch(`${BASE_URL}/table/get-table`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

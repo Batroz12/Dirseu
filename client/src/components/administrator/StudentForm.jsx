@@ -7,9 +7,10 @@ import { styled } from "@mui/system";
 import { Alert, Box, Button, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../../auth/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { createStudentRequest } from "../../api/api";
 import { useEffect } from "react";
+import { useRegister } from "../../context/Register_context";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -26,23 +27,31 @@ export default function StudentForm() {
   const [direccion, setDireccion] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
 
-  const { user_id } = useParams();
-
   const activeStep = 0;
 
   const { isAuthenticated } = useAuth();
+  const { userData } = useRegister();
   const goTo = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) goTo("/", { replace: true });
-    // return <Navigate to="/Home" replace />;
   }, [isAuthenticated]);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
+      if (!userData) {
+        console.log("UserData:  Vacio");
+        goTo("/register", { replace: true });
+        return;
+      }
+
       const response = await createStudentRequest({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: userData.password,
         codigo,
         matricula,
         carrera,
@@ -50,7 +59,6 @@ export default function StudentForm() {
         fecha_nacimiento,
         telefono,
         direccion,
-        user_id,
       });
 
       if (response.ok) {

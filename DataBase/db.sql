@@ -14,6 +14,28 @@ CREATE TABLE users(
 	role ENUM('admin', 'student') NOT NULL
 );
 
+CREATE TABLE estudiantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    matricula VARCHAR(50) NOT NULL,
+    carrera VARCHAR(100) NOT NULL,
+    semestre INT NOT NULL,
+    fecha_nacimiento DATE,
+    telefono VARCHAR(15),
+    direccion TEXT,
+    user_id INT UNIQUE, -- Relación uno a uno
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE docentes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_docente VARCHAR(20) NOT NULL UNIQUE,
+    departamento VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15),
+    direccion TEXT,
+    user_id INT UNIQUE, -- Relación uno a uno
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 -- Crear la tabla talleres
 CREATE TABLE talleres (
@@ -68,7 +90,7 @@ CREATE TABLE inscripciones_talleres (
     fecha_inscripcion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
     FOREIGN KEY (entidad_id) REFERENCES talleres(id),
-    FOREIGN KEY (estudiante_id) REFERENCES users(id)
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
 );
 
 -- Crear la tabla inscripciones_capacitaciones
@@ -79,7 +101,7 @@ CREATE TABLE inscripciones_capacitaciones (
     fecha_inscripcion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
     FOREIGN KEY (entidad_id) REFERENCES capacitaciones(id),
-    FOREIGN KEY (estudiante_id) REFERENCES users(id)
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
 );
 
 -- Crear la tabla inscripciones_voluntariados
@@ -90,7 +112,7 @@ CREATE TABLE inscripciones_voluntariados (
     fecha_inscripcion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
     FOREIGN KEY (entidad_id) REFERENCES voluntariados(id),
-    FOREIGN KEY (estudiante_id) REFERENCES users(id)
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
 );
 
 -- Crear la tabla postulaciones_ofertas
@@ -98,10 +120,10 @@ CREATE TABLE postulaciones_ofertas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     entidad_id INT NOT NULL,
     estudiante_id INT NOT NULL,
-    fecha_inscripcion DATE NOT NULL,
+    fecha_postulacion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
     FOREIGN KEY (entidad_id) REFERENCES ofertas_laborales(id),
-    FOREIGN KEY (estudiante_id) REFERENCES users(id)
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
 );
 
 

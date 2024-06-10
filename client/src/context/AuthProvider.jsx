@@ -1,11 +1,15 @@
 import { useContext, createContext, useState, useEffect } from "react";
 
-import { refreshTokenRequest, accessTokenRequest } from "../api/api";
+import {
+  refreshTokenRequest,
+  accessTokenRequest,
+  getUserInfoRequest,
+} from "../api/api";
 
 const AuthContext = createContext({
   isAuthenticated: false,
   isAdmin: false,
-  getAccesToken: () => {},
+  getaccessToken: () => {},
   getRefreshToken: () => {},
   saveUser: (userData) => {},
   getUser: () => {},
@@ -16,8 +20,9 @@ const AuthContext = createContext({
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [accesToken, setAccesToken] = useState("");
+  const [accessToken, setaccessToken] = useState("");
   const [user, setUser] = useState();
+  const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -65,11 +70,11 @@ export function AuthProvider({ children }) {
   }
 
   async function checkAuth() {
-    if (accesToken) {
+    if (accessToken) {
       //El usuario ya esta autenticado
-      const userInfo = await getUserInfo(accesToken);
+      const userInfo = await getUserInfo(accessToken);
       if (userInfo) {
-        saveSessionInfo(userInfo, accesToken, getRefreshToken());
+        saveSessionInfo(userInfo, accessToken, getRefreshToken());
         return;
       }
     }
@@ -86,19 +91,18 @@ export function AuthProvider({ children }) {
         }
       }
     }
-    setLoading(false);
   }
 
   function signOut() {
     setIsAuthenticated(false);
     setIsAdmin(false);
-    setAccesToken("");
+    setaccessToken("");
     setUser(undefined);
     localStorage.removeItem("token");
   }
 
   function saveSessionInfo(userInfo, accessToken, refreshToken) {
-    setAccesToken(accessToken);
+    setaccessToken(accessToken);
     localStorage.setItem("token", JSON.stringify(refreshToken));
     setIsAuthenticated(true);
     setUser(userInfo);
@@ -107,10 +111,11 @@ export function AuthProvider({ children }) {
       setIsAdmin(true);
     }
     setLoading(false);
+    Userdata(accessToken);
   }
 
-  function getAccesToken() {
-    return accesToken;
+  function getaccessToken() {
+    return accessToken;
   }
 
   function getRefreshToken() {
@@ -127,8 +132,22 @@ export function AuthProvider({ children }) {
     saveSessionInfo(userData.user, userData.accessToken, userData.refreshToken);
   }
 
+  async function Userdata(accessToken) {
+    try {
+      const response = await getUserInfoRequest(accessToken);
+      console.log(response);
+
+      if (response.ok) {
+        const json = await response.json();
+
+        setUserData(json.data);
+        return;
+      }
+    } catch (error) {}
+  }
+
   function getUser() {
-    return user;
+    return userData;
   }
 
   return (
@@ -136,7 +155,7 @@ export function AuthProvider({ children }) {
       value={{
         isAuthenticated,
         isAdmin,
-        getAccesToken,
+        getaccessToken,
         saveUser,
         getRefreshToken,
         getUser,
