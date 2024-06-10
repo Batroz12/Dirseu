@@ -9,9 +9,10 @@ import { styled } from "@mui/system";
 import { Alert, Box, Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../../auth/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { createUserRequest } from "../../api/api";
 import { useEffect } from "react";
+import { useRegister } from "../../context/Register_context";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -28,6 +29,7 @@ export default function UserForm() {
   const activeStep = 0;
 
   const { isAuthenticated } = useAuth();
+  const { setUserData } = useRegister();
   const goTo = useNavigate();
 
   useEffect(() => {
@@ -39,25 +41,19 @@ export default function UserForm() {
     e.preventDefault();
 
     try {
-      const response = await createUserRequest({
+      if (!firstName || !lastName || !email || !password) {
+        setErrorResponse("Campos Requeridos");
+        return;
+      }
+
+      setUserData({
         firstName,
         lastName,
         email,
         password,
       });
 
-      if (response.ok) {
-        console.log("Usuario Creado Exitosamente");
-        setErrorResponse("");
-
-        const json = await response.json();
-        goTo(`type/${json.id}`);
-      } else {
-        console.log("Algo Ocurrio");
-        const json = await response.json();
-        setErrorResponse(json.error);
-        return;
-      }
+      goTo("type");
     } catch (error) {
       console.error(error);
     }

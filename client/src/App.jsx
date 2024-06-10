@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "./auth/AuthProvider.jsx";
+import { useAuth } from "./context/AuthProvider.jsx";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -18,29 +18,38 @@ import TypeUserTab from "./components/administrator/TypeUserTab.jsx";
 import StudentForm from "./components/administrator/StudentForm.jsx";
 import TeacherForm from "./components/administrator/TeacherForm.jsx";
 
+import { RegisterProvider } from "./context/Register_context.jsx";
+import UserSettings from "./pages/UserSettings.jsx";
+
 export default function App() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <Routes>
-      <Route path="login" element={<SignIn />} />
-      <Route path="register" element={<SignUp />}>
-        <Route path="" element={<UserForm />} />
-        <Route path="type/:user_id" element={<TypeUserTab />}>
-          <Route path="" element={<StudentForm />} />
-          <Route path="teacher" element={<TeacherForm />} />
-        </Route>
-      </Route>
+    <RegisterProvider>
+      <Routes>
+        <Route path="login" element={<SignIn />} />
 
-      <Route element={<ProtectedRoute validate={isAuthenticated} to="login" />}>
-        <Route path="" element={<Home />}>
-          <Route path="" element={<Modules />}>
-            <Route path="list/:module/:table" element={<ListModule />} />
+        <Route path="register" element={<SignUp />}>
+          <Route path="" element={<UserForm />} />
+          <Route path="type" element={<TypeUserTab />}>
+            <Route path="" element={<StudentForm />} />
+            <Route path="teacher" element={<TeacherForm />} />
           </Route>
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="administrator" element={<Administrator />} />
         </Route>
-      </Route>
-    </Routes>
+
+        <Route
+          element={<ProtectedRoute validate={isAuthenticated} to="login" />}
+        >
+          <Route path="" element={<Home />}>
+            <Route path="" element={<Modules />}>
+              <Route path="list/:module/:table" element={<ListModule />} />
+            </Route>
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="administrator" element={<Administrator />} />
+            <Route path="userInfo" element={<UserSettings />} />
+          </Route>
+        </Route>
+      </Routes>
+    </RegisterProvider>
   );
 }

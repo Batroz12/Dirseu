@@ -14,7 +14,7 @@ import Alert from "@mui/material/Alert";
 
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 
 import { accesUserRequest } from "../api/api";
 import { useEffect } from "react";

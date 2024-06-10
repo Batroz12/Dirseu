@@ -2,13 +2,15 @@
 
 import { Router } from 'express';
 import {
-    createUser,
+    createStudent,
+    createDocente
 
 } from '../controllers/signup.controller.js';
 
 const router = Router();
 
-router.post('/', createUser);
+router.post('/student', createStudent);
+router.post('/docente', createDocente);
 
 
 export default router;
