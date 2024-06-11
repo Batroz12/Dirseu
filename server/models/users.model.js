@@ -44,7 +44,7 @@ export const getDataByEmail = async (email) => {
         [rows] = await pool.query('SELECT * FROM users u INNER JOIN docentes d ON d.user_id = u.id WHERE u.email = ?', [email]);
 
         if (rows[0]) {
-            return { type: 'estudiante', ...rows[0] };
+            return { type: 'docente', ...rows[0] };
         }
 
     } catch (error) {

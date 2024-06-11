@@ -22,6 +22,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import { useAuth } from "../context/AuthProvider";
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -66,25 +67,16 @@ ToggleCustomTheme.propTypes = {
 };
 
 export default function UserSettings() {
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
-  const toggleCustomTheme = () => {
-    setShowCustomTheme((prev) => !prev);
-  };
-
-  // const handleNext = () => {
-  //   setActiveStep(activeStep + 1);
-  // };
-
-  // const handleBack = () => {
-  //   setActiveStep(activeStep - 1);
-  // };
-
   const [expanded, setExpanded] = React.useState(false);
+
+  const auth = useAuth();
+
+  if (!auth.getUser()) {
+    return "";
+  }
+
+  const userData = auth.getUser();
+  console.log(userData);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -92,7 +84,7 @@ export default function UserSettings() {
 
   const keys = Object.keys(userData);
   const usuarioKeys = keys.slice(2, 5); // Desde el tercer al quinto dato
-  const otrosDatosKeys = keys.slice(6, keys.length - 1); // Desde el sexto hasta el antepenúltimo dato
+  const otrosDatosKeys = keys.slice(7, keys.length - 1); // Desde el sexto hasta el antepenúltimo dato
 
   return (
     <React.Fragment>
@@ -155,9 +147,8 @@ export default function UserSettings() {
             width: "100%",
             backgroundColor: "background.paper",
             alignItems: "start",
-            pt: { xs: 2, sm: 4 },
-            px: { xs: 2, sm: 10 },
-            gap: { xs: 4, md: 8 },
+            py: 2,
+            px: 4,
           }}
         >
           <Box p={6} boxShadow={3} borderRadius={4}>
@@ -206,7 +197,7 @@ export default function UserSettings() {
                 gutterBottom
                 sx={{ mb: 3, fontFamily: "Arial", color: "#333" }}
               >
-                Datos del Usuario
+                DATOS DEL USUARIO
               </Typography>
               <Grid container spacing={2} sx={{ pl: 4 }}>
                 {usuarioKeys.map((key) => (
@@ -252,7 +243,14 @@ export default function UserSettings() {
                       {renderIcon(key)}
                       <Typography sx={{ ml: 1 }}>
                         <strong>
-                          {key.charAt(0).toUpperCase() + key.slice(1)}:
+                          {(key.charAt(0).toUpperCase() + key.slice(1))
+                            // Reemplaza "_x" por " X" (el carácter después del guion bajo en mayúscula)
+                            .replace(
+                              /_(.)/g,
+                              (match, p1) => " " + p1.toUpperCase()
+                            )
+                            // Convierte el primer carácter de la cadena resultante a mayúscula
+                            .replace(/^./, (match) => match.toUpperCase())}
                         </strong>
                       </Typography>
                     </Grid>
@@ -313,23 +311,23 @@ const opcionesPorCategoria = {
   ],
 };
 
-// Datos de ejemplo del usuario
-const userData = {
-  type: "estudiante",
-  id: 3,
-  firstName: "Aldair",
-  lastName: "Huaman Caceres",
-  email: "aldair@gmail.com",
-  role: "student",
-  codigo: "021100115k",
-  matricula: "Regular",
-  carrera: "Ing. Sistemas",
-  semestre: 7,
-  fecha_nacimiento: "2010-04-13T05:00:00.000Z",
-  telefono: "972256712",
-  direccion: "Su Casa ps",
-  user_id: 27,
-};
+// // Datos de ejemplo del usuario
+// const userData = {
+//   type: "estudiante",
+//   id: 3,
+//   firstName: "Aldair",
+//   lastName: "Huaman Caceres",
+//   email: "aldair@gmail.com",
+//   role: "student",
+//   codigo: "021100115k",
+//   matricula: "Regular",
+//   carrera: "Ing. Sistemas",
+//   semestre: 7,
+//   fecha_nacimiento: "2010-04-13T05:00:00.000Z",
+//   telefono: "972256712",
+//   direccion: "Su Casa ps",
+//   user_id: 27,
+// };
 
 function renderIcon(key) {
   switch (key) {

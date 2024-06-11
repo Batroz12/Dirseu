@@ -119,12 +119,23 @@ function Navbar({ mode, toggleColorMode }) {
             ""
           )}
 
-          {auth.isAdmin ? (
+          {auth.getUser()?.type == "docente" || auth.isAdmin ? (
             <Tab
               label="Analytics"
               {...a11yProps(1)}
               component={Link}
               to="analytics"
+            />
+          ) : (
+            ""
+          )}
+
+          {auth.getUser()?.type == "docente" || auth.isAdmin ? (
+            <Tab
+              label="Inscripciones "
+              {...a11yProps(1)}
+              component={Link}
+              to="inscripciones"
             />
           ) : (
             ""

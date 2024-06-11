@@ -37,7 +37,9 @@ export default function Modules() {
           </Grid>
         ))}
       </Grid>
-      <Outlet />
+      <Box sx={{ px: "10%", my: 4 }}>
+        <Outlet />
+      </Box>
     </React.Fragment>
   );
 }
@@ -46,24 +48,24 @@ const data = [
   {
     title: "Taller",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "list/Talleres/talleres",
+    to: "list/talleres",
   },
   {
     title: "Capacitacion",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
-    to: "list/Capacitaciones/capacitaciones",
+    to: "list/capacitaciones",
   },
   {
     title: "Oferta Laboral",
     image:
       "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
-    to: "list/Ofertas Laborales/ofertas_laborales",
+    to: "list/ofertas_laborales",
   },
   {
     title: "Voluntariado",
     image:
       "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",
-    to: "list/Voluntariados/voluntariados",
+    to: "list/voluntariados",
   },
 ];

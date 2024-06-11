@@ -88,3 +88,36 @@ export const getTableRequest = async (table) => {
         body: JSON.stringify(table)
     });
 };
+
+export const getTableByIdRequest = async (data) => {
+    return await fetch(`${BASE_URL}/table/get-module`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+};
+
+export const getUsersInscriptionRequest = async (data) => {
+    return await fetch(`${BASE_URL}/table/users-inscription`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data) // Aquí se pasa un objeto con las propiedades table e id
+    });
+};
+
+export const registerInscriptionRequest = async (data) => {
+    return await fetch(`${BASE_URL}/table/register-inscription`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+};
+
+
+

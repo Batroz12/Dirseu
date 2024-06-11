@@ -14,14 +14,11 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 
-import { createTheme } from "@mui/material/styles";
-
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
 import AddressForm from "../components/administrator/AddressForm";
-import getCheckoutTheme from "../components/administrator/getCheckoutTheme";
 import InfoMobile from "../components/administrator/InfoMobile";
 import PaymentForm from "../components/administrator/PaymentForm";
 import Review from "../components/administrator/Review";
@@ -85,19 +82,7 @@ function getStepContent(step) {
 }
 
 export default function Administrator() {
-  const [mode, setMode] = React.useState("light");
-  const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const checkoutTheme = createTheme(getCheckoutTheme(mode));
-  const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
-
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
-  const toggleCustomTheme = () => {
-    setShowCustomTheme((prev) => !prev);
-  };
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);

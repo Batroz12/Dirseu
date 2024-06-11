@@ -1,5 +1,5 @@
 USE railway;
-
+SELECT * FROM estudiantes;
 CREATE TABLE tokens(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     token TEXT NOT NULL
@@ -27,15 +27,7 @@ CREATE TABLE estudiantes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE docentes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    codigo_docente VARCHAR(20) NOT NULL UNIQUE,
-    departamento VARCHAR(100) NOT NULL,
-    telefono VARCHAR(15),
-    direccion TEXT,
-    user_id INT UNIQUE, -- Relación uno a uno
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+
 
 -- Crear la tabla talleres
 CREATE TABLE talleres (
@@ -89,8 +81,8 @@ CREATE TABLE inscripciones_talleres (
     estudiante_id INT NOT NULL,
     fecha_inscripcion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
-    FOREIGN KEY (entidad_id) REFERENCES talleres(id),
-    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+    FOREIGN KEY (entidad_id) REFERENCES talleres(id) ON DELETE CASCADE,
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
 );
 
 -- Crear la tabla inscripciones_capacitaciones
@@ -100,8 +92,8 @@ CREATE TABLE inscripciones_capacitaciones (
     estudiante_id INT NOT NULL,
     fecha_inscripcion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
-    FOREIGN KEY (entidad_id) REFERENCES capacitaciones(id),
-    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+    FOREIGN KEY (entidad_id) REFERENCES capacitaciones(id) ON DELETE CASCADE,
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
 );
 
 -- Crear la tabla inscripciones_voluntariados
@@ -111,8 +103,8 @@ CREATE TABLE inscripciones_voluntariados (
     estudiante_id INT NOT NULL,
     fecha_inscripcion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
-    FOREIGN KEY (entidad_id) REFERENCES voluntariados(id),
-    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+    FOREIGN KEY (entidad_id) REFERENCES voluntariados(id) ON DELETE CASCADE,
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
 );
 
 -- Crear la tabla postulaciones_ofertas
@@ -122,8 +114,8 @@ CREATE TABLE postulaciones_ofertas (
     estudiante_id INT NOT NULL,
     fecha_postulacion DATE NOT NULL,
     estado ENUM('aprobado', 'pendiente', 'rechazado') NOT NULL,
-    FOREIGN KEY (entidad_id) REFERENCES ofertas_laborales(id),
-    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+    FOREIGN KEY (entidad_id) REFERENCES ofertas_laborales(id) ON DELETE CASCADE,
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
 );
 
 
@@ -183,4 +175,23 @@ INSERT INTO voluntariados (nombre, descripcion, fecha_inicio, fecha_fin, lugar, 
 ('Voluntariado en Emergencias', 'Apoyo en situaciones de emergencia y desastres naturales.', '2024-08-25', '2024-08-30', 'Zona de Emergencia', 50);
 
 
+
+-- Tablas Inscripciones
+INSERT INTO inscripciones_talleres (entidad_id, estudiante_id, fecha_inscripcion, estado)
+VALUES
+(1, 3, '2024-06-02', 'pendiente'),
+(2, 3, '2024-06-03', 'aprobado'),
+(3, 3, '2024-06-04', 'pendiente');
+
+INSERT INTO inscripciones_capacitaciones (entidad_id, estudiante_id, fecha_inscripcion, estado)
+VALUES
+(1, 3, '2024-06-05', 'pendiente'),
+(2, 3, '2024-06-06', 'aprobado'),
+(3, 3, '2024-06-07', 'pendiente');
+
+INSERT INTO inscripciones_voluntariados (entidad_id, estudiante_id, fecha_inscripcion, estado)
+VALUES
+(1, 3, '2024-06-08', 'pendiente'),
+(2, 3, '2024-06-09', 'aprobado'),
+(3, 3, '2024-06-10', 'pendiente');
 

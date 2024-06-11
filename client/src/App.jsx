@@ -20,6 +20,10 @@ import TeacherForm from "./components/administrator/TeacherForm.jsx";
 
 import { RegisterProvider } from "./context/Register_context.jsx";
 import UserSettings from "./pages/UserSettings.jsx";
+import Inscripciones from "./pages/Inscripciones.jsx";
+import ListInscripciones from "./pages/ListInscripciones.jsx";
+import Tabla from "./pages/Tabla.jsx";
+import DetailsModules from "./pages/DetailsModules.jsx";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -42,10 +46,15 @@ export default function App() {
         >
           <Route path="" element={<Home />}>
             <Route path="" element={<Modules />}>
-              <Route path="list/:module/:table" element={<ListModule />} />
+              <Route path="list/:table" element={<ListModule />} />
+              <Route path="form/:table/:id" element={<DetailsModules />} />
+            </Route>
+            <Route path="administrator" element={<Administrator />} />
+            <Route path="inscripciones" element={<Inscripciones />}>
+              <Route path=":table" element={<ListInscripciones />} />
+              <Route path="tables/:table/:id" element={<Tabla />} />
             </Route>
             <Route path="analytics" element={<Analytics />} />
-            <Route path="administrator" element={<Administrator />} />
             <Route path="userInfo" element={<UserSettings />} />
           </Route>
         </Route>

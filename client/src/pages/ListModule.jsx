@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
 
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import ButtonImgBase from "../components/components/ButtonImgBase";
-import { Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import { getTableRequest } from "../api/api";
 
 export default function ListModule() {
-  const { module, table } = useParams();
+  const { table } = useParams();
 
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     geItems();
-  }, [module, table]);
+  }, [table]);
 
   // geItems();
 
@@ -46,31 +46,39 @@ export default function ListModule() {
           display: "flex",
           textAlign: "center",
           justifyContent: "center",
-          my: 4,
+          mb: 4,
         }}
       >
         <Typography component="h1" variant="title1" sx={{ fontWeight: "bold" }}>
-          {module}
+          {(table.charAt(0).toUpperCase() + table.slice(1))
+            // Reemplaza "_x" por " X" (el carácter después del guion bajo en mayúscula)
+            .replace(/_(.)/g, (match, p1) => " " + p1.toUpperCase())
+            // Convierte el primer carácter de la cadena resultante a mayúscula
+            .replace(/^./, (match) => match.toUpperCase())}
         </Typography>
       </Box>
       {/* cards */}
 
-      <Grid
-        container
-        spacing={2}
-        columns={7}
-        sx={{ textAlign: "center", px: "10%" }}
-      >
+      <Grid container spacing={2} columns={7} sx={{ textAlign: "center" }}>
         {items.map((item) => (
           <Grid xs={6} sm={3} md={2} lg={2.25} key={item.id}>
-            <Card variant="outlined" sx={{ height: "100%", flexGrow: 1 }}>
+            <Box
+              sx={{
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.02)",
+                  boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
+                },
+              }}
+            >
               <ButtonImgBase
                 title={item.nombre}
-                url={data.find((item) => item.title === module)?.image || null}
+                url={data.find((item) => item.title === table)?.image || null}
                 width="100%"
-                to=""
+                to={`/form/${table}/${item.id}`}
               />
-            </Card>
+            </Box>
           </Grid>
         ))}
       </Grid>
@@ -81,24 +89,24 @@ export default function ListModule() {
 
 const data = [
   {
-    title: "Talleres",
+    title: "talleres",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
     to: "list/taller",
   },
   {
-    title: "Capacitaciones",
+    title: "capacitaciones",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
     to: "",
   },
   {
-    title: "Ofertas Laborales",
+    title: "ofertas_laborales",
     image:
       "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
     to: "",
   },
   {
-    title: "Voluntariados",
+    title: "voluntariados",
     image:
       "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",
     to: "",
