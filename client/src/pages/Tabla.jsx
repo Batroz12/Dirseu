@@ -1,11 +1,14 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, Paper } from "@mui/material";
+import { Box, Button, IconButton, Paper } from "@mui/material";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUsersInscriptionRequest } from "../api/api";
+
+import * as XLSX from "xlsx";
 
 export default function Tabla() {
   const { table, id } = useParams();
@@ -54,6 +57,30 @@ export default function Tabla() {
 
     return `${evenOddClass} ${estadoClass}`;
   };
+
+  async function handleDownload(e) {
+    e.preventDefault();
+
+    try {
+      const response = await getUsersInscriptionRequest({ table, id });
+
+      if (response.ok) {
+        console.log("Tabla Recuperada par Descargar");
+
+        const json = await response.json();
+
+        // Convertir datos a formato de hoja de cálculo
+        const ws = XLSX.utils.json_to_sheet(json.rows);
+
+        // Crear un libro de trabajo
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+        // Guardar el libro de trabajo como archivo Excel
+        XLSX.writeFile(wb, "data.xlsx");
+      }
+    } catch (error) {}
+  }
 
   return (
     <>
@@ -111,6 +138,22 @@ export default function Tabla() {
           disableColumnResize
           sx={{ backgroundColor: "white", color: "black", m: 5, mt: 2 }}
         />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            mr: 2,
+            mb: 2,
+          }}
+        >
+          <IconButton
+            aria-label="Descargar"
+            onClick={handleDownload}
+            color="primary"
+          >
+            <SystemUpdateAltIcon />
+          </IconButton>
+        </Box>
       </Box>
     </>
   );

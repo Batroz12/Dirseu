@@ -91,6 +91,7 @@ export function AuthProvider({ children }) {
         }
       }
     }
+    setLoading(false);
   }
 
   function signOut() {
@@ -139,7 +140,6 @@ export function AuthProvider({ children }) {
 
       if (response.ok) {
         const json = await response.json();
-
         setUserData(json.data);
         return;
       }

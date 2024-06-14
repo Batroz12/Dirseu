@@ -1,6 +1,6 @@
 // Contiene la lógica de controladores para manejar las solicitudes HTTP.
 
-import { getUserByEmail, registerUser, registerStudent, registerDocente } from '../models/users.model.js';
+import { getUserByEmail, registerUser, registerStudent, registerEgresado, registerDocente } from '../models/users.model.js';
 
 async function createUser(userData) {
     try {
@@ -18,7 +18,6 @@ async function createUser(userData) {
 
         // Crear Usuario
         const exists = await getUserByEmail(email);
-
 
 
         if (exists) {
@@ -80,6 +79,49 @@ export const createStudent = async (req, res) => {
         res.status(200).json({
             statusCode: 200,
             message: 'Estudiante creado exitosamente',
+        });
+    } catch (error) {
+        return res.status(500).json({ statusCode: 500, message: error.message });
+    }
+};
+
+export const createEgresado = async (req, res) => {
+    try {
+
+        const { codigo, carrera, promocion, telefono, direccion } = req.body;
+
+        if (!!!codigo || !!!carrera || !!!promocion) {
+            return res.status(400).json({
+                statusCode: 400,
+                error: 'Campos Requeridos'
+            });
+        }
+
+        // Crear Usuario 
+        const user = await createUser(req.body);
+
+        // Verficar Error de creacion de usuario
+        if (user.error) {
+            return res.status(400).json(user);
+        }
+
+        const exists = await getUserByEmail(req.body.email);
+
+        // Verificar si el usuario se creo
+        if (!exists) {
+            return res.status(400).json({
+                statusCode: 400,
+                error: 'El Usuario No pudo crearse'
+            });
+        }
+
+
+        // Llama a la función para registrar al estudiante
+        await registerEgresado({ codigo, carrera, promocion, telefono, direccion, user_id: exists.id });
+
+        res.status(200).json({
+            statusCode: 200,
+            message: 'Egresado creado exitosamente',
         });
     } catch (error) {
         return res.status(500).json({ statusCode: 500, message: error.message });

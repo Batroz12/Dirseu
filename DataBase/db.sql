@@ -1,5 +1,8 @@
 USE railway;
-SELECT * FROM estudiantes;
+
+SELECT * FROM users;
+-- DELETE FROM users WHERE id = 32;
+
 CREATE TABLE tokens(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     token TEXT NOT NULL
@@ -27,7 +30,26 @@ CREATE TABLE estudiantes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE egresados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    carrera VARCHAR(100) NOT NULL,
+    promocion INT NOT NULL,
+    telefono VARCHAR(15),
+    direccion TEXT,
+    user_id INT UNIQUE, -- Relación uno a uno
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
+CREATE TABLE docentes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_docente VARCHAR(20) NOT NULL UNIQUE,
+    departamento VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15),
+    direccion TEXT,
+    user_id INT UNIQUE, -- Relación uno a uno
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 -- Crear la tabla talleres
 CREATE TABLE talleres (
@@ -57,8 +79,8 @@ CREATE TABLE ofertas_laborales (
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
     empresa VARCHAR(100) NOT NULL,
-    fecha_publicacion DATE NOT NULL,
-    fecha_cierre DATE NOT NULL
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL
 );
 
 -- Crear la tabla voluntariados
@@ -108,7 +130,7 @@ CREATE TABLE inscripciones_voluntariados (
 );
 
 -- Crear la tabla postulaciones_ofertas
-CREATE TABLE postulaciones_ofertas (
+CREATE TABLE inscripciones_ofertas_laborales (
     id INT PRIMARY KEY AUTO_INCREMENT,
     entidad_id INT NOT NULL,
     estudiante_id INT NOT NULL,
@@ -117,9 +139,6 @@ CREATE TABLE postulaciones_ofertas (
     FOREIGN KEY (entidad_id) REFERENCES ofertas_laborales(id) ON DELETE CASCADE,
     FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
 );
-
-
-
 
 USE railway;
 
@@ -149,7 +168,7 @@ INSERT INTO capacitaciones (nombre, descripcion, fecha_inicio, fecha_fin, lugar,
 ('Capacitación en Ventas', 'Estrategias y técnicas efectivas de ventas.', '2024-08-10', '2024-08-12', 'Aula 404', 35);
 
 
-INSERT INTO ofertas_laborales (nombre, descripcion, empresa, fecha_publicacion, fecha_cierre) VALUES
+INSERT INTO ofertas_laborales (nombre, descripcion, empresa, fecha_inicio, fecha_fin) VALUES
 ('Desarrollador Web', 'Empresa de tecnología busca desarrollador web con experiencia en React.', 'Tech Solutions', '2024-06-01', '2024-06-30'),
 ('Analista de Datos', 'Se requiere analista de datos para el área de marketing.', 'Data Corp', '2024-07-01', '2024-07-31'),
 ('Diseñador Gráfico', 'Empresa de publicidad busca diseñador gráfico creativo.', 'Creativa S.A.', '2024-08-01', '2024-08-31'),
@@ -175,23 +194,4 @@ INSERT INTO voluntariados (nombre, descripcion, fecha_inicio, fecha_fin, lugar, 
 ('Voluntariado en Emergencias', 'Apoyo en situaciones de emergencia y desastres naturales.', '2024-08-25', '2024-08-30', 'Zona de Emergencia', 50);
 
 
-
--- Tablas Inscripciones
-INSERT INTO inscripciones_talleres (entidad_id, estudiante_id, fecha_inscripcion, estado)
-VALUES
-(1, 3, '2024-06-02', 'pendiente'),
-(2, 3, '2024-06-03', 'aprobado'),
-(3, 3, '2024-06-04', 'pendiente');
-
-INSERT INTO inscripciones_capacitaciones (entidad_id, estudiante_id, fecha_inscripcion, estado)
-VALUES
-(1, 3, '2024-06-05', 'pendiente'),
-(2, 3, '2024-06-06', 'aprobado'),
-(3, 3, '2024-06-07', 'pendiente');
-
-INSERT INTO inscripciones_voluntariados (entidad_id, estudiante_id, fecha_inscripcion, estado)
-VALUES
-(1, 3, '2024-06-08', 'pendiente'),
-(2, 3, '2024-06-09', 'aprobado'),
-(3, 3, '2024-06-10', 'pendiente');
 

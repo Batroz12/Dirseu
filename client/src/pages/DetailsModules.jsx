@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import GroupIcon from "@mui/icons-material/Group";
@@ -14,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getTableByIdRequest, registerInscriptionRequest } from "../api/api";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
+import FormularioPDF from "../components/administrator/FormularioPDF";
 
 export default function DetailsModules() {
   const [description, setDescription] = useState({});
@@ -71,6 +73,8 @@ export default function DetailsModules() {
       if (response.ok) {
         const json = await response.json();
         console.log(json.message);
+        setErrorResponse(json.message);
+        handleOpen();
       } else {
         const json = await response.json();
         setErrorResponse(json.error);
@@ -94,12 +98,21 @@ export default function DetailsModules() {
   };
 
   const [open, setOpen] = React.useState(false);
+  const [openCV, setOpenCV] = React.useState(false);
+
   const handleClose = () => {
     setOpen(false);
     navigate(-1);
   };
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const handleCloseCV = () => {
+    setOpenCV(false);
+  };
+  const handleOpenCV = () => {
+    setOpenCV(true);
   };
 
   return (
@@ -266,18 +279,46 @@ export default function DetailsModules() {
               width: "100%",
             }}
           >
-            <Button
-              variant="contained"
-              endIcon={<ChevronRightRoundedIcon />}
-              onClick={handleSubscribe}
-              sx={{
-                width: "60%",
-                fontSize: "1.2rem",
-                padding: "10px 0",
-              }}
-            >
-              Inscribirse
-            </Button>
+            {auth.getUser()?.type != "egresado" ? (
+              <Button
+                variant="contained"
+                endIcon={<ChevronRightRoundedIcon />}
+                onClick={handleSubscribe}
+                sx={{
+                  width: "60%",
+                  fontSize: "1.2rem",
+                  padding: "10px 0",
+                }}
+              >
+                Inscribirse
+              </Button>
+            ) : (
+              <React.Fragment>
+                <Button
+                  variant="contained"
+                  endIcon={<ContactPageIcon />}
+                  onClick={handleOpenCV}
+                  sx={{
+                    width: "60%",
+                    fontSize: "1.2rem",
+                    padding: "10px 0",
+                  }}
+                >
+                  Generar CV
+                </Button>
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={openCV}
+                >
+                  <Box>
+                    <FormularioPDF func={handleCloseCV} />
+                  </Box>
+                </Backdrop>
+              </React.Fragment>
+            )}
           </Box>
         </Grid>
       </Grid>
@@ -289,24 +330,20 @@ const data = [
   {
     title: "talleres",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "list/taller",
   },
   {
     title: "capacitaciones",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
-    to: "",
   },
   {
     title: "ofertas_laborales",
     image:
       "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
-    to: "",
   },
   {
     title: "voluntariados",
     image:
       "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",
-    to: "",
   },
 ];

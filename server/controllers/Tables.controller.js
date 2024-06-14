@@ -103,7 +103,7 @@ export const registerIncription = async (req, res) => {
             });
         }
 
-        const exists = await getInscriptionByUserId({ table, estudiante_id });
+        const exists = await getInscriptionByUserId({ table, entidad_id, estudiante_id });
 
         if (exists) {
             return res.status(400).json({

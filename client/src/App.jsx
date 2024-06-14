@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "./context/AuthProvider.jsx";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
@@ -24,6 +24,7 @@ import Inscripciones from "./pages/Inscripciones.jsx";
 import ListInscripciones from "./pages/ListInscripciones.jsx";
 import Tabla from "./pages/Tabla.jsx";
 import DetailsModules from "./pages/DetailsModules.jsx";
+import EgresadoForm from "./components/administrator/EgresadoForm.jsx";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -37,7 +38,8 @@ export default function App() {
           <Route path="" element={<UserForm />} />
           <Route path="type" element={<TypeUserTab />}>
             <Route path="" element={<StudentForm />} />
-            <Route path="teacher" element={<TeacherForm />} />
+            <Route path="egresado" element={<EgresadoForm />} />
+            <Route path="docente" element={<TeacherForm />} />
           </Route>
         </Route>
 

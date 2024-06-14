@@ -40,6 +40,13 @@ export const getDataByEmail = async (email) => {
             return { type: 'estudiante', ...rows[0] };
         }
 
+        // Probar si es egresado
+        [rows] = await pool.query('SELECT * FROM users u INNER JOIN egresados e ON e.user_id = u.id WHERE u.email = ?', [email]);
+
+        if (rows[0]) {
+            return { type: 'egresado', ...rows[0] };
+        }
+
         // Probar si es docente
         [rows] = await pool.query('SELECT * FROM users u INNER JOIN docentes d ON d.user_id = u.id WHERE u.email = ?', [email]);
 
@@ -63,6 +70,18 @@ export const registerStudent = async ({ codigo, matricula, carrera, semestre, fe
         return { success: true, message: 'Student registered successfully.' };
     } catch (error) {
         throw new Error('Failed to register student.');
+    }
+};
+
+export const registerEgresado = async ({ codigo, carrera, promocion, telefono, direccion, user_id }) => {
+    try {
+        // Insertar datos en la tabla de estudiantes
+        await pool.query('INSERT INTO egresados (codigo, carrera, promocion, telefono, direccion, user_id) VALUES (?, ?, ?, ?, ?, ?)', [codigo, carrera, promocion, telefono, direccion, user_id]);
+
+        // Devuelve una respuesta de éxito
+        return { success: true, message: 'Egresado registered successfully.' };
+    } catch (error) {
+        throw new Error('Failed to register egresado.');
     }
 };
 

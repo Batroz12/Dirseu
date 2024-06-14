@@ -1,12 +1,12 @@
 import { createPool } from 'mysql2/promise';
-import config from '../config/config.js';
+import configs from '../config/config.js';
 
 export const pool = new createPool({
-    host: config.DB_HOST,
-    user: config.DB_USER,
-    password: config.DB_PASSWORD,
-    database: config.DB_NAME,
-    port: config.DB_PORT,
+    host: configs.DB_HOST,
+    user: configs.DB_USER,
+    password: configs.DB_PASSWORD,
+    database: configs.DB_NAME,
+    port: configs.DB_PORT,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,

@@ -1,4 +1,7 @@
-const config = {
+import { config } from 'dotenv';
+config();
+
+const configs = {
     PORT: process.env.PORT || 4000,
     DB_HOST: process.env.DB_HOST || "roundhouse.proxy.rlwy.net",
     DB_USER: process.env.DB_USER || "root",
@@ -7,4 +10,4 @@ const config = {
     DB_PORT: process.env.DB_PORT || 14978,
 };
 
-export default config;
+export default configs;

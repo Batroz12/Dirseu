@@ -1,15 +1,10 @@
 import * as React from "react";
 
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { Card as MuiCard } from "@mui/material";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
-import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -18,6 +13,7 @@ import { styled } from "@mui/material/styles";
 
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
+import SchoolIcon from "@mui/icons-material/School";
 import { Link, Outlet } from "react-router-dom";
 
 const Card = styled(MuiCard)(({ theme, selected }) => ({
@@ -51,34 +47,31 @@ const Card = styled(MuiCard)(({ theme, selected }) => ({
 }));
 
 export default function TypeUserTab() {
-  const [paymentType, setPaymentType] = React.useState("creditCard");
+  const [Type, setType] = React.useState("estudiante");
 
-  const handlePaymentTypeChange = (event) => {
-    setPaymentType(event.target.value);
+  const handleTypeChange = (event) => {
+    setType(event.target.value);
   };
 
   return (
     <Stack spacing={{ xs: 3, sm: 6 }} useFlexGap>
       <FormControl component="fieldset" fullWidth>
         <RadioGroup
-          aria-label="Payment options"
-          name="paymentType"
-          value={paymentType}
-          onChange={handlePaymentTypeChange}
+          aria-label="Type options"
+          name="Type"
+          value={Type}
+          onChange={handleTypeChange}
           sx={{
             display: "flex",
             flexDirection: { xs: "column", sm: "row" },
             gap: 2,
+            flexWrap: "nowrap",
+            justifyContent: "space-between",
           }}
         >
-          <Card
-            selected={paymentType === "creditCard"}
-            component={Link}
-            to=""
-            sx={{}}
-          >
+          <Card selected={Type === "estudiante"} component={Link} to="" sx={{}}>
             <CardActionArea
-              onClick={() => setPaymentType("creditCard")}
+              onClick={() => setType("estudiante")}
               sx={{
                 ".MuiCardActionArea-focusHighlight": {
                   backgroundColor: "transparent",
@@ -96,7 +89,7 @@ export default function TypeUserTab() {
                   sx={(theme) => ({
                     color:
                       theme.palette.mode === "light" ? "grey.400" : "grey.600",
-                    ...(paymentType === "creditCard" && {
+                    ...(Type === "estudiante" && {
                       color: "primary.main",
                     }),
                   })}
@@ -106,12 +99,42 @@ export default function TypeUserTab() {
             </CardActionArea>
           </Card>
           <Card
-            selected={paymentType === "bankTransfer"}
+            selected={Type === "egresado"}
             component={Link}
-            to="teacher"
+            to="egresado"
+            sx={{}}
           >
             <CardActionArea
-              onClick={() => setPaymentType("bankTransfer")}
+              onClick={() => setType("egresado")}
+              sx={{
+                ".MuiCardActionArea-focusHighlight": {
+                  backgroundColor: "transparent",
+                },
+                "&:focus-visible": {
+                  backgroundColor: "action.hover",
+                },
+              }}
+            >
+              <CardContent
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+              >
+                <SchoolIcon
+                  fontSize="small"
+                  sx={(theme) => ({
+                    color:
+                      theme.palette.mode === "light" ? "grey.400" : "grey.600",
+                    ...(Type === "egresado" && {
+                      color: "primary.main",
+                    }),
+                  })}
+                />
+                <Typography fontWeight="medium">Egresado</Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+          <Card selected={Type === "docente"} component={Link} to="docente">
+            <CardActionArea
+              onClick={() => setType("docente")}
               sx={{
                 ".MuiCardActionArea-focusHighlight": {
                   backgroundColor: "transparent",
@@ -129,7 +152,7 @@ export default function TypeUserTab() {
                   sx={(theme) => ({
                     color:
                       theme.palette.mode === "light" ? "grey.400" : "grey.600",
-                    ...(paymentType === "bankTransfer" && {
+                    ...(Type === "docente" && {
                       color: "primary.main",
                     }),
                   })}

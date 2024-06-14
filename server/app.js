@@ -1,7 +1,7 @@
 import express from 'express';
 
 import cors from "cors";
-import config from './config/config.js';
+import configs from './config/config.js';
 
 import indexRoutes from './routes/index.routes.js';
 import sgnin from './routes/login.routes.js';
@@ -17,9 +17,7 @@ import Tables from './routes/Tables.routes.js';
 
 const app = express();
 
-app.use(cors({
-    origin: 'http://localhost:3000'
-}));
+app.use(cors());
 
 app.use(express.json());
 
@@ -34,5 +32,5 @@ app.use('/api/refresh-token', refreshToken);
 app.use('/api/table', Tables);
 
 
-app.listen(config.PORT);
-console.log(`Server is running on port ${config.PORT}.`); 
+app.listen(configs.PORT);
+console.log(`Server is running on port ${configs.PORT}.`); 

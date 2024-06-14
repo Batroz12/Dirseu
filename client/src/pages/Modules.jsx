@@ -5,8 +5,11 @@ import { Box, Card, Typography } from "@mui/material";
 
 import ButtonImgBase from "../components/components/ButtonImgBase";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 export default function Modules() {
+  const auth = useAuth();
+
   return (
     <React.Fragment>
       <Box
@@ -24,18 +27,25 @@ export default function Modules() {
       {/* cards */}
 
       <Grid container spacing={2} columns={9} sx={{ textAlign: "center" }}>
-        {data.map((card, index) => (
-          <Grid xs={6} sm={3} md={2} lg={2.25}>
-            <Card variant="outlined" sx={{ height: "100%", flexGrow: 1 }}>
-              <ButtonImgBase
-                title={card.title}
-                url={card.image}
-                width="100%"
-                to={card.to}
-              />
-            </Card>
-          </Grid>
-        ))}
+        {data.map((card, index) => {
+          const cardTypes = card.type.split(",");
+
+          if (cardTypes.includes(auth.getUser()?.type)) {
+            return (
+              <Grid item xs={6} sm={3} md={2} lg={2.25} key={index}>
+                <Card variant="outlined" sx={{ height: "100%", flexGrow: 1 }}>
+                  <ButtonImgBase
+                    title={card.title}
+                    url={card.image}
+                    width="100%"
+                    to={card.to}
+                  />
+                </Card>
+              </Grid>
+            );
+          }
+          return null;
+        })}
       </Grid>
       <Box sx={{ px: "10%", my: 4 }}>
         <Outlet />
@@ -46,23 +56,27 @@ export default function Modules() {
 
 const data = [
   {
+    type: "estudiante,docente",
     title: "Taller",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
     to: "list/talleres",
   },
   {
+    type: "estudiante,docente",
     title: "Capacitacion",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
     to: "list/capacitaciones",
   },
   {
+    type: "egresado,docente",
     title: "Oferta Laboral",
     image:
       "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
     to: "list/ofertas_laborales",
   },
   {
+    type: "estudiante,docente",
     title: "Voluntariado",
     image:
       "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",

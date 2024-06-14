@@ -1,7 +1,7 @@
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = import.meta.env.VITE_SERVER;
 
 export const createUserRequest = async (data) =>
-    await fetch(`${BASE_URL}/signup`, {
+    await fetch(`${BASE_URL}/api/signup`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -10,7 +10,16 @@ export const createUserRequest = async (data) =>
     });
 
 export const createStudentRequest = async (data) =>
-    await fetch(`${BASE_URL}/signup/student`, {
+    await fetch(`${BASE_URL}/api/signup/student`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+
+export const createEgresadoRequest = async (data) =>
+    await fetch(`${BASE_URL}/api/signup/egresado`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -19,7 +28,7 @@ export const createStudentRequest = async (data) =>
     });
 
 export const createDocenteRequest = async (data) =>
-    await fetch(`${BASE_URL}/signup/docente`, {
+    await fetch(`${BASE_URL}/api/signup/docente`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -28,7 +37,7 @@ export const createDocenteRequest = async (data) =>
     });
 
 export const accesUserRequest = async (data) =>
-    await fetch(`${BASE_URL}/login`, {
+    await fetch(`${BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -37,7 +46,7 @@ export const accesUserRequest = async (data) =>
     });
 
 export const refreshTokenRequest = async (refreshToken) => {
-    return await fetch(`${BASE_URL}/refresh-token`, {
+    return await fetch(`${BASE_URL}/api/refresh-token`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -47,7 +56,7 @@ export const refreshTokenRequest = async (refreshToken) => {
 };
 
 export const accessTokenRequest = async (accessToken) => {
-    return await fetch(`${BASE_URL}/user`, {
+    return await fetch(`${BASE_URL}/api/user`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
@@ -57,7 +66,7 @@ export const accessTokenRequest = async (accessToken) => {
 };
 
 export const signOutRequest = async (refreshToken) => {
-    return await fetch(`${BASE_URL}/signout`, {
+    return await fetch(`${BASE_URL}/api/signout`, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
@@ -69,7 +78,7 @@ export const signOutRequest = async (refreshToken) => {
 
 // API's TO USERS
 export const getUserInfoRequest = async (accessToken) => {
-    return await fetch(`${BASE_URL}/user/info`, {
+    return await fetch(`${BASE_URL}/api/user/info`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json",
@@ -80,7 +89,7 @@ export const getUserInfoRequest = async (accessToken) => {
 
 // API´s TO TABLES
 export const getTableRequest = async (table) => {
-    return await fetch(`${BASE_URL}/table/get-table`, {
+    return await fetch(`${BASE_URL}/api/table/get-table`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -90,7 +99,7 @@ export const getTableRequest = async (table) => {
 };
 
 export const getTableByIdRequest = async (data) => {
-    return await fetch(`${BASE_URL}/table/get-module`, {
+    return await fetch(`${BASE_URL}/api/table/get-module`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -100,7 +109,7 @@ export const getTableByIdRequest = async (data) => {
 };
 
 export const getUsersInscriptionRequest = async (data) => {
-    return await fetch(`${BASE_URL}/table/users-inscription`, {
+    return await fetch(`${BASE_URL}/api/table/users-inscription`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -110,7 +119,7 @@ export const getUsersInscriptionRequest = async (data) => {
 };
 
 export const registerInscriptionRequest = async (data) => {
-    return await fetch(`${BASE_URL}/table/register-inscription`, {
+    return await fetch(`${BASE_URL}/api/table/register-inscription`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

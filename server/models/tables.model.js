@@ -66,7 +66,7 @@ export const getUsersInscriptionRequest = async (table, id) => {
 
 
 // Función para buscar un usuario por correo electrónico
-export const getInscriptionByUserId = async ({ table, estudiante_id }) => {
+export const getInscriptionByUserId = async ({ table, entidad_id, estudiante_id }) => {
     try {
         // Asegúrate de que el nombre de la tabla sea seguro
         const validTables = ['talleres', 'capacitaciones', 'ofertas_laborales', 'voluntariados']; // Lista de tablas válidas
@@ -80,9 +80,9 @@ export const getInscriptionByUserId = async ({ table, estudiante_id }) => {
         SELECT * FROM
             inscripciones_${table}
         WHERE 
-        estudiante_id = ? ;`;
+            entidad_id = ? AND estudiante_id = ? ;`;
 
-        const [rows] = await pool.query(query, [estudiante_id]);
+        const [rows] = await pool.query(query, [entidad_id, estudiante_id]);
 
         return rows[0];
     } catch (error) {
