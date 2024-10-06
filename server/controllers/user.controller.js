@@ -17,7 +17,7 @@ export const refreshUser = async (req, res) => {
 export const getUserInfo = async (req, res) => {
     try {
 
-        // Sacar req.user que pasa el Authenticate.js (End Point Protejido)
+        // Sacar req.user que pasa el Authenticate.js (End Point Protegido)
         const { email } = req.user;
 
         if (!!!email) {

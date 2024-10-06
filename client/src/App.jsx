@@ -1,8 +1,15 @@
 import React from "react";
 import { useAuth } from "./context/AuthProvider.jsx";
 
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+import './styles/global.css'
+
+import Inicio from "./paginas/Inicio/Inicio.jsx";
+import DFormativo from "./paginas/DFormativo/DFormativo.jsx";
+import DSostenible from "./paginas/DSostenible/DSostenible.jsx";
+import ExtensionU from "./paginas/ExtensionU/ExtensionU.jsx";
+import SEgresado from "./paginas/SEgresado/SEgresado.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
@@ -26,13 +33,20 @@ import Tabla from "./pages/Tabla.jsx";
 import DetailsModules from "./pages/DetailsModules.jsx";
 import EgresadoForm from "./components/administrator/EgresadoForm.jsx";
 
+
 export default function App() {
   const { isAuthenticated } = useAuth();
 
   return (
     <RegisterProvider>
       <Routes>
-        <Route path="login" element={<SignIn />} />
+        {/* Componente Inicio antes de login */}
+        <Route path="/" element={<Inicio />} />
+        <Route path="/Desarrollo-Formativo" element={<DFormativo />}/>
+        <Route path="/Desarrollo-Sostenible" element={<DSostenible />}/>
+        <Route path="/Extension-Universitaria" element={<ExtensionU />}/>
+        <Route path="/SeguimientoAlEgresado" element={<SEgresado />}/>
+        <Route path="/login" element={<SignIn />} />
 
         <Route path="register" element={<SignUp />}>
           <Route path="" element={<UserForm />} />
@@ -46,7 +60,7 @@ export default function App() {
         <Route
           element={<ProtectedRoute validate={isAuthenticated} to="login" />}
         >
-          <Route path="" element={<Home />}>
+          <Route path="/Home" element={<Home />}>
             <Route path="" element={<Modules />}>
               <Route path="list/:table" element={<ListModule />} />
               <Route path="form/:table/:id" element={<DetailsModules />} />

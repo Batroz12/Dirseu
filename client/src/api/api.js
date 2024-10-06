@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_SERVER;
+// const BASE_URL = import.meta.env.VITE_SERVER;
+const BASE_URL = "http://localhost:4000";
 
 export const createUserRequest = async (data) =>
     await fetch(`${BASE_URL}/api/signup`, {

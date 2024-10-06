@@ -8,8 +8,8 @@ function sign(payload, isAccessToken) {
     return jwt.sign(
         payload,
         isAccessToken
-            ? process.env.ACCESS_TOKEN_SECRET
-            : process.env.REFRESH_TOKEN_SECRET,
+            ? "c4d5994c-991d-4179-9102-97fff13959dd"
+            : "e93f29a5-38b1-4630-a4c1-5d166a2ba4b7",
         {
             algorithm: "HS256",
             expiresIn: 3600,

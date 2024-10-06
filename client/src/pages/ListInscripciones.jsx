@@ -39,7 +39,7 @@ export default function ListInscripciones() {
           return (
             <Grid key={item.id} item xs={12} sx={{ p: 0, m: 0 }}>
               <Link
-                to={`/inscripciones/tables/${table}/${item.id}`}
+                to={`/Home/inscripciones/tables/${table}/${item.id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Card
@@ -95,7 +95,7 @@ const data = [
   {
     title: "talleres",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "list/taller",
+    to: "",
   },
   {
     title: "capacitaciones",

@@ -76,7 +76,7 @@ export default function ListModule() {
                 title={item.nombre}
                 url={data.find((item) => item.title === table)?.image || null}
                 width="100%"
-                to={`/form/${table}/${item.id}`}
+                to={`/Home/form/${table}/${item.id}`}
               />
             </Box>
           </Grid>
@@ -91,7 +91,7 @@ const data = [
   {
     title: "talleres",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "list/taller",
+    to: "",
   },
   {
     title: "capacitaciones",

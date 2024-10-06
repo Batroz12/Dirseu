@@ -30,7 +30,7 @@ export default function SignIn() {
   const goTo = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) goTo("/", { replace: true });
+    if (isAuthenticated) goTo("/Home", { replace: true });
     // return <Navigate to="/Home" replace />;
   }, [isAuthenticated]);
 

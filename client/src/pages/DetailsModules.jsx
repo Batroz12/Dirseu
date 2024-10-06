@@ -330,6 +330,7 @@ const data = [
   {
     title: "talleres",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
+    to: "/form/talleres",
   },
   {
     title: "capacitaciones",

@@ -161,6 +161,7 @@ export default function TypeUserTab() {
               </CardContent>
             </CardActionArea>
           </Card>
+          
         </RadioGroup>
       </FormControl>
       <Box
