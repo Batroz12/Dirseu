@@ -333,7 +333,7 @@ const data = [
   {
     title: "Taller",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "list/Talleres/talleres",
+    to: "list/Talleres/",
   },
   {
     title: "Capacitacion",

@@ -53,6 +53,12 @@ export const getDataByEmail = async (email) => {
         if (rows[0]) {
             return { type: 'docente', ...rows[0] };
         }
+        // Probar si es coordinador
+        [rows] = await pool.query('SELECT * FROM users u INNER JOIN coordinadores c ON c.user_id = u.id WHERE u.email = ?', [email]);
+
+        if (rows[0]) {
+            return { type: 'coordinador', ...rows[0] };
+        }
 
     } catch (error) {
         throw new Error('Failed to obtain info user.');

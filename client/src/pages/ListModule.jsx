@@ -1,37 +1,27 @@
 import React, { useEffect, useState } from "react";
-import Grid from "@mui/material/Unstable_Grid2";
-
+import Grid from '@mui/material/Grid';
 import { Box, Typography } from "@mui/material";
-
 import ButtonImgBase from "../components/components/ButtonImgBase";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { getTableRequest } from "../api/api";
 
 export default function ListModule() {
   const { table } = useParams();
-
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     geItems();
   }, [table]);
 
-  // geItems();
-
   async function geItems() {
     try {
       const response = await getTableRequest({ table });
-      console.log(response);
-
       if (response.ok) {
-        console.log("Tabla Recuperada");
-        // setErrorResponse("");
         const json = await response.json();
         setItems(json.rows);
       } else {
-        console.log("Algo Ocurrio");
+        console.log("Algo ocurrió");
         const json = await response.json();
-        // setErrorResponse(json.error);
         return;
       }
     } catch (error) {
@@ -51,19 +41,18 @@ export default function ListModule() {
       >
         <Typography component="h1" variant="title1" sx={{ fontWeight: "bold" }}>
           {(table.charAt(0).toUpperCase() + table.slice(1))
-            // Reemplaza "_x" por " X" (el carácter después del guion bajo en mayúscula)
             .replace(/_(.)/g, (match, p1) => " " + p1.toUpperCase())
-            // Convierte el primer carácter de la cadena resultante a mayúscula
             .replace(/^./, (match) => match.toUpperCase())}
         </Typography>
       </Box>
-      {/* cards */}
-
-      <Grid container spacing={2} columns={7} sx={{ textAlign: "center" }}>
+  
+      {/* Cards grid */}
+      <Grid container spacing={3} sx={{ textAlign: "center" }}>
         {items.map((item) => (
-          <Grid xs={6} sm={3} md={2} lg={2.25} key={item.id}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
             <Box
               sx={{
+                padding: 2,
                 boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
                 transition: "transform 0.3s ease-in-out",
                 "&:hover": {
@@ -74,9 +63,9 @@ export default function ListModule() {
             >
               <ButtonImgBase
                 title={item.nombre}
-                url={data.find((item) => item.title === table)?.image || null}
+                url={data.find((d) => d.title === table)?.image || null}
                 width="100%"
-                to={`/Home/form/${table}/${item.id}`}
+                to={`/Home/modules/form/${table}/${item.id}`}
               />
             </Box>
           </Grid>
@@ -95,20 +84,17 @@ const data = [
   },
   {
     title: "capacitaciones",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
     to: "",
   },
   {
     title: "ofertas_laborales",
-    image:
-      "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
+    image: "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
     to: "",
   },
   {
     title: "voluntariados",
-    image:
-      "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",
+    image: "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",
     to: "",
   },
 ];

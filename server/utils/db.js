@@ -12,6 +12,17 @@ export const pool = new createPool({
     queueLimit: 0,
 });
 
+export const execute = async (sql, params) => {
+    const [rows, fields] = await pool.execute(sql, params);
+    console.log('Resultado de execute:', rows, fields);
+    return [rows, fields];
+  };
+  
+  export const query = async (query, params) => {
+    const [results] = await pool.query(query, params);
+    return results;
+};
+
 
 // Middleware para manejar errores de conexión
 pool.on("error", (err) => {
