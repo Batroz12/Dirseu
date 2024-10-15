@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 import {
-  School as SchoolIcon,
+  Favorite as FavoriteIcon,
   ErrorOutline as ErrorOutlineIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
 } from '@mui/icons-material';
@@ -15,6 +15,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
     fecha_fin: '',
     lugar: '',
     cupo_maximo: '',
+    imagen: null, // Estado para la imagen
   });
 
   // Estados para manejar errores y mensajes de éxito
@@ -35,6 +36,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
           : '',
         lugar: taller.lugar || '',
         cupo_maximo: taller.cupo_maximo || '',
+        imagen: null, // Reiniciar la imagen al editar
       });
     } else {
       setFormData({
@@ -44,6 +46,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
+        imagen: null, // Reiniciar la imagen al crear
       });
     }
   }, [taller]);
@@ -54,6 +57,14 @@ const FormularioTaller = ({ taller, onSubmit }) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      imagen: file,
     }));
   };
 
@@ -97,6 +108,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
+        imagen: null,
       });
     }
   };
@@ -118,9 +130,11 @@ const FormularioTaller = ({ taller, onSubmit }) => {
         justifyContent="center"
         mb={3}
       >
-        <SchoolIcon color="primary" sx={{ mr: 1 }} />
+        <FavoriteIcon color="error" sx={{ mr: 1 }} />
         <Typography variant="h5" component="h2" color="text.primary">
-          {taller ? 'Actualizar Taller' : 'Agregar Taller'}
+          {taller
+            ? 'Actualizar Taller'
+            : 'Agregar Taller'}
         </Typography>
       </Box>
 
@@ -142,7 +156,8 @@ const FormularioTaller = ({ taller, onSubmit }) => {
           sx={{ mb: 2 }}
           icon={<CheckCircleOutlineIcon />}
         >
-          ¡Éxito! El taller ha sido {taller ? 'actualizado' : 'agregado'} correctamente.
+          ¡Éxito! El taller ha sido{' '}
+          {taller ? 'actualizado' : 'agregado'} correctamente.
         </Alert>
       )}
 
@@ -157,7 +172,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
             value={formData.nombre}
             onChange={handleChange}
             required
-            placeholder="Ej: Introducción a React"
+            placeholder="Ej: Taller de fotografía"
             fullWidth
           />
 
@@ -212,7 +227,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
             value={formData.lugar}
             onChange={handleChange}
             required
-            placeholder="Ej: Aula 101"
+            placeholder="Ej: Auditorio principal"
             fullWidth
           />
 
@@ -225,10 +240,31 @@ const FormularioTaller = ({ taller, onSubmit }) => {
             value={formData.cupo_maximo}
             onChange={handleChange}
             required
-            placeholder="Ej: 30"
+            placeholder="Ej: 50"
             inputProps={{ min: 1 }}
             fullWidth
           />
+
+          {/* Campo para subir imagen */}
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ mt: 2 }}
+          >
+            Subir Imagen
+            <input
+              type="file"
+              name="imagen"
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Button>
+          {formData.imagen && (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Imagen seleccionada: {formData.imagen.name}
+            </Typography>
+          )}
 
           {/* Botón de enviar */}
           <Button
@@ -236,10 +272,12 @@ const FormularioTaller = ({ taller, onSubmit }) => {
             variant="contained"
             color="primary"
             fullWidth
-            startIcon={<SchoolIcon />}
+            startIcon={<FavoriteIcon />}
             sx={{ mt: 2 }}
           >
-            {taller ? 'Actualizar Taller' : 'Agregar Taller'}
+            {taller
+              ? 'Actualizar Taller'
+              : 'Agregar Taller'}
           </Button>
         </Box>
       </form>

@@ -2,10 +2,11 @@ import React from 'react';
 import Stack from '@mui/material/Stack';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import CustomDatePicker from './fecha';
-import NavbarBreadcrumbs from './NavbarMoviles';
+import NavbarBreadcrumbs1 from './NavbarMoviles';
 import MenuButton from './notificaciones';
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import Search from './Search';
+import NavbarBreadcrumbs from '../../../components/components/NavbarBreadcrumbs';
 
 const Header = () => {
   return (
@@ -21,6 +22,7 @@ const Header = () => {
       }}
       spacing={2}
     >
+      <NavbarBreadcrumbs1 />
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
         <Search />

@@ -11,12 +11,13 @@ const FormularioEvento = ({ evento, onSubmit }) => {
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
-    fecha_inicio: '',
-    fecha_fin: '',
-    lugar: '',
+    fecha: '',
     hora: '',
-    cupo_maximo: '',
+    lugar: '',
+    imagen: null,
   });
+
+  const [imagenActual, setImagenActual] = useState(null);
 
   // Estados para manejar errores y mensajes de éxito
   const [error, setError] = useState('');
@@ -27,30 +28,30 @@ const FormularioEvento = ({ evento, onSubmit }) => {
     if (evento) {
       setFormData({
         nombre: evento.nombre || '',
-        descripcion: evento.descripcion || '',
-        fecha_inicio: evento.fecha_inicio
-          ? evento.fecha_inicio.split('T')[0]
+        descripcion: evento.descripcion || '', // Aquí estaba el error
+        fecha: evento.fecha
+          ? evento.fecha.split('T')[0]
           : '',
-        fecha_fin: evento.fecha_fin
-          ? evento.fecha_fin.split('T')[0]
-          : '',
-        lugar: evento.lugar || '',
         hora: evento.hora || '',
-        cupo_maximo: evento.cupo_maximo || '',
+        lugar: evento.lugar || '',
+        imagen: null, // No pre-llenar el archivo de imagen
       });
+  
+      if (evento.imagen) {
+        setImagenActual(`http://localhost:4000${evento.imagen}`);
+      }
     } else {
       setFormData({
         nombre: '',
         descripcion: '',
-        fecha_inicio: '',
-        fecha_fin: '',
-        lugar: '',
+        fecha: '',
         hora: '',
-        cupo_maximo: '',
+        lugar: '',
+        imagen: null,
       });
+      setImagenActual(null);
     }
   }, [evento]);
-
   // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,6 +61,17 @@ const FormularioEvento = ({ evento, onSubmit }) => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      imagen: file,
+    }));
+
+    // Ocultar la imagen actual cuando se selecciona una nueva
+    setImagenActual(null);
+  };
+
   // Manejar el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,22 +79,11 @@ const FormularioEvento = ({ evento, onSubmit }) => {
     // Validaciones
     if (
       !formData.nombre ||
-      !formData.fecha_inicio ||
-      !formData.fecha_fin ||
-      !formData.lugar ||
+      !formData.fecha ||
       !formData.hora ||
-      !formData.cupo_maximo
+      !formData.lugar
     ) {
       setError('Por favor, completa todos los campos obligatorios.');
-      setSuccess(false);
-      return;
-    }
-
-    if (
-      isNaN(formData.cupo_maximo) ||
-      parseInt(formData.cupo_maximo) <= 0
-    ) {
-      setError('El cupo máximo debe ser un número positivo.');
       setSuccess(false);
       return;
     }
@@ -97,12 +98,12 @@ const FormularioEvento = ({ evento, onSubmit }) => {
       setFormData({
         nombre: '',
         descripcion: '',
-        fecha_inicio: '',
-        fecha_fin: '',
-        lugar: '',
+        fecha: '',
         hora: '',
-        cupo_maximo: '',
+        lugar: '',
+        imagen: null,
       });
+      setImagenActual(null);
     }
   };
 
@@ -181,11 +182,11 @@ const FormularioEvento = ({ evento, onSubmit }) => {
 
           {/* Campo de Fecha de inicio */}
           <TextField
-            label="Fecha de inicio*"
-            id="fecha_inicio"
-            name="fecha_inicio"
+            label="Fecha*"
+            id="fecha"
+            name="fecha"
             type="date"
-            value={formData.fecha_inicio}
+            value={formData.fecha}
             onChange={handleChange}
             required
             InputLabelProps={{
@@ -194,13 +195,13 @@ const FormularioEvento = ({ evento, onSubmit }) => {
             fullWidth
           />
 
-          {/* Campo de Fecha de fin */}
+          {/* Campo de Hora */}
           <TextField
-            label="Fecha de fin*"
-            id="fecha_fin"
-            name="fecha_fin"
-            type="date"
-            value={formData.fecha_fin}
+            label="Hora*"
+            id="hora"
+            name="hora"
+            type="time"
+            value={formData.hora}
             onChange={handleChange}
             required
             InputLabelProps={{
@@ -221,34 +222,21 @@ const FormularioEvento = ({ evento, onSubmit }) => {
             fullWidth
           />
 
-          {/* Campo de Hora */}
-          <TextField
-            label="Hora*"
-            id="hora"
-            name="hora"
-            type="time"
-            value={formData.hora}
-            onChange={handleChange}
-            required
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-          />
-
-          {/* Campo de Cupo máximo */}
-          <TextField
-            label="Cupo máximo*"
-            id="cupo_maximo"
-            name="cupo_maximo"
-            type="number"
-            value={formData.cupo_maximo}
-            onChange={handleChange}
-            required
-            placeholder="Ej: 100"
-            inputProps={{ min: 1 }}
-            fullWidth
-          />
+          {/* Campo para subir imagen */}
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ mt: 2 }}
+          >
+            Subir Imagen
+            <input
+              type="file"
+              name="imagen"
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Button>
 
           {/* Botón de enviar */}
           <Button

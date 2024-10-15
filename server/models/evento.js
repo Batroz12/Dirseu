@@ -5,24 +5,24 @@ class Evento {
     this.id = evento.id;
     this.nombre = evento.nombre;
     this.descripcion = evento.descripcion;
-    this.fecha_inicio = evento.fecha_inicio;
-    this.fecha_fin = evento.fecha_fin;
+    this.fecha = evento.fecha;
+    this.hora = evento.hora;
     this.lugar = evento.lugar;
-    this.cupo_maximo = evento.cupo_maximo;
+    this.imagen = evento.imagen;
   }
 
   static async crear(nuevoEvento) {
     try {
-      // Insertar el nuevo Evento
+      // Insertar el nuevo Evento en la tabla 'eventos'
       const [result] = await execute(
-        'INSERT INTO voluntariados (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO eventos (nombre, descripcion, fecha, hora, lugar, imagen) VALUES (?, ?, ?, ?, ?, ?)',
         [
           nuevoEvento.nombre || null,
           nuevoEvento.descripcion || null,
-          nuevoEvento.fecha_inicio || null,
-          nuevoEvento.fecha_fin || null,
+          nuevoEvento.fecha || null,
+          nuevoEvento.hora || null,
           nuevoEvento.lugar || null,
-          nuevoEvento.cupo_maximo || null
+          nuevoEvento.imagen || null
         ]
       );
 
@@ -30,12 +30,12 @@ class Evento {
       const [eventoRows] = await execute('SELECT * FROM eventos WHERE id = ?', [result.insertId]);
       
       if (eventoRows.length === 0) {
-        throw new Error('evento no encontrado después de la inserción.');
+        throw new Error('Evento no encontrado después de la inserción.');
       }
 
       return new Evento(eventoRows[0]);
     } catch (error) {
-      console.error('Error en evento.crear:', error);
+      console.error('Error en Evento.crear:', error);
       throw error;
     }
   }
@@ -43,11 +43,9 @@ class Evento {
   static async obtenerTodos() {
     try {
       const eventos = await query('SELECT * FROM eventos');
-      console.log('Tipo de eventos:', typeof eventos);
-      console.log('Contenido de eventos:', eventos);
       return eventos.map(evento => new Evento(evento));
     } catch (error) {
-      console.error('Error en obtenerTodos:', error);
+      console.error('Error en Evento.obtenerTodos:', error);
       throw error;
     }
   }
@@ -60,8 +58,8 @@ class Evento {
 
   async actualizar() {
     await execute(
-      'UPDATE eventos SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, lugar = ?, cupo_maximo = ? WHERE id = ?',
-      [this.nombre, this.descripcion, this.fecha_inicio, this.fecha_fin, this.lugar, this.cupo_maximo, this.id]
+      'UPDATE eventos SET nombre = ?, descripcion = ?, fecha = ?, hora = ?, lugar = ?, imagen = ? WHERE id = ?',
+      [this.nombre, this.descripcion, this.fecha, this.hora, this.lugar, this.imagen, this.id]
     );
   }
 

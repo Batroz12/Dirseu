@@ -9,24 +9,24 @@ class Voluntariado {
     this.fecha_fin = voluntariado.fecha_fin;
     this.lugar = voluntariado.lugar;
     this.cupo_maximo = voluntariado.cupo_maximo;
+    this.imagen = voluntariado.imagen;
   }
 
   static async crear(nuevoVoluntariado) {
     try {
       // Insertar el nuevo voluntariado
       const [result] = await execute(
-        'INSERT INTO voluntariados (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO voluntariados (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
           nuevoVoluntariado.nombre || null,
           nuevoVoluntariado.descripcion || null,
           nuevoVoluntariado.fecha_inicio || null,
           nuevoVoluntariado.fecha_fin || null,
           nuevoVoluntariado.lugar || null,
-          nuevoVoluntariado.cupo_maximo || null
+          nuevoVoluntariado.cupo_maximo || null, // Asegúrate de que sea un número si es necesario
+          nuevoVoluntariado.imagen || null
         ]
       );
-      
-      console.log('Resultado del INSERT:', result);
 
       // Obtener el voluntariado recién insertado
       const [voluntariadoRows] = await execute('SELECT * FROM voluntariados WHERE id = ?', [result.insertId]);

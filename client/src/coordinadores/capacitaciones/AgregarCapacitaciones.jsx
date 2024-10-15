@@ -15,6 +15,7 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
     fecha_fin: '',
     lugar: '',
     cupo_maximo: '',
+    imagen: null, // Estado para la imagen
   });
 
   // Estados para manejar errores y mensajes de éxito
@@ -35,6 +36,7 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
           : '',
         lugar: capacitacion.lugar || '',
         cupo_maximo: capacitacion.cupo_maximo || '',
+        imagen: null, // Reiniciar la imagen al editar
       });
     } else {
       setFormData({
@@ -44,6 +46,7 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
+        imagen: null, // Reiniciar la imagen al crear
       });
     }
   }, [capacitacion]);
@@ -54,6 +57,15 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  // Manejar cambios en el campo de archivo (imagen)
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      imagen: file,
     }));
   };
 
@@ -83,12 +95,21 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
       return;
     }
 
+    // Validación de fechas (opcional)
+    const inicio = new Date(formData.fecha_inicio);
+    const fin = new Date(formData.fecha_fin);
+    if (inicio > fin) {
+      setError('La fecha de inicio no puede ser posterior a la fecha de fin.');
+      setSuccess(false);
+      return;
+    }
+
     // Si la validación pasa
     setError('');
     setSuccess(true);
     onSubmit(formData);
 
-    // Resetear el formulario si es para crear una nueva capacitacion
+    // Resetear el formulario si es para crear una nueva capacitación
     if (!capacitacion) {
       setFormData({
         nombre: '',
@@ -97,6 +118,7 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
+        imagen: null,
       });
     }
   };
@@ -212,7 +234,7 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
             value={formData.lugar}
             onChange={handleChange}
             required
-            placeholder="Ej: Sala de Conferencias"
+            placeholder="Ej: Sala de Conferencias A"
             fullWidth
           />
 
@@ -225,10 +247,31 @@ const FormularioCapacitacion = ({ capacitacion, onSubmit }) => {
             value={formData.cupo_maximo}
             onChange={handleChange}
             required
-            placeholder="Ej: 50"
+            placeholder="Ej: 30"
             inputProps={{ min: 1 }}
             fullWidth
           />
+
+          {/* Campo para subir imagen */}
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ mt: 2 }}
+          >
+            Subir Imagen
+            <input
+              type="file"
+              name="imagen"
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Button>
+          {formData.imagen && (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Imagen seleccionada: {formData.imagen.name}
+            </Typography>
+          )}
 
           {/* Botón de enviar */}
           <Button

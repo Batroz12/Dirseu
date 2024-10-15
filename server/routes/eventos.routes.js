@@ -1,21 +1,56 @@
 import express from 'express';
+import { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, eliminarEvento } from '../controllers/eventosController.js'; // Asegúrate de que la ruta es correcta
+import multer from 'multer';
+import path from 'path';
 
-import { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, eliminarEvento } from '../controllers/eventosController.js';
+// Configuración de almacenamiento con Multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads'); // Carpeta donde se almacenarán las imágenes
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'IMAGE-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+// Función para validar tipos de archivos
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif|webp/; // Incluí webp para admitir el nuevo formato
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Solo imágenes (jpeg, jpg, png, gif, webp) son permitidas.'));
+  }
+}
+
+// Inicializar Multer
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limitar el tamaño a 5MB
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  }
+});
 
 const router = express.Router();
-// Crear un nuevo Evento
-router.post('/', crearEvento);
 
-// Obtener todos los Evento
+// Crear un nuevo evento
+router.post('/', upload.single('imagen'), crearEvento); // Aplicar Multer aquí, campo 'Imagen'
+
+// Obtener todos los eventos
 router.get('/', obtenerEventos);
 
-// Obtener un Evento específico
+// Obtener un evento específico
 router.get('/:id', obtenerEvento);
 
-// Actualizar un Evento
-router.put('/:id', actualizarEvento);
+// Actualizar un evento
+router.put('/:id', upload.single('imagen'), actualizarEvento); // Aplicar Multer aquí, campo 'Imagen'
 
-// Eliminar un Evento
+// Eliminar un evento
 router.delete('/:id', eliminarEvento);
 
 export default router;

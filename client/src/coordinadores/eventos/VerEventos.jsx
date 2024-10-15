@@ -77,20 +77,20 @@ const EventosPage = () => {
   };
 
   // Maneja el envío del formulario
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data, formDataImage) => {
     try {
       if (evento) {
-        await actualizarEvento(evento.id, data);
+        await actualizarEvento(evento.id, data, formDataImage);
         alert('Evento actualizado exitosamente');
       } else {
-        await crearEvento(data);
+        await crearEvento(data, formDataImage);
         alert('Evento creado exitosamente');
       }
       setEvento(null);
       setOpenModal(false);
       await cargarEventos();
     } catch (error) {
-      console.error('Error al guardar el evento:', error);
+      console.error('Error al guardar el evento:', error.response ? error.response.data : error.message);
       setError('Error al guardar el evento');
     }
   };
@@ -102,7 +102,7 @@ const EventosPage = () => {
         await eliminarEvento(id);
         await cargarEventos();
       } catch (error) {
-        console.error('Error al eliminar el evento:', error);
+        console.error('Error al eliminar el evento:', error.response ? error.response.data : error.message);
         setError('Error al eliminar el evento');
       }
     }
@@ -145,10 +145,10 @@ const EventosPage = () => {
                 <TableRow>
                   <TableCell>Nombre</TableCell>
                   <TableCell>Descripción</TableCell>
-                  <TableCell>Fecha Inicio</TableCell>
-                  <TableCell>Fecha Fin</TableCell>
-                  <TableCell>Lugar</TableCell>
+                  <TableCell>Fecha</TableCell>
                   <TableCell>Hora</TableCell>
+                  <TableCell>Lugar</TableCell>
+                  <TableCell>Imagen</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
@@ -157,10 +157,20 @@ const EventosPage = () => {
                   <TableRow key={e.id}>
                     <TableCell>{e.nombre}</TableCell>
                     <TableCell>{e.descripcion}</TableCell>
-                    <TableCell>{new Date(e.fecha_inicio).toLocaleDateString()}</TableCell>
-                    <TableCell>{new Date(e.fecha_fin).toLocaleDateString()}</TableCell>
-                    <TableCell>{e.lugar}</TableCell>
+                    <TableCell>{new Date(e.fecha).toLocaleDateString()}</TableCell>
                     <TableCell>{e.hora}</TableCell>
+                    <TableCell>{e.lugar}</TableCell>
+                    <TableCell>
+                      {e.Imagen ? (
+                        <img
+                          src={e.imagen}
+                          alt={e.nombre}
+                          style={{ width: '100px', height: 'auto' }}
+                        />
+                      ) : (
+                        'Sin imagen'
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"
@@ -191,14 +201,10 @@ const EventosPage = () => {
             {evento ? 'Actualizar Evento' : 'Crear Evento'}
           </DialogTitle>
           <DialogContent>
-            {isLoading ? (
-              <CircularProgress />
-            ) : (
-              <FormularioEvento
-                evento={evento}
-                onSubmit={handleSubmit}
-              />
-            )}
+            <FormularioEvento
+              evento={evento}
+              onSubmit={handleSubmit}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal} color="secondary">

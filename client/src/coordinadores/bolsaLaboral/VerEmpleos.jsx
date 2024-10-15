@@ -52,7 +52,6 @@ const OfertaLaboralPage = () => {
       const response = await obtenerOfertasLaborales();
       setOfertas(response.data);
     } catch (error) {
-      console.error('Error al obtener las ofertas laborales:', error.response ? error.response.data : error.message);
       setError('Error al obtener las ofertas laborales');
     } finally {
       setIsLoading(false);
@@ -78,11 +77,25 @@ const OfertaLaboralPage = () => {
   // Maneja el envío del formulario
   const handleSubmit = async (data) => {
     try {
+      const formData = new FormData();
+      formData.append('nombre', data.nombre);
+      formData.append('descripcion', data.descripcion);
+      formData.append('empresa', data.empresa);
+      formData.append('fecha_inicio', data.fecha_inicio);
+      formData.append('fecha_fin', data.fecha_fin);
+      if (data.imagen) {
+        formData.append('imagen', data.imagen);
+      }
+
       if (oferta) {
-        await actualizarOfertaLaboral(oferta.id, data);
+        await actualizarOfertaLaboral(oferta.id, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         alert('Oferta laboral actualizada exitosamente');
       } else {
-        await crearOfertaLaboral(data);
+        await crearOfertaLaboral(formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         alert('Oferta laboral creada exitosamente');
       }
       setOferta(null);
@@ -144,6 +157,7 @@ const OfertaLaboralPage = () => {
                   <TableCell>Empresa</TableCell>
                   <TableCell>Fecha Inicio</TableCell>
                   <TableCell>Fecha Fin</TableCell>
+                  <TableCell>Imagen</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
@@ -155,6 +169,17 @@ const OfertaLaboralPage = () => {
                     <TableCell>{o.empresa}</TableCell>
                     <TableCell>{new Date(o.fecha_inicio).toLocaleDateString()}</TableCell>
                     <TableCell>{new Date(o.fecha_fin).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      {o.imagen ? (
+                        <img
+                          src={`http://localhost:4000${o.imagen}`}
+                          alt={o.nombre}
+                          style={{ width: '100px', height: 'auto' }}
+                        />
+                      ) : (
+                        'No hay imagen'
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

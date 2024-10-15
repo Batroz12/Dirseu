@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+// src/coordinadores/capacitaciones/VerCapacitaciones.jsx
+import React, { useState, useEffect } from 'react';
+import FormularioCapacitacion from './AgregarCapacitaciones';
 import {
   obtenerCapacitaciones,
   crearCapacitacion,
   actualizarCapacitacion,
   eliminarCapacitacion
 } from '../../api/capacitaciones';
-import FormularioCapacitacion from './AgregarCapacitaciones';
 import {
   Button,
   Box,
@@ -26,7 +27,6 @@ import {
   DialogActions
 } from '@mui/material';
 
-// Creación del tema personalizado de MUI
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -39,20 +39,18 @@ const theme = createTheme({
   },
 });
 
-const CapacitacionPage = () => {
+const VerCapacitaciones = () => {
   const [capacitaciones, setCapacitaciones] = useState([]);
   const [capacitacion, setCapacitacion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  // Función para cargar las capacitaciones
   const cargarCapacitaciones = async () => {
     try {
       const response = await obtenerCapacitaciones();
       setCapacitaciones(response.data);
     } catch (error) {
-      console.error('Error al obtener las capacitaciones:', error.response ? error.response.data : error.message);
       setError('Error al obtener las capacitaciones');
     } finally {
       setIsLoading(false);
@@ -63,37 +61,53 @@ const CapacitacionPage = () => {
     cargarCapacitaciones();
   }, []);
 
-  // Maneja la apertura del modal para crear o editar
   const handleOpenModal = (capacitacion = null) => {
     setCapacitacion(capacitacion);
     setOpenModal(true);
   };
 
-  // Maneja el cierre del modal
   const handleCloseModal = () => {
     setCapacitacion(null);
     setOpenModal(false);
   };
 
-  // Maneja el envío del formulario
+  // Función para manejar el envío del formulario
   const handleSubmit = async (data) => {
     try {
+      let response;
+      const formData = new FormData();
+      formData.append('nombre', data.nombre);
+      formData.append('descripcion', data.descripcion);
+      formData.append('fecha_inicio', data.fecha_inicio);
+      formData.append('fecha_fin', data.fecha_fin);
+      formData.append('lugar', data.lugar);
+      formData.append('cupo_maximo', data.cupo_maximo);
+      if (data.imagen) {
+        formData.append('imagen', data.imagen);
+      }
+
+      console.log('Datos enviados:', Object.fromEntries(formData));
+
       if (capacitacion) {
-        await actualizarCapacitacion(capacitacion.id, data);
+        response = await actualizarCapacitacion(capacitacion.id, formData);
         alert('Capacitación actualizada exitosamente');
       } else {
-        await crearCapacitacion(data);
+        response = await crearCapacitacion(formData);
         alert('Capacitación creada exitosamente');
       }
-      setCapacitacion(null);
-      setOpenModal(false);
       await cargarCapacitaciones();
+      handleCloseModal();
     } catch (error) {
-      setError('Error al guardar la capacitación');
+      console.error(error);
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Error al guardar la capacitación');
+      }
     }
   };
 
-  // Maneja la eliminación de una capacitación
+  // Manejar la eliminación de una capacitación
   const handleEliminar = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta capacitación?')) {
       try {
@@ -118,7 +132,6 @@ const CapacitacionPage = () => {
           </Typography>
         )}
 
-        {/* Botón para abrir el modal de creación */}
         <Box display="flex" justifyContent="flex-end" mb={2}>
           <Button
             variant="contained"
@@ -129,7 +142,6 @@ const CapacitacionPage = () => {
           </Button>
         </Box>
 
-        {/* Tabla de Capacitaciones */}
         {isLoading ? (
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
@@ -139,12 +151,13 @@ const CapacitacionPage = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Nombre</TableCell>
+                  <TableCell>Título</TableCell>
                   <TableCell>Descripción</TableCell>
                   <TableCell>Fecha Inicio</TableCell>
                   <TableCell>Fecha Fin</TableCell>
-                  <TableCell>Lugar</TableCell>
+                  <TableCell>Ubicación</TableCell>
                   <TableCell>Cupo Máximo</TableCell>
+                  <TableCell>Imagen</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
@@ -157,6 +170,17 @@ const CapacitacionPage = () => {
                     <TableCell>{new Date(c.fecha_fin).toLocaleDateString()}</TableCell>
                     <TableCell>{c.lugar}</TableCell>
                     <TableCell>{c.cupo_maximo}</TableCell>
+                    <TableCell>
+                      {c.imagen ? (
+                        <img
+                          src={`http://localhost:4000${c.imagen}`}
+                          alt={c.nombre}
+                          style={{ width: '100px', height: 'auto' }}
+                        />
+                      ) : (
+                        'No hay imagen'
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"
@@ -181,20 +205,15 @@ const CapacitacionPage = () => {
           </TableContainer>
         )}
 
-        {/* Modal para Crear/Editar Capacitación */}
         <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
           <DialogTitle color="text.primary">
             {capacitacion ? 'Actualizar Capacitación' : 'Crear Capacitación'}
           </DialogTitle>
           <DialogContent>
-            {isLoading ? (
-              <CircularProgress />
-            ) : (
-              <FormularioCapacitacion
-                capacitacion={capacitacion}
-                onSubmit={handleSubmit}
-              />
-            )}
+            <FormularioCapacitacion
+              capacitacion={capacitacion}
+              onSubmit={handleSubmit}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal} color="secondary">
@@ -207,4 +226,4 @@ const CapacitacionPage = () => {
   );
 };
 
-export default CapacitacionPage;
+export default VerCapacitaciones;

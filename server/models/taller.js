@@ -9,20 +9,22 @@ class Taller {
     this.fecha_fin = taller.fecha_fin;
     this.lugar = taller.lugar;
     this.cupo_maximo = taller.cupo_maximo;
+    this.imagen = taller.imagen;
   }
 
   static async crear(nuevoTaller) {
     try {
       // Insertar el nuevo Taller
       const [result] = await execute(
-        'INSERT INTO talleres (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO talleres (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
           nuevoTaller.nombre || null,
           nuevoTaller.descripcion || null,
           nuevoTaller.fecha_inicio || null,
           nuevoTaller.fecha_fin || null,
           nuevoTaller.lugar || null,
-          nuevoTaller.cupo_maximo || null
+          nuevoTaller.cupo_maximo || null,
+          nuevoTaller.imagen || null
         ]
       );
       

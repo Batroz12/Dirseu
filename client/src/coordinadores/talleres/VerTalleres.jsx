@@ -29,7 +29,7 @@ import {
 // Creación del tema personalizado de MUI
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'light', // Puedes cambiar a 'dark' para modo oscuro
     primary: {
       main: '#007BFF',
     },
@@ -41,10 +41,10 @@ const theme = createTheme({
 
 const TallerPage = () => {
   const [talleres, setTalleres] = useState([]);
-  const [taller, setTaller] = useState(null);
+  const [taller, setTaller] = useState(null); // Taller a editar
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false); // Controla la apertura del modal
 
   // Función para cargar los talleres
   const cargarTalleres = async () => {
@@ -52,7 +52,6 @@ const TallerPage = () => {
       const response = await obtenerTalleres();
       setTalleres(response.data);
     } catch (error) {
-      console.error('Error al obtener los talleres:', error.response ? error.response.data : error.message);
       setError('Error al obtener los talleres');
     } finally {
       setIsLoading(false);
@@ -75,20 +74,50 @@ const TallerPage = () => {
     setOpenModal(false);
   };
 
-  // Maneja el envío del formulario
+  // Función para manejar el envío del formulario
   const handleSubmit = async (data) => {
     try {
+      let response;
       if (taller) {
-        await actualizarTaller(taller.id, data);
+        // Crear FormData para enviar datos con imagen
+        const formData = new FormData();
+        formData.append('nombre', data.nombre);
+        formData.append('descripcion', data.descripcion);
+        formData.append('fecha_inicio', data.fecha_inicio);
+        formData.append('fecha_fin', data.fecha_fin);
+        formData.append('lugar', data.lugar);
+        formData.append('cupo_maximo', data.cupo_maximo);
+        if (data.imagen) {
+          formData.append('imagen', data.imagen);
+        }
+
+        response = await actualizarTaller(taller.id, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         alert('Taller actualizado exitosamente');
       } else {
-        await crearTaller(data);
+        // Crear FormData para enviar datos con imagen
+        const formData = new FormData();
+        formData.append('nombre', data.nombre);
+        formData.append('descripcion', data.descripcion);
+        formData.append('fecha_inicio', data.fecha_inicio);
+        formData.append('fecha_fin', data.fecha_fin);
+        formData.append('lugar', data.lugar);
+        formData.append('cupo_maximo', data.cupo_maximo);
+        if (data.imagen) {
+          formData.append('imagen', data.imagen);
+        }
+
+        response = await crearTaller(formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         alert('Taller creado exitosamente');
       }
       setTaller(null);
       setOpenModal(false);
       await cargarTalleres();
     } catch (error) {
+      console.error(error);
       setError('Error al guardar el taller');
     }
   };
@@ -145,6 +174,7 @@ const TallerPage = () => {
                   <TableCell>Fecha Fin</TableCell>
                   <TableCell>Lugar</TableCell>
                   <TableCell>Cupo Máximo</TableCell>
+                  <TableCell>Imagen</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
@@ -157,6 +187,17 @@ const TallerPage = () => {
                     <TableCell>{new Date(t.fecha_fin).toLocaleDateString()}</TableCell>
                     <TableCell>{t.lugar}</TableCell>
                     <TableCell>{t.cupo_maximo}</TableCell>
+                    <TableCell>
+                      {t.imagen ? (
+                        <img
+                          src={`http://localhost:4000${t.imagen}`}
+                          alt={t.nombre}
+                          style={{ width: '100px', height: 'auto' }}
+                        />
+                      ) : (
+                        'No hay imagen'
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

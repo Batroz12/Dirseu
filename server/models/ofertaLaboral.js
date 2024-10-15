@@ -8,19 +8,21 @@ class OfertaLaboral {
     this.empresa = oferta.empresa;
     this.fecha_inicio = oferta.fecha_inicio;
     this.fecha_fin = oferta.fecha_fin;
+    this.imagen = oferta.imagen;
   }
 
   static async crear(nuevoOferta) {
     try {
       // Insertar la nueva oferta
       const [result] = await execute(
-        'INSERT INTO ofertas_laborales (nombre, descripcion, empresa, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO ofertas_laborales (nombre, descripcion, empresa, fecha_inicio, fecha_fin, imagen) VALUES (?, ?, ?, ?, ?, ?)',
         [
           nuevoOferta.nombre || null,
           nuevoOferta.descripcion || null,
           nuevoOferta.empresa || null,
           nuevoOferta.fecha_inicio || null,
-          nuevoOferta.fecha_fin || null
+          nuevoOferta.fecha_fin || null,
+          nuevoOferta.imagen || null
         ]
       );
 

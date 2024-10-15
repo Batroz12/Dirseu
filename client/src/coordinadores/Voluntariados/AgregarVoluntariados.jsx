@@ -15,7 +15,10 @@ const FormularioVoluntariado = ({ voluntariado, onSubmit }) => {
     fecha_fin: '',
     lugar: '',
     cupo_maximo: '',
+    imagen: null, // Estado para la imagen
   });
+
+  const [imagenActual, setImagenActual] = useState(null); // Estado para la imagen actual del voluntariado
 
   // Estados para manejar errores y mensajes de éxito
   const [error, setError] = useState('');
@@ -35,7 +38,13 @@ const FormularioVoluntariado = ({ voluntariado, onSubmit }) => {
           : '',
         lugar: voluntariado.lugar || '',
         cupo_maximo: voluntariado.cupo_maximo || '',
+        imagen: null, // Reiniciar la imagen al editar
       });
+
+      // Si hay una imagen existente, almacena su URL
+      if (voluntariado.imagen) {
+        setImagenActual(`http://localhost:4000${voluntariado.imagen}`);
+      }
     } else {
       setFormData({
         nombre: '',
@@ -44,7 +53,9 @@ const FormularioVoluntariado = ({ voluntariado, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
+        imagen: null, // Reiniciar la imagen al crear
       });
+      setImagenActual(null); // Reiniciar la imagen actual al crear
     }
   }, [voluntariado]);
 
@@ -55,6 +66,17 @@ const FormularioVoluntariado = ({ voluntariado, onSubmit }) => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      imagen: file,
+    }));
+
+    // Ocultar la imagen actual cuando se selecciona una nueva
+    setImagenActual(null);
   };
 
   // Manejar el envío del formulario
@@ -97,7 +119,9 @@ const FormularioVoluntariado = ({ voluntariado, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
+        imagen: null,
       });
+      setImagenActual(null);
     }
   };
 
@@ -233,6 +257,41 @@ const FormularioVoluntariado = ({ voluntariado, onSubmit }) => {
             fullWidth
           />
 
+          {/* Campo para subir imagen */}
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ mt: 2 }}
+          >
+            Subir Imagen
+            <input
+              type="file"
+              name="imagen"
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Button>
+
+          {/* Mostrar la imagen actual si existe */}
+          {imagenActual && (
+            <Box mt={2}>
+              <Typography variant="body2">Imagen actual:</Typography>
+              <img
+                src={imagenActual}
+                alt="Imagen actual del voluntariado"
+                style={{ width: '150px', height: 'auto', marginTop: '10px' }}
+              />
+            </Box>
+          )}
+
+          {/* Mostrar la nueva imagen seleccionada si existe */}
+          {formData.imagen && (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Imagen seleccionada: {formData.imagen.name}
+            </Typography>
+          )}
+          
           {/* Botón de enviar */}
           <Button
             type="submit"

@@ -74,20 +74,37 @@ const VoluntariadoPage = () => {
     setOpenModal(false);
   };
 
-  // Maneja el envío del formulario
+  // Función para manejar el envío del formulario
   const handleSubmit = async (data) => {
     try {
+      const formData = new FormData();
+      formData.append('nombre', data.nombre);
+      formData.append('descripcion', data.descripcion);
+      formData.append('fecha_inicio', data.fecha_inicio);
+      formData.append('fecha_fin', data.fecha_fin);
+      formData.append('lugar', data.lugar);
+      formData.append('cupo_maximo', data.cupo_maximo);
+  
+      // Asegúrate de que la imagen esté en el FormData si se selecciona una
+      if (data.imagen) {
+        formData.append('imagen', data.imagen); // El campo 'imagen' debe coincidir con el nombre en el backend
+      }
+  
       if (voluntariado) {
-        await actualizarVoluntariado(voluntariado.id, data);
+        // Actualizar un voluntariado existente
+        await actualizarVoluntariado(voluntariado.id, formData);
         alert('Voluntariado actualizado exitosamente');
       } else {
-        await crearVoluntariado(data);
+        // Crear un nuevo voluntariado
+        await crearVoluntariado(formData);
         alert('Voluntariado creado exitosamente');
       }
+  
       setVoluntariado(null);
       setOpenModal(false);
       await cargarVoluntariados();
     } catch (error) {
+      console.error('Error al guardar el voluntariado:', error);
       setError('Error al guardar el voluntariado');
     }
   };
@@ -144,6 +161,7 @@ const VoluntariadoPage = () => {
                   <TableCell>Fecha Fin</TableCell>
                   <TableCell>Lugar</TableCell>
                   <TableCell>Cupo Máximo</TableCell>
+                  <TableCell>Imagen</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
@@ -156,6 +174,17 @@ const VoluntariadoPage = () => {
                     <TableCell>{new Date(v.fecha_fin).toLocaleDateString()}</TableCell>
                     <TableCell>{v.lugar}</TableCell>
                     <TableCell>{v.cupo_maximo}</TableCell>
+                    <TableCell>
+                      {v.imagen ? (
+                        <img
+                          src={`http://localhost:4000${v.imagen}`}
+                          alt={v.nombre}
+                          style={{ width: '100px', height: 'auto' }}
+                        />
+                      ) : (
+                        'No hay imagen'
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         variant="contained"

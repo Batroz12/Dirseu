@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 import {
-  Work as WorkIcon,
+  Business as BusinessIcon,
   ErrorOutline as ErrorOutlineIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
 } from '@mui/icons-material';
@@ -11,36 +11,39 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
+    empresa: '',
     fecha_inicio: '',
     fecha_fin: '',
-    empresa: '',
+    imagen: null, // Estado para la imagen
   });
 
   // Estados para manejar errores y mensajes de éxito
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Efecto para inicializar formData cuando cambia oferta
+  // Efecto para inicializar formData cuando cambia la oferta laboral
   useEffect(() => {
     if (oferta) {
       setFormData({
         nombre: oferta.nombre || '',
         descripcion: oferta.descripcion || '',
+        empresa: oferta.empresa || '',
         fecha_inicio: oferta.fecha_inicio
           ? oferta.fecha_inicio.split('T')[0]
           : '',
         fecha_fin: oferta.fecha_fin
           ? oferta.fecha_fin.split('T')[0]
           : '',
-        empresa: oferta.empresa || '',
+        imagen: null, // Reiniciar la imagen al editar
       });
     } else {
       setFormData({
         nombre: '',
         descripcion: '',
+        empresa: '',
         fecha_inicio: '',
         fecha_fin: '',
-        empresa: '',
+        imagen: null, // Reiniciar la imagen al crear
       });
     }
   }, [oferta]);
@@ -54,6 +57,14 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      imagen: file,
+    }));
+  };
+
   // Manejar el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,9 +72,9 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
     // Validaciones
     if (
       !formData.nombre ||
+      !formData.empresa ||
       !formData.fecha_inicio ||
-      !formData.fecha_fin ||
-      !formData.empresa
+      !formData.fecha_fin
     ) {
       setError('Por favor, completa todos los campos obligatorios.');
       setSuccess(false);
@@ -75,14 +86,15 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
     setSuccess(true);
     onSubmit(formData);
 
-    // Resetear el formulario si es para crear una nueva oferta
+    // Resetear el formulario si es para crear una nueva oferta laboral
     if (!oferta) {
       setFormData({
         nombre: '',
         descripcion: '',
+        empresa: '',
         fecha_inicio: '',
         fecha_fin: '',
-        empresa: '',
+        imagen: null,
       });
     }
   };
@@ -104,7 +116,7 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
         justifyContent="center"
         mb={3}
       >
-        <WorkIcon color="primary" sx={{ mr: 1 }} />
+        <BusinessIcon color="primary" sx={{ mr: 1 }} />
         <Typography variant="h5" component="h2" color="text.primary">
           {oferta ? 'Actualizar Oferta Laboral' : 'Agregar Oferta Laboral'}
         </Typography>
@@ -128,7 +140,8 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
           sx={{ mb: 2 }}
           icon={<CheckCircleOutlineIcon />}
         >
-          ¡Éxito! La oferta ha sido {oferta ? 'actualizada' : 'agregada'} correctamente.
+          ¡Éxito! La oferta laboral ha sido{' '}
+          {oferta ? 'actualizada' : 'agregada'} correctamente.
         </Alert>
       )}
 
@@ -137,7 +150,7 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
         <Box display="flex" flexDirection="column" gap={2}>
           {/* Campo de Nombre */}
           <TextField
-            label="Nombre de la oferta*"
+            label="Nombre de la oferta laboral*"
             id="nombre"
             name="nombre"
             value={formData.nombre}
@@ -154,9 +167,21 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
             name="descripcion"
             value={formData.descripcion}
             onChange={handleChange}
-            placeholder="Describe los detalles de la oferta"
+            placeholder="Describe los detalles de la oferta laboral"
             multiline
             rows={4}
+            fullWidth
+          />
+
+          {/* Campo de Empresa */}
+          <TextField
+            label="Empresa*"
+            id="empresa"
+            name="empresa"
+            value={formData.empresa}
+            onChange={handleChange}
+            required
+            placeholder="Ej: Empresa XYZ"
             fullWidth
           />
 
@@ -190,28 +215,36 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
             fullWidth
           />
 
-          {/* Campo de Empresa */}
-          <TextField
-            label="Empresa*"
-            id="empresa"
-            name="empresa"
-            value={formData.empresa}
-            onChange={handleChange}
-            required
-            placeholder="Ej: Empresa XYZ"
-            fullWidth
-          />
-
+          {/* Campo para subir imagen */}
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ mt: 2 }}
+          >
+            Subir Imagen
+            <input
+              type="file"
+              name="imagen"
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Button>
+          {formData.imagen && (
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Imagen seleccionada: {formData.imagen.name}
+            </Typography>
+          )}
+          
           {/* Botón de enviar */}
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            startIcon={<WorkIcon />}
             sx={{ mt: 2 }}
           >
-            {oferta ? 'Actualizar Oferta' : 'Agregar Oferta'}
+            {oferta ? 'Actualizar Oferta Laboral' : 'Agregar Oferta Laboral'}
           </Button>
         </Box>
       </form>

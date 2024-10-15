@@ -1,23 +1,72 @@
 import * as React from 'react';
+import Avatar from "@mui/material/Avatar";
 import { styled } from '@mui/material/styles';
 import Divider, { dividerClasses } from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MuiMenuItem from '@mui/material/MenuItem';
 import { paperClasses } from '@mui/material/Paper';
 import { listClasses } from '@mui/material/List';
+import Typography from "@mui/material/Typography";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from './MenuButton';
+import { useAuth } from '../../../context/AuthProvider';
+import { signOutRequest } from "../../../api/api";
+import { Link } from 'react-router-dom';
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
 });
 
+function stringToColor(string) {
+  let hash = 0;
+  // Calcula un valor hash basado en el string
+  for (let i = 0; i < string.length; i++) {
+    // Suma los códigos ASCII de los caracteres y aplica desplazamiento a la izquierda y resta
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Convierte el hash en un color hexadecimal
+  const color = `#${((hash & 0x00ffffff) | 0x1000000).toString(16).slice(1)}`;
+  return color;
+}
+
+function stringAvatar(name) {
+  const initials = name.match(/\b\w/g).slice(0, 2).join("");
+  // 1. name.match(/\b\w/g): Busca todas las letras que forman palabras completas en el nombre.
+  //    - \b: Coincide con un límite de palabra.
+  //    - \w: Coincide con cualquier carácter de palabra.
+  //    - g: Realiza la búsqueda globalmente en toda la cadena.
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: initials,
+  };
+}
+
 export default function OptionsMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const auth = useAuth();
+
+  async function handleSignOut(e) {
+    e.preventDefault();
+
+    try {
+      const response = await signOutRequest(auth.getRefreshToken());
+
+      if (response.ok) {
+        auth.signOut();
+      }
+    } catch (error) {}
+
+    setAnchorEl(null);
+  }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -53,10 +102,35 @@ export default function OptionsMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Perfil</MenuItem>
+        <MenuItem sx={{ mt: 1 }}>
+          <Avatar
+            sizes="small"
+            alt="Riley Carter"
+            src="/static/images/avatar/7.jpg"
+            sx={{
+              width: 24,
+              height: 24,
+              mr: 1,
+            }}
+            {...stringAvatar(
+              `${auth.getUser()?.firstName} ${auth.getUser()?.lastName}`
+            )}
+          />
+
+          <Typography component="p" variant="subtitle2" sx={{ ml: 2 }}>
+            {auth.getUser()?.firstName || ""}
+          </Typography>
+        </MenuItem>
+        <Link
+          to = "userInfo"
+          style={{ textDecoration: "none", color: "inherit" }}
+          replace
+        >
+          <MenuItem onClick={handleClose}>Perfil</MenuItem>
+        </Link>
+        
         <MenuItem onClick={handleClose}>Mi Cuenta</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Agregar otra cuenta</MenuItem>
         <MenuItem onClick={handleClose}>Configuraciones</MenuItem>
         <Divider />
         <MenuItem
@@ -68,7 +142,7 @@ export default function OptionsMenu() {
             },
           }}
         >
-          <ListItemText>Logout</ListItemText>
+          <MenuItem onClick={handleSignOut}>Logout</MenuItem>
           <ListItemIcon>
             <LogoutRoundedIcon fontSize="small" />
           </ListItemIcon>

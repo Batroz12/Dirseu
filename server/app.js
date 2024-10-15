@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from "cors";
+import path from 'path';
 
 import configs from './config/config.js';
 import indexRoutes from './routes/index.routes.js';
@@ -25,6 +26,9 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+
+// Servir archivos estáticos (como imágenes) desde la carpeta "uploads"
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Rutas
 app.use('/api/login', sgnin);

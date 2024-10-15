@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { useAuth } from '../../../context/AuthProvider';
 import { Link } from "react-router-dom";
 
@@ -10,12 +11,37 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-
 import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
 
+function stringToColor(string) {
+  let hash = 0;
+  // Calcula un valor hash basado en el string
+  for (let i = 0; i < string.length; i++) {
+    // Suma los códigos ASCII de los caracteres y aplica desplazamiento a la izquierda y resta
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Convierte el hash en un color hexadecimal
+  const color = `#${((hash & 0x00ffffff) | 0x1000000).toString(16).slice(1)}`;
+  return color;
+}
+
+function stringAvatar(name) {
+  const initials = name.match(/\b\w/g).slice(0, 2).join("");
+  // 1. name.match(/\b\w/g): Busca todas las letras que forman palabras completas en el nombre.
+  //    - \b: Coincide con un límite de palabra.
+  //    - \w: Coincide con cualquier carácter de palabra.
+  //    - g: Realiza la búsqueda globalmente en toda la cadena.
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: initials,
+  };
+}
 
 const drawerWidth = 240;
 
@@ -31,6 +57,7 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const auth = useAuth();
   return (
     <Drawer
       variant="permanent"
@@ -64,19 +91,21 @@ export default function SideMenu() {
         }}
       >
         <Avatar
-          sizes="small"
-          alt="David Alexander"
-          src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
+            sizes="small"
+            alt="Riley Carter"
+            src="/static/images/avatar/7.jpg"
+            sx={{
+              width: 24,
+              height: 24,
+              mr: 1,
+            }}
+            {...stringAvatar(
+              `${auth.getUser()?.firstName} ${auth.getUser()?.lastName}`
+            )}
         />
-        <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            David Alexander
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            david@email.com
-          </Typography>
-        </Box>
+        <Typography component="p" variant="subtitle2" sx={{ ml: 2 }}>
+            {auth.getUser()?.firstName || ""}
+        </Typography>
         <OptionsMenu />
       </Stack>
     </Drawer>

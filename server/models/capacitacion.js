@@ -9,20 +9,22 @@ class Capacitacion {
     this.fecha_fin = capacitacion.fecha_fin;
     this.lugar = capacitacion.lugar;
     this.cupo_maximo = capacitacion.cupo_maximo;
+    this.imagen = capacitacion.imagen;
   }
 
   static async crear(nuevoCapacitacion) {
     try {
       // Insertar la nueva capacitacion
       const [result] = await execute(
-        'INSERT INTO capacitaciones (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO capacitaciones (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
           nuevoCapacitacion.nombre || null,
           nuevoCapacitacion.descripcion || null,
           nuevoCapacitacion.fecha_inicio || null,
           nuevoCapacitacion.fecha_fin || null,
           nuevoCapacitacion.lugar || null,
-          nuevoCapacitacion.cupo_maximo || null
+          nuevoCapacitacion.cupo_maximo || null,
+          nuevoCapacitacion.imagen || null
         ]
       );
 
