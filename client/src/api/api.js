@@ -37,6 +37,15 @@ export const createDocenteRequest = async (data) =>
         body: JSON.stringify(data)
     });
 
+export const createEmpleadorRequest = async (data) =>
+    await fetch(`${BASE_URL}/api/signup/empleador`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+
 export const accesUserRequest = async (data) =>
     await fetch(`${BASE_URL}/api/login`, {
         method: 'POST',

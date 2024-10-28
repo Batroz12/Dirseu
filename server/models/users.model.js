@@ -1,14 +1,28 @@
-// Contiene los modelos de la base de datos.
-
+import axios from 'axios';
 import bcrypt from 'bcrypt';
 import { pool } from '../utils/db.js';
+
+const MAILBOXLAYER_ACCESS_KEY = '9d6a620c75f125f9ba4c778e7abf5bb7';  // Colocar el access key aquí
+
+export const verifyEmailWithMailboxLayer = async (email) => {
+    try {
+        const response = await axios.get('http://apilayer.net/api/check', {
+            params: {
+                access_key: MAILBOXLAYER_ACCESS_KEY,
+                email: email
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error('Error al verificar el correo electrónico.');
+    }
+};
 
 // Función para registrar un nuevo usuario
 export const registerUser = async ({ firstName, lastName, email, password }) => {
     try {
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
 
         await pool.query('INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', [firstName, lastName, email, hashedPassword, 'student']);
 
@@ -22,6 +36,11 @@ export const registerUser = async ({ firstName, lastName, email, password }) => 
 // Función para buscar un usuario por correo electrónico
 export const getUserByEmail = async (email) => {
     const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    return rows[0];
+};
+
+export const getUserByID = async (id) => {
+    const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
     return rows[0];
 };
 
@@ -59,13 +78,17 @@ export const getDataByEmail = async (email) => {
         if (rows[0]) {
             return { type: 'coordinador', ...rows[0] };
         }
+        // Probar si es empleador
+        [rows] = await pool.query('SELECT * FROM users u INNER JOIN empleadores e ON e.user_id = u.id WHERE u.email = ?', [email]);
+
+        if (rows[0]) {
+            return { type: 'empleador', ...rows[0] };
+        }
 
     } catch (error) {
         throw new Error('Failed to obtain info user.');
     }
 }
-
-
 
 export const registerStudent = async ({ codigo, matricula, carrera, semestre, fecha_nacimiento, telefono, direccion, user_id }) => {
     try {
@@ -97,6 +120,18 @@ export const registerDocente = async ({ codigo_docente, departamento, telefono, 
         return { success: true, message: 'Docente registrado exitosamente.' };
     } catch (error) {
         throw new Error('Error al registrar el docente.');
+    }
+};
+
+export const registerEmpleador = async ({ user_id, codigo_empleador, nombre_empresa, telefono, direccion_empresa, area_negocio, email_empresa }) => {
+    try {
+        await pool.query(
+            'INSERT INTO empleadores (user_id, codigo_empleador, nombre_empresa, telefono, direccion_empresa, area_negocio, email_empresa, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE())', 
+            [user_id, codigo_empleador, nombre_empresa, telefono, direccion_empresa, area_negocio, email_empresa]
+        );
+        return { success: true, message: 'Empleador registrado exitosamente.' };
+    } catch (error) {
+        throw new Error('Error al registrar el empleador.');
     }
 };
 

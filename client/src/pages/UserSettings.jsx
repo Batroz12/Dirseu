@@ -84,7 +84,7 @@ export default function UserSettings() {
 
   const keys = Object.keys(userData);
   const usuarioKeys = keys.slice(2, 5); // Desde el tercer al quinto dato
-  const otrosDatosKeys = keys.slice(7, keys.length - 1); // Desde el sexto hasta el antepenúltimo dato
+  const otrosDatosKeys = keys.slice(8, keys.length - 1); // Desde el sexto hasta el antepenúltimo dato
 
   return (
     <React.Fragment>

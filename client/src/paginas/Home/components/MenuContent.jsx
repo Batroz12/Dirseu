@@ -29,16 +29,72 @@ function a11yProps(index) {
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, link: '' },
-  { text: 'Analitica', icon: <AnalyticsRoundedIcon />, link: 'analytics', condition: (auth) => auth.getUser()?.type === 'docente' || auth.isAdmin },
-  { text: 'Coordinadores', icon: <PeopleRoundedIcon />, subItems: [
+  { 
+    text: 'Analitica', 
+    icon: <AnalyticsRoundedIcon />, 
+    link: 'analytics', 
+    condition: (auth) => auth.getUser()?.type === 'coordinador' || auth.isAdmin 
+  },
+  { 
+    text: 'Coordinadores', 
+    icon: <PeopleRoundedIcon />, 
+    subItems: [
       { text: 'Desarrollo Formativo', link: 'coordinadores/DesarrolloFormativo' },
       { text: 'Desarrollo Sostenible', link: 'coordinadores/DesarrolloSostenible' },
       { text: 'Extensión Universitaria', link: 'coordinadores/ExtensionUniversitaria' },
       { text: 'Seguimiento al Egresado', link: 'coordinadores/SeguimientoEgresado' }
-    ], condition: (auth) => auth.isAdmin
+    ], 
+    condition: (auth) => auth.isAdmin || auth.getUser()?.type === 'coordinador' 
   },
-  { text: 'Inscripciones', icon: <AssignmentRoundedIcon />, link: 'inscripciones', condition: (auth) => auth.getUser()?.type === 'docente' || auth.isAdmin },
-  { text: 'Modulos', icon: <AssignmentRoundedIcon />, link: 'modules' },
+  { 
+    text: 'Empleador', 
+    icon: <PeopleRoundedIcon />, 
+    link: 'empleador/Agregar-Empleo', 
+    condition: (auth) => auth.isAdmin || auth.getUser()?.type === 'empleador' // Visible para administradores y empleadores
+  },
+  { 
+    text: 'Inscripciones', 
+    icon: <AssignmentRoundedIcon />, 
+    link: 'inscripciones', 
+    condition: (auth) => 
+      auth.isAdmin 
+  },
+  { 
+    text: 'Modulos', 
+    icon: <AssignmentRoundedIcon />, 
+    link: 'modules', 
+    condition: (auth) => 
+      auth.getUser()?.type === 'docente' || 
+      auth.getUser()?.type === 'estudiante' || 
+      auth.getUser()?.type === 'egresado' ||
+      auth.isAdmin 
+  },
+  { 
+    text: 'Empleos', 
+    icon: <AssignmentRoundedIcon />, 
+    link: 'Egresado/empleos', 
+    condition: (auth) => 
+      auth.getUser()?.type === 'egresado' ||
+      auth.isAdmin 
+  },
+  { 
+    text: 'Convenios', 
+    icon: <AssignmentRoundedIcon />, 
+    link: 'Egresado/convenios', 
+    condition: (auth) => 
+      auth.getUser()?.type === 'egresado' ||
+      auth.getUser()?.type === 'estudiante' ||
+      auth.isAdmin 
+  },
+  { 
+    text: 'Documentos de interes', 
+    icon: <AssignmentRoundedIcon />, 
+    link: 'Egresado/Formatos', 
+    condition: (auth) => 
+      auth.getUser()?.type === 'egresado' ||
+      auth.getUser()?.type === 'estudiante' ||
+      auth.isAdmin 
+  },
 ];
 
 const secondaryListItems = [

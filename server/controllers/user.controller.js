@@ -1,6 +1,4 @@
-
 import { getDataByEmail } from '../models/users.model.js';
-
 
 export const refreshUser = async (req, res) => {
     try {

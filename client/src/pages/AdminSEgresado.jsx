@@ -38,7 +38,10 @@ const AdministrarSEgresado = () => {
     },
     {
       title: 'Empleadores',
-      options: ['Ver Empleadores', 'Agregar Empleadores'],
+      options: [
+        { label: 'Agregar Empleadores', path:'/Home/coordinadores/SeguimientoEgresado/userEmForm' },
+        { label: 'Ver Empleadores', path: '/Home/coordinadores/SeguimientoEgresado/verCapacitaciones' },
+      ],
     },
     {
       title: 'Bolsa Laboral',

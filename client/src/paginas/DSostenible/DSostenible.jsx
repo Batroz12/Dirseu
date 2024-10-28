@@ -1,50 +1,30 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Leaf, Users, BookOpen, Globe, ChevronDown, ChevronUp } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
-import Politicas from '../componentes/politicas/politicas';
+import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
 
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
 import Mof from '../componentes/mof/mof';
 
-const ExpandableSection = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="mb-4">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center w-full py-2 px-4 bg-green-600 bg-opacity-80 text-white rounded-lg focus:outline-none"
-      >
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {isOpen ? <ChevronUp /> : <ChevronDown />}
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mt-2 p-4 bg-white bg-opacity-90 rounded-lg"
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
 const DSostenible = () => {
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Submitted email:', email);
-    setEmail('');
-  };
+  const purpose = 'Programar y desarrollar las actividades inherentes a la cooperación del desarrollo sostenible que permitan integrar y vincular a la universidad, con la sociedad a través de planes, programas y proyectos de carácter sociales o ambientales a favor de la población local, regional y nacional.';
+  const functions = [
+    'Ejecutar las políticas y normas que correspondan al ámbito funcional de su competencia.',
+    'Participar en la formulación y evaluación del Plan Operativo y Presupuesto de la Dirección, de acuerdo a los lineamientos y disposiciones establecidas.',
+    'Promover la realización de eventos educativos, foros y actividades académicas en general, relacionadas con el medio ambiente y el desarrollo sostenible.',
+    'Promover la participación directa de los estudiantes en materia de promoción y fomento del desarrollo sostenible, protección y conservación del medio ambiente, fortalecimiento de la gestión ambiental satisfactoria, oportuna y resguardo de los derechos ambientales de la región.',
+    'Constituir las comisiones ambientales de las diferentes Escuelas Profesionales de la Sede Central y Filial.',
+    'Promover el fomento del desarrollo en coordinación con instituciones públicas y privadas de la región.',
+    'Difundir, ejecutar, actualizar y defender los objetivos y lineamientos que establece la política ambiental de la universidad.',
+    'Coordinar y establecer vínculos de cooperación con investigadores y entidades nacionales e internacionales, que financian o trabajan en proyectos para el desarrollo sostenible de la región.',
+    'Proponer nuevos programas de servicio social que puedan incorporarse y ser orientados a la currícula de las escuelas profesionales.',
+    'Promover debates sobre desarrollo sostenible y medio ambiente, así como la preservación de la herencia cultural, en el ámbito universitario local.',
+    'Convocar y organizar programas de voluntariado con los estudiantes y/o docentes de la Universidad, para atender las necesidades latentes que afectan a la población local y regional menos favorecida del Cusco.'
+  ];
 
   // Configuración de redes sociales
   const socialLinks = [
@@ -55,18 +35,13 @@ const DSostenible = () => {
   ];
 
   const buttons = [
-    { label: 'Impacto', href: 'Impacto' },
-    { label: 'Participa', href: 'Participacion' },
-    { label: 'Contacto', href: 'contacto' },
-    { label: 'Coordinaciones' }, // Dropdown opcional
+    { label: 'Inicio', href: '/' },
+    { label: 'Desarrollo Formativo', href: '/Desarrollo-Formativo' },
+    { label: 'Desarrollo Sostenible', href: '/Desarrollo-Sostenible' },
+    { label: 'Extensión Universitaria', href: '/Extension-Universitaria' },
+    { label: 'Seguimiento al Egresado', href: '/SeguimientoAlEgresado' },
   ];
 
-  const dropdownLinks = [
-    { name: 'Inicio', url: '/'},
-    { name: 'Desarrollo Formativo', url: '/Desarrollo-Formativo' },
-    { name: 'Extensión Universitaria', url: '/Extension-Universitaria' },
-    { name: 'Seguimiento al Egresado', url: '/SeguimientoAlEgresado' },
-  ];
   return (
     <div className="min-h-screen bg-gray-100">
       <header>
@@ -78,21 +53,23 @@ const DSostenible = () => {
           subtitle=""
           socialLinks={socialLinks}
           buttons={buttons}
-          dropdownLinks={dropdownLinks}
         />
       </header>
       <main className="flex-1 ">
-        {/* Seccion de mof */}
-        <div className="h-auto bg-gray-100">
-          <Mof />
+        {/* Sección de Mof */}
+        <div className="h-auto bg-gray-100 ">
+          <Mof purpose={purpose} functions={functions}
+          backgroundImage='https://imgix-prod.sgs.com/-/media/sgscorp/images/temporary/tree-held-by-hands-1600px.cdn.en-PH.1.png?fit=crop&crop=edges&auto=format&w=1200&h=630'
+          />
         </div>
+
         <motion.section
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <h2 className="py-5 text-3xl font-bold text-center mb-4 text-black">Nuestro Impacto</h2>
+          <h2 className="py-10 text-3xl font-bold text-center mb-4 text-black">Nuestro Impacto</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -127,9 +104,9 @@ const DSostenible = () => {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <h2 className="text-3xl font-bold text-center text-black mb-8">Participa</h2>
+          <h2 className="py-5 text-3xl font-bold text-center text-black mb-8">Participa</h2>
           <div className="text-center">
-            <p className="text-lg mb-6">
+            <p className="py-5 text-lg mb-6">
               ¿Quieres ser parte del cambio? Únete a nuestros programas de voluntariado 
               y contribuye al desarrollo sostenible de nuestra región.
             </p>
@@ -144,10 +121,8 @@ const DSostenible = () => {
         </motion.section>
       </main>
 
-      <footer className="bg-green-800 text-white py-6">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; {new Date().getFullYear()} Coordinación de Desarrollo Sostenible. Todos los derechos reservados.</p>
-        </div>
+      <footer id="footer" className="py-6 bg-gray-800 text-white">
+        <Footer />
       </footer>
     </div>
   );

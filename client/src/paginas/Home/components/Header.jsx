@@ -22,7 +22,7 @@ const Header = () => {
       }}
       spacing={2}
     >
-      <NavbarBreadcrumbs1 />
+      {/* <NavbarBreadcrumbs1 /> */}
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
         <Search />

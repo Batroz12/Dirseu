@@ -1,22 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Palette, Music, Camera, Theater, Book, Users, Mic, Globe, Users2, Music2, Music2Icon, Music3, Music4, Music4Icon } from 'lucide-react';
+import { Palette, Music, Camera, Theater, Users, Mic, Globe, Users2, Music4, UserCircle, Award } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
+import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
 
-import Tuna from '../images/Tuna.jpg';
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
-import Logo2 from '../images/UAC.png';  // Asegúrate de importar correctamente la imagen
 
 const Workshop = ({ icon: Icon, title, description }) => (
   <motion.div 
-    className="bg-white p-6 rounded-lg shadow-lg"
+    className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
     whileHover={{ scale: 1.05 }}
     transition={{ type: "spring", stiffness: 300 }}
   >
     <Icon className="w-12 h-12 text-blue-600 mb-4" />
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+    <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
+    <p className="text-gray-700">{description}</p>
   </motion.div>
 );
 
@@ -38,23 +37,26 @@ const DFormativo = () => {
   ];
 
   const buttons = [
-    { label: 'Talleres', href: 'talleres' },
-    { label: 'Beneficios', href: 'beneficios' },
-    { label: 'Contacto', href: 'contacto' },
-    { label: 'Coordinaciones' }, // Dropdown opcional
+    { label: 'Inicio', href: '/' },
+    { label: 'Desarrollo Formativo', href: '/Desarrollo-Formativo' },
+    { label: 'Desarrollo Sostenible', href: '/Desarrollo-Sostenible' },
+    { label: 'Extensión Universitaria', href: '/Extension-Universitaria' },
+    { label: 'Seguimiento al Egresado', href: '/SeguimientoAlEgresado' },
   ];
 
-  const dropdownLinks = [
-    { name: 'Inicio', url: '/'},
-    { name: 'Desarrollo Sostenible', url: '/DesarrolloSostenible' },
-    { name: 'Extensión Universitaria', url: '/Extension-Universitaria' },
-    { name: 'Seguimiento al Egresado', url: '/SeguimientoAlEgresado' },
-  ];
+  const Benefit = ({ icon: Icon, title, description }) => {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 text-center">
+        {Icon && <Icon className="text-blue-500 mx-auto mb-4" size={48} />}
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
+        <p className="text-gray-600">{description}</p>
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-indigo-50">
       <header>
-        {/* Incorporar NavbarLogo aquí */}
         <NavbarLogo
           backgroundImage={Logo}
           overlayOpacity={0.5}
@@ -62,43 +64,13 @@ const DFormativo = () => {
           subtitle="Potencia tus habilidades creativas a través de nuestros talleres artísticos."
           socialLinks={socialLinks}
           buttons={buttons}
-          dropdownLinks={dropdownLinks}
         />
       </header>
 
-      <main>
-        <section className="bg-blue-700 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold mb-4"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Descubre tu Potencial Artístico
-            </motion.h2>
-            <motion.p 
-              className="text-xl mb-8"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Explora nuestros talleres artísticos y desarrolla tus habilidades creativas
-            </motion.p>
-            <motion.a 
-              href="#talleres"
-              className="bg-white text-blue-700 px-6 py-3 rounded-full font-semibold hover:bg-blue-100 transition duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Ver Talleres
-            </motion.a>
-          </div>
-        </section>
-
-        <section id="talleres" className="py-20">
+      <main className="bg-[#B6BEC2]">
+        <section id="talleres" className="py-0">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Nuestros Talleres</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Nuestros Talleres</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <Workshop 
                 icon={Palette} 
@@ -144,44 +116,36 @@ const DFormativo = () => {
           </div>
         </section>
 
-        <section id="beneficios" className="bg-gray-200 py-20">
+        <section id="beneficios" className="py-0">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Beneficios de Nuestros Talleres</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Beneficios de Nuestros Talleres</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2">Desarrollo Personal</h3>
-                <p className="text-gray-600">Potencia tu creatividad y habilidades de expresión.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2">Desarrollo Social</h3>
-                <p className="text-gray-600">Conocecta con otros estudiantes.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2">Becas</h3>
-                <p className="text-gray-600">Puede aplicar a medias becas o becas completas dependiendo de su participación.</p>
-              </div>
+              <Benefit 
+                icon={UserCircle}  // Icono de desarrollo personal
+                title="Desarrollo Personal" 
+                description="Potencia tu creatividad y habilidades de expresión." 
+              />
+              <Benefit 
+                icon={Users}  // Icono de desarrollo social
+                title="Desarrollo Social" 
+                description="Conecta con otros estudiantes." 
+              />
+              <Benefit 
+                icon={Award}  // Icono de becas
+                title="Becas" 
+                description="Puede aplicar a medias becas o becas completas dependiendo de su participación." 
+              />
             </div>
           </div>
         </section>
 
-        <section id="contacto" className="py-20">
+        <section id="contacto" className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">¿Listo para Empezar?</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">¿Listo para Empezar?</h2>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-              <div className="mb-4">
-                {/* <label htmlFor="email" className="block text-gray-700 mb-2">Correo Electrónico</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                  required 
-                /> */}
-              </div>
               <button 
                 type="submit" 
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300"
               >
                 Más Información
               </button>
@@ -190,10 +154,9 @@ const DFormativo = () => {
         </section>
       </main>
 
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; {new Date().getFullYear()} Coordinación de Desarrollo Formativo. Todos los derechos reservados.</p>
-        </div>
+
+      <footer id="footer" className="py-6 bg-gray-800 text-white">
+        <Footer />
       </footer>
     </div>
   );

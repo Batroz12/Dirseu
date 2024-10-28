@@ -45,8 +45,6 @@ class Capacitacion {
   static async obtenerTodos() {
     try {
       const capacitaciones = await query('SELECT * FROM capacitaciones');
-      console.log('Tipo de capacitaciones:', typeof capacitaciones);
-      console.log('Contenido de capacitaciones:', capacitaciones);
       return capacitaciones.map(capacitacion => new Capacitacion(capacitacion));
     } catch (error) {
       console.error('Error en obtenerTodos:', error);

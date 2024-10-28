@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, BookOpen, Globe, ChevronDown } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
+import Footer from '../componentes/footer/footer';
+import Mof from '../componentes/mof/mof';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
 
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
@@ -42,6 +44,18 @@ const Accordion = ({ title, children }) => {
 const ExtensionU = () => {
   const [email, setEmail] = useState('');
 
+  const purpose = 'Programar, organizar y controlar el desarrollo de programas de extensión universitaria y de proyección social en beneficio de la población menos favorecida de la región, con la participación y apoyo técnico de las facultades. ';
+  const functions = [
+    'Ejecutar las políticas y normas establecidas en el ámbito de su competencia funcional. ',
+    'Coordinar con las Comisiones de Responsabilidad Social y Extensión Universitaria de las facultades, en la formulación de los programas de extensión universitaria y de proyección social. ',
+    'Coordinar, elaborar y proponer el Reglamento de Funcionamiento de las actividades de extensión universitaria y proyección social de la Universidad, dentro del marco de política institucional de la universidad y los lineamientos de acreditación. ',
+    'Desarrollar programas de extensión universitaria en lo académico, cultural y artístico en favor de la comunidad local y regional ',
+    'Difundir los trabajos de investigación y programas de acción social desarrollados por la universidad en favor de la comunidad local y regional menos favorecida. ',
+    'Vincular a las facultades y escuelas profesionales con las comunidades y la población menos favorecida de la región, para dar solución a sus problemas en lo que corresponde a su responsabilidad. ',
+    'Organizar eventos sobre responsabilidad social para docentes y estudiantes de las facultades, a fin de dar a conocer los impactos que tiene la Universidad en su quehacer universitario ante la comunidad local y regional. ',
+    'Coordinar y proponer en base al análisis de la problemática social de las comunidades locales y regionales del Cusco, programas y proyectos de proyección social multidisciplinaria a desarrollar por la Dirección, con la participación de las facultades. ',
+  ];
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Submitted email:', email);
@@ -57,19 +71,12 @@ const ExtensionU = () => {
   ];
 
   const buttons = [
-    { label: 'Talleres', href: 'talleres' },
-    { label: 'Beneficios', href: 'beneficios' },
-    { label: 'Contacto', href: 'contacto' },
-    { label: 'Coordinaciones' }, // Dropdown opcional
+    { label: 'Inicio', href: '/' },
+    { label: 'Desarrollo Formativo', href: '/Desarrollo-Formativo' },
+    { label: 'Desarrollo Sostenible', href: '/Desarrollo-Sostenible' },
+    { label: 'Extensión Universitaria', href: '/Extension-Universitaria' },
+    { label: 'Seguimiento al Egresado', href: '/SeguimientoAlEgresado' },
   ];
-
-  const dropdownLinks = [
-    { name: 'Inicio', url: '/'},
-    { name: 'Desarrollo Formativo', url: '/Desarrollo-Formativo' },
-    { name: 'Desarrollo Sostenible', url: '/DesarrolloSostenible' },
-    { name: 'Seguimiento al Egresado', url: '/SeguimientoAlEgresado' },
-  ];
-
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -83,41 +90,15 @@ const ExtensionU = () => {
           subtitle=""
           socialLinks={socialLinks}
           buttons={buttons}
-          dropdownLinks={dropdownLinks}
         />
       </header>
 
       {/* Sección principal */}
       <main>
-        <section className="bg-green-700 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold mb-4"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Conectando la Universidad con la Comunidad
-            </motion.h2>
-            <motion.p 
-              className="text-xl mb-8"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Descubre cómo nuestra universidad está haciendo la diferencia en la sociedad
-            </motion.p>
-            <motion.a 
-              href="#programas"
-              className="bg-white text-green-700 px-6 py-3 rounded-full font-semibold hover:bg-green-100 transition duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Explorar Programas
-            </motion.a>
-          </div>
-        </section>
-
+        {/* Sección de Mof */}
+        <div className="h-auto bg-gray-100 ">
+          <Mof purpose={purpose} functions={functions} />
+        </div>
         {/* Programas */}
         <section id="programas" className="py-20">
           <div className="container mx-auto px-4">
@@ -143,7 +124,7 @@ const ExtensionU = () => {
         </section>
 
         {/* Impacto */}
-        <section id="impacto" className="bg-gray-200 py-20">
+        <section id="impacto" className="bg-gray-200 py-10">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Nuestro Impacto</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -164,7 +145,7 @@ const ExtensionU = () => {
         </section>
 
         {/* FAQ */}
-        <section className="py-20">
+        <section className="py-10">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Preguntas Frecuentes</h2>
             <div className="max-w-2xl mx-auto">
@@ -182,7 +163,7 @@ const ExtensionU = () => {
         </section>
 
         {/* Formulario de Participación */}
-        <section id="participa" className="bg-green-100 py-20">
+        <section id="participa" className="bg-green-100 py-2">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">¡Únete a Nuestros Programas!</h2>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
@@ -208,16 +189,8 @@ const ExtensionU = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; {new Date().getFullYear()} Extensión Universitaria. Todos los derechos reservados.</p>
-          <div className="mt-4">
-            <a href="#" className="text-green-400 hover:text-green-300 mx-2">Política de Privacidad</a>
-            <a href="#" className="text-green-400 hover:text-green-300 mx-2">Términos de Servicio</a>
-            <a href="#" className="text-green-400 hover:text-green-300 mx-2">Contacto</a>
-          </div>
-        </div>
+      <footer id="footer" className="py-6 bg-gray-800 text-white">
+        <Footer />
       </footer>
     </div>
   );

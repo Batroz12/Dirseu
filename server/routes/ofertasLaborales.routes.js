@@ -1,5 +1,13 @@
 import express from 'express';
-import { crearOfertaLaboral, obtenerOfertasLaborales, obtenerOfertaLaboral, actualizarOfertaLaboral, eliminarOfertaLaboral } from '../controllers/ofertasLaboralesController.js'; // Cambiado a ofertas laborales
+import { crearOfertaLaboral, 
+         obtenerOfertasLaborales, 
+         obtenerOfertaLaboral,
+         obtenerOfertasLaboralesValidas, 
+         obtenerOfertasPorCarrera,
+         obtenerOfertasPorFechaEspecifica, 
+         obtenerOfertasPorUsuario,
+         actualizarOfertaLaboral, 
+         eliminarOfertaLaboral } from '../controllers/ofertasLaboralesController.js'; // Cambiado a ofertas laborales
 import multer from 'multer';
 import path from 'path';
 
@@ -39,16 +47,28 @@ const upload = multer({
 const router = express.Router();
 
 // Crear una nueva oferta laboral
-router.post('/', upload.single('imagen'), crearOfertaLaboral); // Aplicar Multer aquí
+router.post('/', upload.single('imagen'), crearOfertaLaboral); 
 
 // Obtener todas las ofertas laborales
 router.get('/', obtenerOfertasLaborales);
 
+// Obtener ofertas laborales válidas (fechas que no han pasado)
+router.get('/validas', obtenerOfertasLaboralesValidas);
+
 // Obtener una oferta laboral específica
 router.get('/:id', obtenerOfertaLaboral);
 
+// Obtener ofertas laborales filtradas por carrera profesional
+router.get('/carrera/:carreraDestino', obtenerOfertasPorCarrera);
+
+// Obtener ofertas laborales hasta una fecha específica
+router.get('/fecha/:fecha', obtenerOfertasPorFechaEspecifica);
+
+// Obtener ofertas laborales filtradas por id_usuario
+router.get('/usuario/:id_usuario', obtenerOfertasPorUsuario);
+
 // Actualizar una oferta laboral
-router.put('/:id', upload.single('imagen'), actualizarOfertaLaboral); // Aplicar Multer aquí
+router.put('/:id', upload.single('imagen'), actualizarOfertaLaboral);
 
 // Eliminar una oferta laboral
 router.delete('/:id', eliminarOfertaLaboral);

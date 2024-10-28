@@ -47,8 +47,6 @@ class Taller {
   static async obtenerTodos() {
     try {
       const talleres = await query('SELECT * FROM talleres');
-      console.log('Tipo de talleres:', typeof talleres);
-      console.log('Contenido de talleres:', talleres);
       return talleres.map(taller => new Taller(taller));
     } catch (error) {
       console.error('Error en obtenerTodos:', error);

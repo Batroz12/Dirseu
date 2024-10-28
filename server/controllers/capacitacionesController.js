@@ -110,31 +110,27 @@ export async function actualizarCapacitacion(req, res) {
       const nuevaImagenRuta = `/uploads/resized-${req.file.filename}`;
       const antiguaImagenRuta = capacitacion.imagen ? path.join('uploads', capacitacion.imagen) : null;
 
-      // Procesar y redimensionar la nueva imagen con sharp
-      const tempDir = os.tmpdir(); // Carpeta temporal del sistema
-      const tempImagePath = path.join(tempDir, req.file.filename); // Mover imagen temporalmente
+      const tempDir = os.tmpdir();
+      const tempImagePath = path.join(tempDir, req.file.filename);
 
       await fs.rename(req.file.path, tempImagePath);
 
-      const resizedImagePath = `uploads/resized-${req.file.filename}`; // Ruta de la imagen redimensionada
+      const resizedImagePath = `uploads/resized-${req.file.filename}`;
 
       await sharp(tempImagePath)
-        .resize(800) // Redimensionar a 800px de ancho (ajusta según tus necesidades)
+        .resize(800)
         .toFormat('webp')
         .jpeg({ quality: 80 })
         .toFile(resizedImagePath);
 
-      // Intentar eliminar la imagen temporal
       try {
         await fs.unlink(tempImagePath);
       } catch (error) {
         console.error(`Error al eliminar la imagen temporal: ${tempImagePath}`, error);
       }
 
-      // Actualizar la ruta de la imagen en el objeto
       capacitacion.imagen = nuevaImagenRuta;
 
-      // Eliminar la imagen antigua si existe
       if (antiguaImagenRuta) {
         try {
           await fs.unlink(antiguaImagenRuta);
@@ -145,10 +141,8 @@ export async function actualizarCapacitacion(req, res) {
       }
     }
 
-    // Actualizar la capacitación en la base de datos
     await capacitacion.actualizar();
 
-    // Respuesta exitosa
     res.json(capacitacion);
   } catch (error) {
     console.error(error);
@@ -161,13 +155,11 @@ export async function eliminarCapacitacion(req, res) {
   try {
     const { id } = req.params;
 
-    // Obtener la capacitación existente
     const capacitacion = await Capacitacion.obtenerPorId(id);
     if (!capacitacion) {
       return res.status(404).json({ error: 'Capacitación no encontrada' });
     }
 
-    // Eliminar la imagen si existe
     if (capacitacion.imagen) {
       const rutaImagen = path.join('uploads', capacitacion.imagen);
       try {
@@ -178,10 +170,8 @@ export async function eliminarCapacitacion(req, res) {
       }
     }
 
-    // Eliminar la capacitación de la base de datos
     await capacitacion.eliminar();
 
-    // Respuesta exitosa
     res.json({ mensaje: 'Capacitación eliminada con éxito' });
   } catch (error) {
     console.error(error);

@@ -9,9 +9,14 @@ import {
 const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
   // Estado para los datos del formulario
   const [formData, setFormData] = useState({
+    id: '', // Incluye el campo ID si es necesario para identificar la oferta
     nombre: '',
     descripcion: '',
+    requisitos: '',
+    carrera_destino: '',
     empresa: '',
+    nro_contacto: '',
+    correo_contacto: '',
     fecha_inicio: '',
     fecha_fin: '',
     imagen: null, // Estado para la imagen
@@ -25,22 +30,28 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
   useEffect(() => {
     if (oferta) {
       setFormData({
+        id: oferta.id || '', // Asigna el ID cuando existe la oferta
         nombre: oferta.nombre || '',
         descripcion: oferta.descripcion || '',
+        requisitos: oferta.requisitos || '',
+        carrera_destino: oferta.carrera_destino || '',
         empresa: oferta.empresa || '',
-        fecha_inicio: oferta.fecha_inicio
-          ? oferta.fecha_inicio.split('T')[0]
-          : '',
-        fecha_fin: oferta.fecha_fin
-          ? oferta.fecha_fin.split('T')[0]
-          : '',
+        nro_contacto: oferta.nro_contacto || '',
+        correo_contacto: oferta.correo_contacto || '',
+        fecha_inicio: oferta.fecha_inicio ? oferta.fecha_inicio.split('T')[0] : '',
+        fecha_fin: oferta.fecha_fin ? oferta.fecha_fin.split('T')[0] : '',
         imagen: null, // Reiniciar la imagen al editar
       });
     } else {
       setFormData({
+        id: '',
         nombre: '',
         descripcion: '',
+        requisitos: '',
+        carrera_destino: '',
         empresa: '',
+        nro_contacto: '',
+        correo_contacto: '',
         fecha_inicio: '',
         fecha_fin: '',
         imagen: null, // Reiniciar la imagen al crear
@@ -74,7 +85,11 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
       !formData.nombre ||
       !formData.empresa ||
       !formData.fecha_inicio ||
-      !formData.fecha_fin
+      !formData.fecha_fin ||
+      !formData.requisitos ||
+      !formData.carrera_destino ||
+      !formData.nro_contacto ||
+      !formData.correo_contacto
     ) {
       setError('Por favor, completa todos los campos obligatorios.');
       setSuccess(false);
@@ -89,9 +104,14 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
     // Resetear el formulario si es para crear una nueva oferta laboral
     if (!oferta) {
       setFormData({
+        id: '',
         nombre: '',
         descripcion: '',
+        requisitos: '',
+        carrera_destino: '',
         empresa: '',
+        nro_contacto: '',
+        correo_contacto: '',
         fecha_inicio: '',
         fecha_fin: '',
         imagen: null,
@@ -173,6 +193,30 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
             fullWidth
           />
 
+          {/* Campo de Requisitos */}
+          <TextField
+            label="Requisitos*"
+            id="requisitos"
+            name="requisitos"
+            value={formData.requisitos}
+            onChange={handleChange}
+            required
+            placeholder="Ej: Conocimientos en React"
+            fullWidth
+          />
+
+          {/* Campo de Carrera Destino */}
+          <TextField
+            label="Carrera Destino*"
+            id="carrera_destino"
+            name="carrera_destino"
+            value={formData.carrera_destino}
+            onChange={handleChange}
+            required
+            placeholder="Ej: Ingeniería de Sistemas"
+            fullWidth
+          />
+
           {/* Campo de Empresa */}
           <TextField
             label="Empresa*"
@@ -182,6 +226,31 @@ const FormularioOfertaLaboral = ({ oferta, onSubmit }) => {
             onChange={handleChange}
             required
             placeholder="Ej: Empresa XYZ"
+            fullWidth
+          />
+
+          {/* Campo de Número de contacto */}
+          <TextField
+            label="Número de contacto*"
+            id="nro_contacto"
+            name="nro_contacto"
+            value={formData.nro_contacto}
+            onChange={handleChange}
+            required
+            placeholder="Ej: 987654321"
+            fullWidth
+          />
+
+          {/* Campo de Correo de contacto */}
+          <TextField
+            label="Correo de contacto*"
+            id="correo_contacto"
+            name="correo_contacto"
+            value={formData.correo_contacto}
+            onChange={handleChange}
+            required
+            type="email"
+            placeholder="Ej: contacto@empresa.com"
             fullWidth
           />
 

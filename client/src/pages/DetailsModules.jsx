@@ -23,7 +23,7 @@ export default function DetailsModules() {
 
   const { table, id } = useParams();
 
-  const navigate = useNavigate(); // Obtiene el objeto history
+  const navigate = useNavigate();
   const auth = useAuth();
 
   useEffect(() => {
@@ -35,15 +35,11 @@ export default function DetailsModules() {
       const response = await getTableByIdRequest({ table, id });
 
       if (response.ok) {
-        console.log("Info Recuperada");
-        // setErrorResponse("");
         const json = await response.json();
         setDescription(json.data);
         console.log(json.data);
       } else {
-        console.log("Algo Ocurrio");
         const json = await response.json();
-        // setErrorResponse(json.error);
         return;
       }
     } catch (error) {
@@ -52,12 +48,12 @@ export default function DetailsModules() {
   }
 
   const handleBack = () => {
-    navigate(-1); // Navegar hacia atrás
+    navigate(-1);
   };
 
   const handleSubscribe = async () => {
     try {
-      if (auth.getUser().type != "estudiante") {
+      if (auth.getUser().type !== "estudiante") {
         setErrorResponse("Un Docente no puede Inscribirse");
         console.log(errorResponse);
         handleOpen();
@@ -84,14 +80,8 @@ export default function DetailsModules() {
     } catch (error) {
       console.error(error);
     }
-
-    // navigate(-1); // Navegar a la ruta "address"
   };
 
-  const itemData = data.find((d) => d.title === table);
-  const backgroundImage = itemData ? itemData.image : "";
-
-  // Function to format dates
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -115,6 +105,57 @@ export default function DetailsModules() {
     setOpenCV(true);
   };
 
+  // Imagen por defecto
+  const defaultImage = 'https://th.bing.com/th/id/OIP.JKvRJaNFhDO7nu1s_-zieAHaHa?pid=ImgDet&w=184&h=184&c=7&dpr=1,3';
+  // Si description.imagen es null, undefined o una cadena vacía, usamos la imagen por defecto
+  const imageUrl = description.imagen !== null 
+    ? `http://localhost:4000${description.imagen}` 
+    : defaultImage;
+  console.log("Valor de imageUrl:", imageUrl);
+
+  // Función que retorna el contenido dinámico según la tabla
+  const renderContentByTable = () => {
+    switch (table) {
+      case "ofertas_laborales":
+        return (
+          <>
+            <Typography variant="h2">{description.nombre}</Typography>
+            <Typography variant="h6">{description.descripcion}</Typography>
+            <Typography variant="body2">
+              <strong>Empresa:</strong> {description.empresa}
+            </Typography>
+            <Typography variant="body2">
+              <strong>Fecha:</strong> {`${formatDate(description.fecha_inicio)} - ${formatDate(description.fecha_fin)}`}
+            </Typography>
+          </>
+        );
+      case "capacitaciones":
+      case "talleres":
+      case "voluntariados":
+        return (
+          <>
+            <Typography variant="h2">{description.nombre}</Typography>
+            <Typography variant="h6">{description.descripcion}</Typography>
+            <Typography variant="body2">
+              <strong>Fecha:</strong> {`${formatDate(description.fecha_inicio)} - ${formatDate(description.fecha_fin)}`}
+            </Typography>
+            {description.lugar && (
+              <Typography variant="body2">
+                <strong>Lugar:</strong> {description.lugar}
+              </Typography>
+            )}
+            {description.cupo_maximo && (
+              <Typography variant="body2">
+                <strong>Cupo Máximo:</strong> {description.cupo_maximo}
+              </Typography>
+            )}
+          </>
+        );
+      default:
+        return <Typography variant="h6">Datos no disponibles</Typography>;
+    }
+  };
+
   return (
     <React.Fragment>
       <Backdrop
@@ -135,9 +176,12 @@ export default function DetailsModules() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImage})`,
-            backgroundSize: "contain",
+            position: "relative", // Asegura que el botón pueda posicionarse en el contenedor
+            background: ` url(${imageUrl})`,
+            backgroundSize: "cover",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            minHeight: "400px",
             borderRight: "1px solid",
             borderColor: "divider",
             alignItems: "start",
@@ -146,6 +190,21 @@ export default function DetailsModules() {
             gap: 2,
           }}
         >
+          {/* Botón Regresar dentro de la imagen de fondo */}
+          <Button
+            startIcon={<ChevronLeftRoundedIcon />}
+            onClick={handleBack}
+            variant="contained"
+            sx={{
+              position: "absolute", // Posiciona el botón dentro del contenedor
+              top: "20px", // Distancia desde la parte superior
+              left: "20px", // Distancia desde la parte izquierda
+              zIndex: 1, // Asegura que el botón esté por encima de la imagen
+            }}
+          >
+            Regresar
+          </Button>
+
           <Box
             sx={{
               display: "flex",
@@ -154,26 +213,7 @@ export default function DetailsModules() {
               alignItems: "end",
             }}
           >
-            <Button
-              startIcon={<ChevronLeftRoundedIcon />}
-              onClick={handleBack}
-              variant="contained"
-              sx={{
-                display: { xs: "none", sm: "flex" },
-              }}
-            >
-              Regresar
-            </Button>
-
-            <Button
-              startIcon={<ChevronLeftRoundedIcon />}
-              onClick={handleBack}
-              variant="outlined"
-              fullWidth
-              sx={{
-                display: { xs: "flex", sm: "none" },
-              }}
-            />
+            {/* Otros botones o contenido */}
           </Box>
         </Grid>
         <Grid
@@ -193,85 +233,7 @@ export default function DetailsModules() {
             gap: { xs: 4, md: 8 },
           }}
         >
-          <Typography variant="h2" sx={{ fontFamily: "Arial" }}>
-            {description.nombre}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              ml: 5,
-              pl: 2,
-              borderLeft: "4px solid",
-              borderColor: "primary.main",
-            }}
-          >
-            <Typography variant="h6" component="p">
-              {description.descripcion}
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              width: "100%",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <EventIcon color="action" />
-              <Typography variant="body2" component="p">
-                <strong>Fecha:</strong>{" "}
-                {`${formatDate(description.fecha_inicio)} - ${formatDate(
-                  description.fecha_fin
-                )}`}
-              </Typography>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <LocationOnIcon color="action" />
-              <Typography variant="body2" component="p">
-                <strong>Lugar:</strong> {description.lugar}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <GroupIcon color="action" />
-              <Typography variant="body2" component="p">
-                <strong>Cupo Máximo:</strong> {description.cupo_maximo}
-              </Typography>
-            </Box>
-          </Box>
+          {renderContentByTable()}
           <Box
             sx={{
               display: "flex",
@@ -279,7 +241,7 @@ export default function DetailsModules() {
               width: "100%",
             }}
           >
-            {auth.getUser()?.type != "egresado" ? (
+            {auth.getUser()?.type !== "egresado" ? (
               <Button
                 variant="contained"
                 endIcon={<ChevronRightRoundedIcon />}
@@ -325,26 +287,3 @@ export default function DetailsModules() {
     </React.Fragment>
   );
 }
-
-const data = [
-  {
-    title: "talleres",
-    image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "/form/talleres",
-  },
-  {
-    title: "capacitaciones",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
-  },
-  {
-    title: "ofertas_laborales",
-    image:
-      "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
-  },
-  {
-    title: "voluntariados",
-    image:
-      "https://blog.oxfamintermon.org/wp-content/uploads/2015/01/voluntariado-europeo-oxfam-intermon-2-726x477.jpg",
-  },
-];

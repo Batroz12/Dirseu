@@ -45,8 +45,6 @@ class Voluntariado {
   static async obtenerTodos() {
     try {
       const voluntariados = await query('SELECT * FROM voluntariados');
-      console.log('Tipo de voluntariados:', typeof voluntariados);
-      console.log('Contenido de voluntariados:', voluntariados);
       return voluntariados.map(voluntariado => new Voluntariado(voluntariado));
     } catch (error) {
       console.error('Error en obtenerTodos:', error);

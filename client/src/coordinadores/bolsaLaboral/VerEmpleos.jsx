@@ -23,8 +23,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  IconButton,
 } from '@mui/material';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'; // Importar íconos de Material UI
 
 // Creación del tema personalizado de MUI
 const theme = createTheme({
@@ -80,7 +82,11 @@ const OfertaLaboralPage = () => {
       const formData = new FormData();
       formData.append('nombre', data.nombre);
       formData.append('descripcion', data.descripcion);
+      formData.append('requisitos', data.requisitos); // Nuevo campo
+      formData.append('carrera_destino', data.carrera_destino); // Nuevo campo
       formData.append('empresa', data.empresa);
+      formData.append('nro_contacto', data.nro_contacto); // Nuevo campo
+      formData.append('correo_contacto', data.correo_contacto); // Nuevo campo
       formData.append('fecha_inicio', data.fecha_inicio);
       formData.append('fecha_fin', data.fecha_fin);
       if (data.imagen) {
@@ -154,10 +160,13 @@ const OfertaLaboralPage = () => {
                 <TableRow>
                   <TableCell>Nombre</TableCell>
                   <TableCell>Descripción</TableCell>
+                  <TableCell>Requisitos</TableCell> {/* Nuevo campo */}
                   <TableCell>Empresa</TableCell>
+                  <TableCell>Carrera Destino</TableCell> {/* Nuevo campo */}
+                  <TableCell>Número de Contacto</TableCell> {/* Nuevo campo */}
+                  <TableCell>Correo de Contacto</TableCell> {/* Nuevo campo */}
                   <TableCell>Fecha Inicio</TableCell>
                   <TableCell>Fecha Fin</TableCell>
-                  <TableCell>Imagen</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
@@ -166,36 +175,28 @@ const OfertaLaboralPage = () => {
                   <TableRow key={o.id}>
                     <TableCell>{o.nombre}</TableCell>
                     <TableCell>{o.descripcion}</TableCell>
+                    <TableCell>{o.requisitos}</TableCell> {/* Nuevo campo */}
                     <TableCell>{o.empresa}</TableCell>
+                    <TableCell>{o.carrera_destino}</TableCell> {/* Nuevo campo */}
+                    <TableCell>{o.nro_contacto}</TableCell> {/* Nuevo campo */}
+                    <TableCell>{o.correo_contacto}</TableCell> {/* Nuevo campo */}
                     <TableCell>{new Date(o.fecha_inicio).toLocaleDateString()}</TableCell>
                     <TableCell>{new Date(o.fecha_fin).toLocaleDateString()}</TableCell>
-                    <TableCell>
-                      {o.imagen ? (
-                        <img
-                          src={`http://localhost:4000${o.imagen}`}
-                          alt={o.nombre}
-                          style={{ width: '100px', height: 'auto' }}
-                        />
-                      ) : (
-                        'No hay imagen'
-                      )}
-                    </TableCell>
                     <TableCell align="center">
-                      <Button
-                        variant="contained"
+                      {/* Ícono de Editar */}
+                      <IconButton
                         color="primary"
-                        sx={{ mr: 2 }}
                         onClick={() => handleOpenModal(o)}
                       >
-                        Editar
-                      </Button>
-                      <Button
-                        variant="contained"
+                        <EditIcon />
+                      </IconButton>
+                      {/* Ícono de Eliminar */}
+                      <IconButton
                         color="secondary"
                         onClick={() => handleEliminar(o.id)}
                       >
-                        Eliminar
-                      </Button>
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

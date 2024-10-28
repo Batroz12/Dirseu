@@ -16,7 +16,6 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from './theme/customizations';
-import VoluntariadoPage from '../../coordinadores/Voluntariados/voluntariado';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -41,20 +40,18 @@ export default function Dashboard(props) {
               ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
               : alpha(theme.palette.background.default, 1),
             overflow: 'auto',
-            padding: 2, // Ajusta el padding si es necesario
+            padding: 2, 
           })}
         >
           <Stack
-            spacing={2}
             sx={{
-              width: '100%', // Asegúrate de que el Stack ocupe todo el ancho
+              width: '100%',
               pb: 10,
               mt: { xs: 8, md: 0 },
             }}
           >
             <Header />
             <Outlet />
-            {/* <VoluntariadoPage /> */}
             {/* <MainGrid /> */}
           </Stack>
         </Box>

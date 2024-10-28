@@ -7,19 +7,24 @@ import os from 'os'; // Para obtener una carpeta temporal
 // Crear una nueva oferta laboral con imagen
 export async function crearOfertaLaboral(req, res) {
   try {
-    const { nombre, descripcion, empresa, fecha_inicio, fecha_fin } = req.body;
+    const { nombre, descripcion, requisitos, carrera_destino, empresa, nro_contacto, correo_contacto, fecha_inicio, fecha_fin, id_usuario } = req.body;
 
     // Validar que todos los campos estén presentes
-    if (!nombre || !descripcion || !empresa || !fecha_inicio || !fecha_fin) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    if (!nombre || !descripcion || !requisitos || !carrera_destino || !empresa || !nro_contacto || !correo_contacto || !fecha_inicio || !fecha_fin || !id_usuario) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios, incluyendo id_usuario.' });
     }
 
     const nuevaOfertaData = {
       nombre,
       descripcion,
+      requisitos,
+      carrera_destino,
       empresa,
+      nro_contacto,
+      correo_contacto,
       fecha_inicio,
       fecha_fin,
+      id_usuario, // Añadir id_usuario al crear la oferta
       imagen: req.file ? `/uploads/${req.file.filename}` : null
     };
 
@@ -84,11 +89,75 @@ export async function obtenerOfertaLaboral(req, res) {
   }
 }
 
+// Obtener ofertas laborales por carrera profesional
+export async function obtenerOfertasPorCarrera(req, res) {
+  try {
+    const carreraDestino = req.params.carreraDestino; // Obtiene la carrera desde los parámetros de la URL
+    const ofertasLaborales = await OfertaLaboral.obtenerPorCarrera(carreraDestino); // Llama al método del modelo
+
+    if (ofertasLaborales && ofertasLaborales.length > 0) {
+      res.json(ofertasLaborales); // Retorna las ofertas encontradas
+    } else {
+      res.status(404).json({ error: 'No se encontraron ofertas laborales para la carrera especificada' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener las ofertas laborales' });
+  }
+}
+
+// Obtener ofertas laborales que aún no han expirado
+export async function obtenerOfertasLaboralesValidas(req, res) {
+  try {
+    const ofertasLaborales = await OfertaLaboral.obtenerPorFecha(); // Método que obtiene ofertas no expiradas
+    res.json(ofertasLaborales); // Retornar ofertas laborales válidas
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener las ofertas laborales válidas' });
+  }
+}
+
+// Obtener ofertas laborales que no han expirado hasta una fecha específica
+export async function obtenerOfertasPorFechaEspecifica(req, res) {
+  try {
+    const fechaEspecifica = req.params.fecha; // Obtiene la fecha desde los parámetros de la URL
+
+    // Consulta SQL para obtener solo ofertas laborales cuya fecha_fin sea mayor o igual a la fecha específica
+    const ofertas = await OfertaLaboral.obtenerPorFechaEspecifica(fechaEspecifica);
+
+    if (ofertas.length > 0) {
+      res.json(ofertas); // Retorna las ofertas encontradas
+    } else {
+      res.status(404).json({ error: 'No se encontraron ofertas laborales hasta la fecha especificada' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener las ofertas laborales por fecha específica' });
+  }
+}
+
+// Obtener ofertas laborales por id_usuario
+export async function obtenerOfertasPorUsuario(req, res) {
+  try {
+    const { id_usuario } = req.params;
+    const ofertasLaborales = await OfertaLaboral.obtenerPorUsuario(id_usuario);
+
+    if (ofertasLaborales && ofertasLaborales.length > 0) {
+      res.json(ofertasLaborales);
+    } else {
+      res.status(404).json({ error: 'No se encontraron ofertas laborales para el usuario especificado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener las ofertas laborales por usuario' });
+  }
+}
+
 // Actualizar una oferta laboral con posibilidad de cambiar la imagen
 export async function actualizarOfertaLaboral(req, res) {
   try {
     const { id } = req.params;
-    const { nombre, descripcion, empresa, fecha_inicio, fecha_fin } = req.body;
+    const { nombre, descripcion, requisitos, carrera_destino, empresa, nro_contacto, correo_contacto, fecha_inicio, fecha_fin } = req.body;
 
     // Obtener la oferta laboral existente
     let ofertaLaboral = await OfertaLaboral.obtenerPorId(id);
@@ -96,10 +165,14 @@ export async function actualizarOfertaLaboral(req, res) {
       return res.status(404).json({ error: 'Oferta laboral no encontrada' });
     }
 
-    // Actualizar los campos
+    // Actualizar los campos (excluyendo id_usuario)
     ofertaLaboral.nombre = nombre || ofertaLaboral.nombre;
     ofertaLaboral.descripcion = descripcion || ofertaLaboral.descripcion;
+    ofertaLaboral.requisitos = requisitos || ofertaLaboral.requisitos;
+    ofertaLaboral.carrera_destino = carrera_destino || ofertaLaboral.carrera_destino;
     ofertaLaboral.empresa = empresa || ofertaLaboral.empresa;
+    ofertaLaboral.nro_contacto = nro_contacto || ofertaLaboral.nro_contacto;
+    ofertaLaboral.correo_contacto = correo_contacto || ofertaLaboral.correo_contacto;
     ofertaLaboral.fecha_inicio = fecha_inicio || ofertaLaboral.fecha_inicio;
     ofertaLaboral.fecha_fin = fecha_fin || ofertaLaboral.fecha_fin;
 

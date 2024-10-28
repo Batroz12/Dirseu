@@ -18,6 +18,8 @@ import capacitacionesRoutes from './routes/capacitaciones.routes.js';
 import eventosRoutes from './routes/eventos.routes.js';
 import ofertasLaboralesRoutes from './routes/ofertasLaborales.routes.js';
 import talleresRoutes from './routes/talleres.routes.js';
+import ofertasRoutes from './routes/ofertasRoutes.js';
+import vinculacionesRoutes from './routes/vinculacionesRoutes.js';
 import Tables from './routes/Tables.routes.js';
 
 
@@ -40,9 +42,16 @@ app.use('/api/refresh-token', refreshToken);
 
 app.use('/api/capacitaciones', capacitacionesRoutes);
 app.use('/api/eventos', eventosRoutes);
-app.use('/api/ofertas', ofertasLaboralesRoutes);
+app.use('/api/empleos', ofertasLaboralesRoutes);
 app.use('/api/talleres', talleresRoutes);
 app.use('/api/voluntariados', voluntariadosRoutes);
+
+// Rutas Nuevas
+// app.use('/api/egresados', egresadosRoutes);
+// app.use('/api/empleadores', empleadoresRoutes);
+app.use('/api/ofertas', ofertasRoutes);
+// app.use('/api', postulacionesRoutes);
+// app.use('/api', vinculacionesRoutes);
 
 // TABLES END POINTS
 app.use('/api/table', Tables);
