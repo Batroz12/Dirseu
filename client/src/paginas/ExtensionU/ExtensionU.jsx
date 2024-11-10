@@ -94,10 +94,12 @@ const ExtensionU = () => {
       </header>
 
       {/* Sección principal */}
-      <main>
+      <main className="bg-[#B6BEC2]">
         {/* Sección de Mof */}
         <div className="h-auto bg-gray-100 ">
-          <Mof purpose={purpose} functions={functions} />
+          <Mof purpose={purpose} functions={functions} 
+          backgroundImage='https://imgix-prod.sgs.com/-/media/sgscorp/images/temporary/tree-held-by-hands-1600px.cdn.en-PH.1.png?fit=crop&crop=edges&auto=format&w=1200&h=630'
+          />
         </div>
         {/* Programas */}
         <section id="programas" className="py-20">
@@ -124,7 +126,7 @@ const ExtensionU = () => {
         </section>
 
         {/* Impacto */}
-        <section id="impacto" className="bg-gray-200 py-10">
+        <section id="impacto" className="py-10">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Nuestro Impacto</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -163,7 +165,7 @@ const ExtensionU = () => {
         </section>
 
         {/* Formulario de Participación */}
-        <section id="participa" className="bg-green-100 py-2">
+        {/* <section id="participa" className="bg-green-100 py-2">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">¡Únete a Nuestros Programas!</h2>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
@@ -186,7 +188,7 @@ const ExtensionU = () => {
               </button>
             </form>
           </div>
-        </section>
+        </section> */}
       </main>
 
       <footer id="footer" className="py-6 bg-gray-800 text-white">

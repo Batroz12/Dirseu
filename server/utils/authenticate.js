@@ -23,7 +23,6 @@ export function authenticate(req, res, next) {
       }
 
       req.user = decoded.user; // Asignar el usuario decodificado a req.user
-      console.log('Usuario autenticado:', req.user); // Log para verificar el token decodificado
       next();
     } catch (error) {
       console.error('Error al verificar el token:', error);

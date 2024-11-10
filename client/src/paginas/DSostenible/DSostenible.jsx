@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Leaf, Users, BookOpen, Globe, ChevronDown, ChevronUp } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
@@ -43,7 +44,7 @@ const DSostenible = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-indigo-50">
       <header>
         {/* Incorporar NavbarLogo aquí */}
         <NavbarLogo
@@ -55,7 +56,7 @@ const DSostenible = () => {
           buttons={buttons}
         />
       </header>
-      <main className="flex-1 ">
+      <main className="bg-[#B6BEC2]">
         {/* Sección de Mof */}
         <div className="h-auto bg-gray-100 ">
           <Mof purpose={purpose} functions={functions}
@@ -67,7 +68,7 @@ const DSostenible = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12"
+          className="mb-12 max-w-7xl mx-auto px-4"
         >
           <h2 className="py-10 text-3xl font-bold text-center mb-4 text-black">Nuestro Impacto</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -98,27 +99,24 @@ const DSostenible = () => {
           </div>
         </motion.section>
 
-        <motion.section
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
+        <section className="py-5">
           <h2 className="py-5 text-3xl font-bold text-center text-black mb-8">Participa</h2>
           <div className="text-center">
             <p className="py-5 text-lg mb-6">
               ¿Quieres ser parte del cambio? Únete a nuestros programas de voluntariado 
               y contribuye al desarrollo sostenible de nuestra región.
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition duration-300"
-            >
-              Inscríbete como Voluntario
-            </motion.button>
+            <Link to="/Home/modules/list/voluntariados"> {/* Cambia aquí a la ruta deseada */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition duration-300"
+              >
+                Inscríbete como Voluntario
+              </motion.button>
+            </Link>
           </div>
-        </motion.section>
+        </section>
       </main>
 
       <footer id="footer" className="py-6 bg-gray-800 text-white">

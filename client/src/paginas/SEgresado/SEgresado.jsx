@@ -4,14 +4,12 @@ import { Calendar, BookOpen, Briefcase, Users, Mail, Phone, MapPin, Book, FileTe
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import { Facebook, Youtube, Instagram } from 'lucide-react';
 import FormatosAcademicosActualizados from '../../egresado/formatosAcademicos';
-import Convenios from './convenios';
+import Convenios from './componentes/convenios';
 import Footer from '../componentes/footer/footer';
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
-import RecursosAcademicos from './recursosAcademicos';
+import RecursosAcademicos from './componentes/recursosAcademicos';
 import Mof from '../componentes/mof/mof';
 import axios from 'axios';
-
-const BackgroundVideoUrl = 'https://cdn.pixabay.com/video/2024/06/06/215500_large.mp4';
 
 // Sección reutilizable con icono y título
 const Section = ({ id, title, icon: Icon, children }) => (
@@ -108,22 +106,23 @@ const SEgresado = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       {/* Navbar con el componente NavbarLogo */}
       <header>
         <NavbarLogo
-          backgroundVideo={BackgroundVideoUrl}
+          backgroundImage={Logo}
           overlayOpacity={0.5}
-          title="Bienvenido a la Comunidad de Egresados"
+          title="Coordinación de Seguimiento al Egresado"
           socialLinks={socialLinks}
           buttons={buttons}
+          showLoginButton={true}
         />
       </header>
-      <main >
+      <main className="">
         {/* Sección de Mof */}
-        <div className="h-auto bg-gray-100">
+        {/* <div className="h-auto bg-gray-100">
           <Mof purpose={purpose} functions={functions} />
-        </div>
+        </div> */}
         {/* Convenios */}
         <section className="py-10 mx-auto px-4 sm:px-6 lg:px-8">
           <Convenios />

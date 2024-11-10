@@ -1,4 +1,4 @@
-import { getDataByEmail } from '../models/users.model.js';
+import { getDataByEmail, changeUserPassword } from '../models/users.model.js';
 
 export const refreshUser = async (req, res) => {
     try {
@@ -36,3 +36,21 @@ export const getUserInfo = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
+
+export const changePassword = async (req, res) => {
+    const { userId, currentPassword, newPassword } = req.body;
+    console.log("Request Body:", req.body);
+    console.log("Received User ID:", userId);
+    if (!userId || !currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Por favor complete todos los campos' });
+    }
+
+     // Verificar en el backend
+
+    try {
+        const response = await changeUserPassword(userId, currentPassword, newPassword);
+        res.json(response);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};

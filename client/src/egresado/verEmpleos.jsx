@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { X, Briefcase, Phone, Mail, Info } from 'lucide-react';
 import { Typography, Divider, Button, useTheme, MenuItem, Select, InputLabel, FormControl, TextField, Grid } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'; // Adaptador para dayjs
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { motion } from 'framer-motion';
-import dayjs from 'dayjs'; // Importar dayjs
+import dayjs from 'dayjs';
 
-export default function EmpleosConModal() {
+export default function EmpleosConPaginacion() {
   const [jobs, setJobs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 12;
   const [selectedJob, setSelectedJob] = useState(null);
-  const [selectedCareer, setSelectedCareer] = useState(''); // Estado para la carrera seleccionada
-  const [careers, setCareers] = useState([]); // Estado para almacenar las opciones de carreras disponibles
-  const [selectedDate, setSelectedDate] = useState(null); // Estado para almacenar la fecha seleccionada
+  const [selectedCareer, setSelectedCareer] = useState('');
+  const [careers, setCareers] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const theme = useTheme();
 
-  // Función para obtener todas las ofertas laborales válidas
   const fetchValidJobs = () => {
-    fetch('http://localhost:4000/api/empleos') // Conectar con el endpoint de ofertas válidas
+    fetch('http://localhost:4000/api/empleos')
       .then((response) => response.json())
-      .then((data) => setJobs(data)) // Actualiza el estado con ofertas válidas
+      .then((data) => setJobs(Array.isArray(data) ? data : []))
       .catch((error) => console.error('Error al cargar las ofertas válidas:', error));
   };
 
-  // Función para obtener ofertas laborales filtradas por carrera y fecha
   const fetchJobsByCareerAndDate = (career, date) => {
     let url = 'http://localhost:4000/api/empleos';
     if (career !== '') {
@@ -33,39 +33,35 @@ export default function EmpleosConModal() {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        if (date) {
-          const filteredJobs = data.filter((job) => dayjs(job.fecha_fin).isAfter(dayjs(date))); // Usar dayjs para comparar fechas
-          setJobs(filteredJobs);
-        } else {
-          setJobs(data);
-        }
+        const filteredJobs = Array.isArray(data)
+          ? date
+            ? data.filter((job) => dayjs(job.fecha_fin).isAfter(dayjs(date)))
+            : data
+          : [];
+        setJobs(filteredJobs);
       })
       .catch((error) => console.error('Error al cargar los trabajos filtrados:', error));
   };
 
   useEffect(() => {
-    // Cargar todas las ofertas laborales válidas al iniciar
     fetchValidJobs();
-
-    // Cargar las carreras disponibles (esto puede venir de un endpoint o ser estático)
     setCareers([
-      'Ingeniería de Sistemas',
-      'Ingeniería Industrial',
-      'Administración de Empresas',
-      'Derecho',
-      // Agrega más carreras según sea necesario
+      'Arquitectura', 'Ingeniería de Sistemas', 'Ingeniería Civil', 'Ingeniería Ambiental', 'Ingeniería Industrial', 
+      'Administración de Empresas', 'Economia', 'Contabilidad', 'Marketing', 'Finanzas', 'Adm. Negocios Internacionales', 
+      'Derecho', 'Medicina Humana', 'Psicologia', 'Tecnologia Medica', 'Enfermería', 'Estomatología', 'Obstetricia', 
+      'Educación', 'Turismo',
     ]);
   }, []);
 
   const handleCareerChange = (event) => {
     const career = event.target.value;
-    setSelectedCareer(career); // Actualizar la carrera seleccionada
-    fetchJobsByCareerAndDate(career, selectedDate); // Filtrar las ofertas por carrera y fecha seleccionada
+    setSelectedCareer(career);
+    fetchJobsByCareerAndDate(career, selectedDate);
   };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    fetchJobsByCareerAndDate(selectedCareer, date); // Filtrar las ofertas por carrera y fecha seleccionada
+    fetchJobsByCareerAndDate(selectedCareer, date);
   };
 
   const openModal = (job) => {
@@ -77,21 +73,31 @@ export default function EmpleosConModal() {
   };
 
   const formatDate = (dateString) => {
-    return dayjs(dateString).format('DD/MM/YYYY'); // Usar dayjs para formatear la fecha
+    return dayjs(dateString).format('DD/MM/YYYY');
+  };
+
+  // Logica de la paginacion
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = Array.isArray(jobs) ? jobs.slice(indexOfFirstJob, indexOfLastJob) : [];
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}> {/* Envuelve el componente con LocalizationProvider */}
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="container mx-auto p-4">
         <h1 className={`text-3xl font-bold mb-4 text-center ${theme.palette.mode === 'dark' ? 'text-blue-400' : 'bg-white text-gray-900'}`}>
           Ofertas de Empleo
         </h1>
 
-        {/* Filtros dentro de un FormControl */}
         <FormControl fullWidth className="mb-4">
-          <Grid container spacing={2}>
-            {/* Filtro de carrera */}
-            <Grid item xs={12} sm={6}>
+          <Grid container spacing={10}>
+            <Grid item xs={10} sm={6}>
               <InputLabel id="carrera-label">Filtrar por carrera</InputLabel>
               <Select
                 labelId="carrera-label"
@@ -108,8 +114,8 @@ export default function EmpleosConModal() {
                 ))}
               </Select>
             </Grid>
-
-            {/* Filtro de fecha */}
+            
+            {/* Filtro por fecha */}
             <Grid item xs={12} sm={6}>
               <DatePicker
                 label="Filtrar por fecha"
@@ -121,35 +127,51 @@ export default function EmpleosConModal() {
           </Grid>
         </FormControl>
 
-        {/* Sección con margen superior */}
         <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          {jobs.length > 0 ? (
-            jobs.map((job) => (
-              <div
+          {currentJobs.length > 0 ? (
+            currentJobs.map((job) => (
+              <motion.div
                 key={job.id}
-                className={`p-10 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow min-h-[180px] min-w-[440px] ${
+                className={`p-6 rounded-lg shadow-lg min-h-[180px] min-w-[320px] flex flex-col justify-between ${
                   theme.palette.mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
                 }`}
                 onClick={() => openModal(job)}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
-                <h2 className={`text-2xl font-bold mb-2 ${theme.palette.mode === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  {job.nombre}
-                </h2>
-
-                <p className={`${theme.palette.mode === 'dark' ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                  {job.descripcion}
-                </p>
-
-                <Typography variant="body2" className={theme.palette.mode === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
+                <h2 className="text-2xl font-semibold mb-2 text-black">{job.nombre}</h2>
+                <p className="text-sm mb-2 ">{job.descripcion}</p>
+                <Typography variant="body2" className="text-gray-600">
                   <strong>Fechas de postulación:</strong> {`${formatDate(job.fecha_inicio)} - ${formatDate(job.fecha_fin)}`}
                 </Typography>
-              </div>
+              </motion.div>
             ))
           ) : (
             <Typography variant="body1" className="text-center col-span-3">
               No se encontraron ofertas laborales para esta carrera y fecha.
             </Typography>
           )}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-6 space-x-2">
+          <Button 
+            variant="outlined" 
+            onClick={() => handlePageChange(currentPage - 1)} 
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </Button>
+          <Typography variant="body2" className="flex items-center">
+            Página {currentPage} de {totalPages}
+          </Typography>
+          <Button 
+            variant="outlined" 
+            onClick={() => handlePageChange(currentPage + 1)} 
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </Button>
         </div>
 
         {selectedJob && (
@@ -167,23 +189,17 @@ export default function EmpleosConModal() {
                 theme.palette.mode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
               }`}
             >
+              {/* Contenido del modal */}
               <div className="flex justify-between items-center mb-4">
-                <h2 className={`text-2xl font-bold ${theme.palette.mode === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  {selectedJob.nombre}
-                </h2>
-
-                <button
-                  onClick={closeModal}
-                  className={`${theme.palette.mode === 'dark' ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
-                  aria-label="Cerrar modal"
-                >
+                <h2 className="text-2xl font-bold">{selectedJob.nombre}</h2>
+                <button onClick={closeModal} className="text-gray-500 hover:text-gray-700" aria-label="Cerrar modal">
                   <X size={28} />
                 </button>
               </div>
               <Typography variant="h6" className={theme.palette.mode === 'dark' ? 'text-blue-400 mb-2' : 'text-blue-600 mb-2'}>
                 <Info size={20} className="inline mr-2" /> Descripción del empleo
               </Typography>
-              <p className="mb-4">{selectedJob.descripcion}</p>
+              <p className="mb-1">{selectedJob.descripcion}</p>
 
               <Divider className="my-4" />
 
@@ -211,9 +227,9 @@ export default function EmpleosConModal() {
                 <strong>Hasta:</strong> {formatDate(selectedJob.fecha_fin)}
               </p>
 
-              <Button variant="contained" color="primary" fullWidth onClick={closeModal}>
+              {/* <Button variant="contained" color="primary" fullWidth onClick={closeModal}>
                 Aplicar
-              </Button>
+              </Button> */}
             </motion.div>
           </motion.div>
         )}

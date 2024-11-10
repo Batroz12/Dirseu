@@ -6,9 +6,6 @@ import Typography from "@mui/material/Typography";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
-import EventIcon from "@mui/icons-material/Event";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import GroupIcon from "@mui/icons-material/Group";
 import Backdrop from "@mui/material/Backdrop";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,7 +19,6 @@ export default function DetailsModules() {
   const [errorResponse, setErrorResponse] = useState("");
 
   const { table, id } = useParams();
-
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -33,29 +29,21 @@ export default function DetailsModules() {
   async function getDescription() {
     try {
       const response = await getTableByIdRequest({ table, id });
-
       if (response.ok) {
         const json = await response.json();
         setDescription(json.data);
-        console.log(json.data);
-      } else {
-        const json = await response.json();
-        return;
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
 
   const handleSubscribe = async () => {
     try {
       if (auth.getUser().type !== "estudiante") {
         setErrorResponse("Un Docente no puede Inscribirse");
-        console.log(errorResponse);
         handleOpen();
         return;
       }
@@ -66,17 +54,9 @@ export default function DetailsModules() {
         estudiante_id: auth.getUser().id,
       });
 
-      if (response.ok) {
-        const json = await response.json();
-        console.log(json.message);
-        setErrorResponse(json.message);
-        handleOpen();
-      } else {
-        const json = await response.json();
-        setErrorResponse(json.error);
-        handleOpen();
-        console.log(errorResponse);
-      }
+      const json = await response.json();
+      setErrorResponse(response.ok ? json.message : json.error);
+      handleOpen();
     } catch (error) {
       console.error(error);
     }
@@ -90,196 +70,116 @@ export default function DetailsModules() {
   const [open, setOpen] = React.useState(false);
   const [openCV, setOpenCV] = React.useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-    navigate(-1);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
-  const handleCloseCV = () => {
-    setOpenCV(false);
-  };
-  const handleOpenCV = () => {
-    setOpenCV(true);
-  };
+  const handleCloseCV = () => setOpenCV(false);
+  const handleOpenCV = () => setOpenCV(true);
 
-  // Imagen por defecto
   const defaultImage = 'https://th.bing.com/th/id/OIP.JKvRJaNFhDO7nu1s_-zieAHaHa?pid=ImgDet&w=184&h=184&c=7&dpr=1,3';
-  // Si description.imagen es null, undefined o una cadena vacía, usamos la imagen por defecto
-  const imageUrl = description.imagen !== null 
-    ? `http://localhost:4000${description.imagen}` 
-    : defaultImage;
-  console.log("Valor de imageUrl:", imageUrl);
+  const imageUrl = description.imagen ? `http://localhost:4000${description.imagen}` : defaultImage;
 
-  // Función que retorna el contenido dinámico según la tabla
   const renderContentByTable = () => {
-    switch (table) {
-      case "ofertas_laborales":
-        return (
-          <>
-            <Typography variant="h2">{description.nombre}</Typography>
-            <Typography variant="h6">{description.descripcion}</Typography>
-            <Typography variant="body2">
-              <strong>Empresa:</strong> {description.empresa}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Fecha:</strong> {`${formatDate(description.fecha_inicio)} - ${formatDate(description.fecha_fin)}`}
-            </Typography>
-          </>
-        );
-      case "capacitaciones":
-      case "talleres":
-      case "voluntariados":
-        return (
-          <>
-            <Typography variant="h2">{description.nombre}</Typography>
-            <Typography variant="h6">{description.descripcion}</Typography>
-            <Typography variant="body2">
-              <strong>Fecha:</strong> {`${formatDate(description.fecha_inicio)} - ${formatDate(description.fecha_fin)}`}
-            </Typography>
-            {description.lugar && (
-              <Typography variant="body2">
-                <strong>Lugar:</strong> {description.lugar}
-              </Typography>
-            )}
-            {description.cupo_maximo && (
-              <Typography variant="body2">
-                <strong>Cupo Máximo:</strong> {description.cupo_maximo}
-              </Typography>
-            )}
-          </>
-        );
-      default:
-        return <Typography variant="h6">Datos no disponibles</Typography>;
-    }
+    return (
+      <>
+        <Typography variant="h4" sx={{ fontSize: { xs: "1.5rem", sm: "2rem" }, fontWeight: 'bold' }}>
+          {description.nombre}
+        </Typography>
+        <Typography variant="body1" sx={{ fontSize: { xs: "0.9rem", sm: "1rem" }, mt: 2 }}>
+          {description.descripcion}
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          <strong>Fecha:</strong> {`${formatDate(description.fecha_inicio)} - ${formatDate(description.fecha_fin)}`}
+        </Typography>
+        {description.lugar && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            <strong>Lugar:</strong> {description.lugar}
+          </Typography>
+        )}
+        {description.cupo_maximo && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            <strong>Cupo Máximo:</strong> {description.cupo_maximo}
+          </Typography>
+        )}
+      </>
+    );
   };
 
   return (
     <React.Fragment>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}
-        onClick={handleClose}
-      >
-        <Typography variant="h2" sx={{ fontFamily: "Arial" }}>
-          {errorResponse}
-        </Typography>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open} onClick={handleClose}>
+        <Typography variant="h6">{errorResponse}</Typography>
       </Backdrop>
       <Grid container sx={{ mx: "auto" }}>
         <Grid
           item
-          sm={12}
-          md={6}
-          lg={5}
+          xs={12}
+          md={5}
           sx={{
             display: "flex",
             flexDirection: "column",
-            position: "relative", // Asegura que el botón pueda posicionarse en el contenedor
-            background: ` url(${imageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            minHeight: "400px",
-            borderRight: "1px solid",
+            background: `url(${imageUrl}) center center / cover no-repeat`,
+            minHeight: "300px",
+            borderRight: { md: "1px solid" },
             borderColor: "divider",
-            alignItems: "start",
-            pt: 4,
-            px: 5,
-            gap: 2,
+            position: "relative",
           }}
         >
-          {/* Botón Regresar dentro de la imagen de fondo */}
           <Button
             startIcon={<ChevronLeftRoundedIcon />}
             onClick={handleBack}
             variant="contained"
             sx={{
-              position: "absolute", // Posiciona el botón dentro del contenedor
-              top: "20px", // Distancia desde la parte superior
-              left: "20px", // Distancia desde la parte izquierda
-              zIndex: 1, // Asegura que el botón esté por encima de la imagen
+              position: "absolute",
+              top: "20px",
+              left: "20px",
+              zIndex: 1,
+              fontSize: { xs: "0.8rem", sm: "1rem" },
             }}
           >
             Regresar
           </Button>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "end",
-            }}
-          >
-            {/* Otros botones o contenido */}
-          </Box>
         </Grid>
         <Grid
           item
-          sm={12}
-          md={6}
-          lg={7}
+          xs={12}
+          md={7}
           sx={{
             display: "flex",
             flexDirection: "column",
-            maxWidth: "100%",
-            width: "100%",
-            backgroundColor: { xs: "transparent", sm: "background.default" },
+            backgroundColor: { xs: "transparent", md: "background.default" },
             alignItems: "start",
-            pt: { xs: 2, sm: 4 },
-            px: { xs: 2, sm: 10 },
-            gap: { xs: 4, md: 8 },
+            p: { xs: 2, sm: 4, md: 6 },
+            gap: { xs: 2, md: 4 },
           }}
         >
           {renderContentByTable()}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
             {auth.getUser()?.type !== "egresado" ? (
               <Button
                 variant="contained"
                 endIcon={<ChevronRightRoundedIcon />}
                 onClick={handleSubscribe}
-                sx={{
-                  width: "60%",
-                  fontSize: "1.2rem",
-                  padding: "10px 0",
-                }}
+                sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
               >
                 Inscribirse
               </Button>
             ) : (
-              <React.Fragment>
+              <>
                 <Button
                   variant="contained"
                   endIcon={<ContactPageIcon />}
                   onClick={handleOpenCV}
-                  sx={{
-                    width: "60%",
-                    fontSize: "1.2rem",
-                    padding: "10px 0",
-                  }}
+                  sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
                 >
                   Generar CV
                 </Button>
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                  }}
-                  open={openCV}
-                >
+                <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openCV}>
                   <Box>
                     <FormularioPDF func={handleCloseCV} />
                   </Box>
                 </Backdrop>
-              </React.Fragment>
+              </>
             )}
           </Box>
         </Grid>

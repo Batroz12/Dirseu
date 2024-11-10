@@ -1,8 +1,8 @@
-import Evento from '../models/Evento.js'; // Asegúrate de que la ruta es correcta
+import Evento from '../models/evento.js'; 
 import fs from 'fs/promises';
 import sharp from 'sharp';
 import path from 'path';
-import os from 'os'; // Para obtener una carpeta temporal
+import os from 'os'; 
 
 // Crear un nuevo evento con imagen
 export async function crearEvento(req, res) {

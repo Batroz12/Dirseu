@@ -52,24 +52,25 @@ const Inicio = () => {
         />
       </header>
 
-      <main className="flex-1">
+      <main className="">
         {/* Carrusel de imágenes */}
         {/* <section className="w-full">
           <SliderSection />
         </section> */}
-
-        <section>
-          <Coordinaciones />
-        </section>
-
         {/* Nueva sección de Misión y Visión */}
-        <section ref={conocemasRef} id="conocemas" className="w-full py-5 md:py-12 lg:py-16 bg-gray-100">
+        <section ref={conocemasRef} id="conocemas" className="w-full md:py-12 lg:py-12 bg-gray-100">
           <div className="container mx-auto px-1 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 mx-auto">
             Nuestra Misión y Visión
           </h2>
               <CardsMV />
           </div>
+        </section>
+        <section className="py-0 bg-gray-100">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 mx-auto">
+            Nuestras Coordinaciones
+          </h2>
+          <Coordinaciones />
         </section>
         {/* Seccion de politicas */}
         <section className="py-0 md:py-0 lg:py-0 bg-gray-100 min-h-screen">
@@ -87,7 +88,7 @@ const Inicio = () => {
                 <LuUsers className="h-16 w-16 mb-6 text-blue-600" />
                 <h3 className="text-2xl font-bold mb-4">Voluntariado</h3>
                 <p className="text-gray-600 mb-6">
-                  Oportunidades para servir y aprender en la comunidad.
+                  Oportunidades para aprender y contribuir de manera significativa al bienestar comunitario.
                 </p>
                 <Programas />
               </div>
@@ -103,7 +104,7 @@ const Inicio = () => {
                 <LuBriefcase className="h-16 w-16 mb-6 text-blue-600" />
                 <h3 className="text-2xl font-bold mb-4">Desarrollo Profesional</h3>
                 <p className="text-gray-600 mb-6">
-                  Programas para mejorar habilidades profesionales.
+                  Oportunidades de aprendizaje enfocadas en mejorar y potenciar tus habilidades profesionales.
                 </p>
                 <Capacitaciones />
               </div>
@@ -111,7 +112,7 @@ const Inicio = () => {
                 <LuGlobe className="h-16 w-16 mb-6 text-blue-600" />
                 <h3 className="text-2xl font-bold mb-4">Desarrollo Sostenible</h3>
                 <p className="text-gray-600 mb-6">
-                  Programas enfocados en la sostenibilidad y el impacto ambiental.
+                  Programas dedicados a fomentar la sostenibilidad y crear un impacto ambiental positivo y duradero.
                 </p>
                 {/* <DesarrolloSostenible /> */}
               </div>

@@ -135,3 +135,36 @@ export const registerEmpleador = async ({ user_id, codigo_empleador, nombre_empr
     }
 };
 
+// Función para cambiar la contraseña de un usuario
+export const changeUserPassword = async (userId, currentPassword, newPassword) => {
+    try {
+        // Obtener el usuario por su ID
+        const [rows] = await pool.query('SELECT password FROM users WHERE id = ?', [userId]);
+        const user = rows[0];
+
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        // Verificar que la contraseña actual coincida
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            throw new Error('La contraseña actual es incorrecta');
+        }
+
+        // Validar la longitud de la nueva contraseña (ejemplo: mínimo 8 caracteres)
+        if (newPassword.length < 8) {
+            throw new Error('La nueva contraseña debe tener al menos 8 caracteres');
+        }
+
+        // Hashear la nueva contraseña
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Actualizar la contraseña en la base de datos
+        await pool.query('UPDATE users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
+
+        return { success: true, message: 'Contraseña cambiada exitosamente' };
+    } catch (error) {
+        throw new Error(error.message || 'Error al cambiar la contraseña');
+    }
+};

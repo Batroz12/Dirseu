@@ -31,10 +31,6 @@ function stringToColor(string) {
 
 function stringAvatar(name) {
   const initials = name.match(/\b\w/g).slice(0, 2).join("");
-  // 1. name.match(/\b\w/g): Busca todas las letras que forman palabras completas en el nombre.
-  //    - \b: Coincide con un límite de palabra.
-  //    - \w: Coincide con cualquier carácter de palabra.
-  //    - g: Realiza la búsqueda globalmente en toda la cadena.
   return {
     sx: {
       bgcolor: stringToColor(name),
@@ -42,7 +38,6 @@ function stringAvatar(name) {
     children: initials,
   };
 }
-
 const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer)({
@@ -64,7 +59,7 @@ export default function SideMenu() {
       sx={{
         display: { xs: 'none', md: 'block' },
         [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'background.paper',
+          backgroundColor: 'background.alternate',
         },
       }}
     >
@@ -93,7 +88,6 @@ export default function SideMenu() {
         <Avatar
             sizes="small"
             alt="Riley Carter"
-            src="/static/images/avatar/7.jpg"
             sx={{
               width: 24,
               height: 24,

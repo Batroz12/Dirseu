@@ -31,11 +31,11 @@ export default function CustomButton() {
         justifyContent: 'flex-start',
         padding: '10px 16px',
         width: '100%',
-        textTransform: 'none', // Evitar que el texto se transforme a mayúsculas
-        backgroundColor: theme.palette.primary.main, // Color de fondo según el tema
-        color: theme.palette.primary.contrastText, // Texto adaptado al tema
+        textTransform: 'none',
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
         '&:hover': {
-          backgroundColor: theme.palette.primary.dark, // Color al hacer hover
+          backgroundColor: theme.palette.primary.dark,
         },
       }}
     >

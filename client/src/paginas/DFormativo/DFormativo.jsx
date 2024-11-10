@@ -4,12 +4,22 @@ import { Palette, Music, Camera, Theater, Users, Mic, Globe, Users2, Music4, Use
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
+import DanzaFolklorica from '../componentes/horariosTalleres/danzaFolklorica';
+import DanzaModerna from '../componentes/horariosTalleres/danzaModerna';
+import Teatro from '../componentes/horariosTalleres/teatro';
+import Tuna from '../componentes/horariosTalleres/tuna';
+import TunaFemenina from '../componentes/horariosTalleres/tunaF';
+import Orquesta from '../componentes/horariosTalleres/orquesta';
+import Ritmo from '../componentes/horariosTalleres/ritmo';
+import Coro from '../componentes/horariosTalleres/coro';
+import ArtesVisuales from '../componentes/horariosTalleres/artesVisuales';
 
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
 
-const Workshop = ({ icon: Icon, title, description }) => (
+const Workshop = ({ icon: Icon, title, description, onClick }) => (
   <motion.div 
-    className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+    className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+    onClick={onClick}
     whileHover={{ scale: 1.05 }}
     transition={{ type: "spring", stiffness: 300 }}
   >
@@ -21,11 +31,60 @@ const Workshop = ({ icon: Icon, title, description }) => (
 
 const DFormativo = () => {
   const [email, setEmail] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Submitted email:', email);
     setEmail('');
+  };
+
+  const openModal = (workshop) => {
+    setSelectedWorkshop(workshop);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedWorkshop(null);
+  };
+
+  const workshops = [
+    { icon: Palette, title: "Artes Visuales y Gráficas", description: "Aprende diversas técnicas de pintura y expresa tu creatividad en el lienzo." },
+    { icon: Music, title: "Orquesta Sinfónica", description: "Descubre el mundo de la música instrumental a través de una variedad de instrumentos y estilos." },
+    { icon: Mic, title: "Coro", description: "Explora tu voz y aprende a interpretar piezas musicales en conjunto." },
+    { icon: Users2, title: "Danza Moderna", description: "Explora tu creatividad a través del movimiento y aprende coreografías contemporáneas." },
+    { icon: Theater, title: "Teatro", description: "Desarrolla tus habilidades de actuación y expresión corporal en el escenario." },
+    { icon: Music4, title: "Tuna Femenina", description: "Descubre el arte de la interpretación musical y la tradición de la Tuna, mientras disfrutas de la camaradería." },
+    { icon: Users, title: "Danza Folclórica", description: "Expresa tus emociones a través del movimiento y aprende diversos estilos de baile tradicionales." },
+    { icon: Users, title: "Ritmo y Conexión", description: "Conéctate con el ritmo y aprende a bailar en diferentes estilos, mientras compartes una experiencia social." },
+    { icon: Music4, title: "Tuna Universitaria", description: "Únete a la tradición musical universitaria, donde aprenderás a interpretar canciones y a disfrutar de la música en grupo." },
+  ];
+
+  const renderModalContent = () => {
+    switch (selectedWorkshop?.title) {
+      case "Danza Folclórica":
+        return <DanzaFolklorica />;
+      case "Danza Moderna":
+        return <DanzaModerna />;
+      case "Teatro":
+        return <Teatro />;
+      case "Artes Visuales y Gráficas":
+        return <ArtesVisuales />;
+      case "Ritmo y Conexión":
+        return <Ritmo />;
+      case "Orquesta Sinfónica":
+        return <Orquesta />;
+      case "Coro":
+        return <Coro />;
+      case "Tuna Femenina":
+        return <TunaFemenina />;
+      case "Tuna Universitaria":
+        return <Tuna />;
+      default:
+        return <p>Información no disponible.</p>;
+    }
   };
 
   // Configuración de redes sociales
@@ -68,53 +127,37 @@ const DFormativo = () => {
       </header>
 
       <main className="bg-[#B6BEC2]">
-        <section id="talleres" className="py-0">
+      {/* Sección de talleres */}
+      <section id="talleres" className="py-0">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Nuestros Talleres</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Workshop 
-                icon={Palette} 
-                title="Artes Visuales y Gráficas" 
-                description="Aprende diversas técnicas de pintura y expresa tu creatividad en el lienzo."
-              />
-              <Workshop 
-                icon={Mic} 
-                title="Orquesta Sinfónica y Coro" 
-                description="Descubre el mundo de la música a través de diversos instrumentos y estilos."
-              />
-              <Workshop 
-                icon={Users2} 
-                title="Danza Moderna"
-                description="Captura momentos únicos y aprende a contar historias a través de imágenes."
-              />
-              <Workshop 
-                icon={Theater} 
-                title="Teatro" 
-                description="Desarrolla tus habilidades de actuación y expresión corporal en el escenario."
-              />
-              <Workshop 
-                icon={Music4} 
-                title="Tuna Femenina" 
-                description="Explora tu voz literaria y crea historias cautivadoras."
-              />
-              <Workshop 
-                icon={Users} 
-                title="Danza Folclórica" 
-                description="Expresa tus emociones a través del movimiento y aprende diversos estilos de baile."
-              />
-              <Workshop 
-                icon={Users} 
-                title="Ritmo y Conexión" 
-                description="Expresa tus emociones a través del movimiento y aprende diversos estilos de baile."
-              />
-              <Workshop 
-                icon={Music4} 
-                title="Tuna Universitaria" 
-                description="Expresa tus emociones a través del movimiento y aprende diversos estilos de baile."
-              />
+              {workshops.map((workshop, index) => (
+                <Workshop 
+                  key={index} 
+                  icon={workshop.icon} 
+                  title={workshop.title} 
+                  description={workshop.description} 
+                  onClick={() => openModal(workshop)} 
+                />
+              ))}
             </div>
           </div>
         </section>
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg relative max-w-3xl mx-auto">
+              <button 
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" 
+                onClick={closeModal}
+              >
+                X
+              </button>
+              {renderModalContent()}
+            </div>
+          </div>
+        )}
 
         <section id="beneficios" className="py-0">
           <div className="container mx-auto px-4">

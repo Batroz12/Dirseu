@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthProvider';
 import {
   obtenerOfertasLaborales,
   crearOfertaLaboral,
   actualizarOfertaLaboral,
   eliminarOfertaLaboral
-} from '../../api/empleos'; // Cambia los importes a la API de ofertas laborales
-import FormularioOferta from './AgregarEmpleos'; // Componente de formulario para agregar ofertas
+} from '../../api/empleos';
+import FormularioOferta from './AgregarEmpleos';
 import {
   Button,
   Box,
@@ -25,15 +26,15 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  TablePagination
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'; // Importar íconos de Material UI
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
-// Creación del tema personalizado de MUI
 const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#007BFF',
+      main: '#006fe6',
     },
     secondary: {
       main: '#f50057',
@@ -42,13 +43,19 @@ const theme = createTheme({
 });
 
 const OfertaLaboralPage = () => {
+  const { getUser } = useAuth();
+  const usuarioAutenticado = getUser();
+
   const [ofertas, setOfertas] = useState([]);
   const [oferta, setOferta] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  
+  // Estados de paginación
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Función para cargar las ofertas laborales
   const cargarOfertasLaborales = async () => {
     try {
       const response = await obtenerOfertasLaborales();
@@ -64,34 +71,32 @@ const OfertaLaboralPage = () => {
     cargarOfertasLaborales();
   }, []);
 
-  // Maneja la apertura del modal para crear o editar
   const handleOpenModal = (oferta = null) => {
     setOferta(oferta);
     setOpenModal(true);
   };
 
-  // Maneja el cierre del modal
   const handleCloseModal = () => {
     setOferta(null);
     setOpenModal(false);
   };
 
-  // Maneja el envío del formulario
   const handleSubmit = async (data) => {
     try {
       const formData = new FormData();
       formData.append('nombre', data.nombre);
       formData.append('descripcion', data.descripcion);
-      formData.append('requisitos', data.requisitos); // Nuevo campo
-      formData.append('carrera_destino', data.carrera_destino); // Nuevo campo
+      formData.append('requisitos', data.requisitos);
+      formData.append('carrera_destino', data.carrera_destino);
       formData.append('empresa', data.empresa);
-      formData.append('nro_contacto', data.nro_contacto); // Nuevo campo
-      formData.append('correo_contacto', data.correo_contacto); // Nuevo campo
+      formData.append('nro_contacto', data.nro_contacto);
+      formData.append('correo_contacto', data.correo_contacto);
       formData.append('fecha_inicio', data.fecha_inicio);
       formData.append('fecha_fin', data.fecha_fin);
       if (data.imagen) {
         formData.append('imagen', data.imagen);
       }
+      formData.append('id_usuario', usuarioAutenticado?.user_id);
 
       if (oferta) {
         await actualizarOfertaLaboral(oferta.id, formData, {
@@ -104,15 +109,14 @@ const OfertaLaboralPage = () => {
         });
         alert('Oferta laboral creada exitosamente');
       }
-      setOferta(null);
-      setOpenModal(false);
-      await cargarOfertasLaborales();
+
+      handleCloseModal();
+      cargarOfertasLaborales();
     } catch (error) {
       setError('Error al guardar la oferta laboral');
     }
   };
 
-  // Maneja la eliminación de una oferta laboral
   const handleEliminar = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta oferta laboral?')) {
       try {
@@ -123,6 +127,19 @@ const OfertaLaboralPage = () => {
       }
     }
   };
+
+  // Manejadores de cambio de página y número de filas por página
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Ofertas actuales para mostrar según la página
+  const ofertasPaginas = ofertas.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <ThemeProvider theme={theme}>
@@ -137,13 +154,8 @@ const OfertaLaboralPage = () => {
           </Typography>
         )}
 
-        {/* Botón para abrir el modal de creación */}
         <Box display="flex" justifyContent="flex-end" mb={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleOpenModal()}
-          >
+          <Button variant="contained" color="primary" onClick={() => handleOpenModal()}>
             Agregar Oferta Laboral
           </Button>
         </Box>
@@ -154,47 +166,39 @@ const OfertaLaboralPage = () => {
             <CircularProgress />
           </Box>
         ) : (
-          <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
+          <TableContainer component={Paper} sx={{ width: '110%', maxWidth: '1200px', margin: 'auto', overflowX: 'auto' }}>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Nombre</TableCell>
                   <TableCell>Descripción</TableCell>
-                  <TableCell>Requisitos</TableCell> {/* Nuevo campo */}
+                  <TableCell>Requisitos</TableCell>
                   <TableCell>Empresa</TableCell>
-                  <TableCell>Carrera Destino</TableCell> {/* Nuevo campo */}
-                  <TableCell>Número de Contacto</TableCell> {/* Nuevo campo */}
-                  <TableCell>Correo de Contacto</TableCell> {/* Nuevo campo */}
+                  <TableCell>Carrera Destino</TableCell>
+                  <TableCell>Número de Contacto</TableCell>
+                  <TableCell>Correo de Contacto</TableCell>
                   <TableCell>Fecha Inicio</TableCell>
                   <TableCell>Fecha Fin</TableCell>
                   <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {ofertas.map((o) => (
+                {ofertasPaginas.map((o) => (
                   <TableRow key={o.id}>
                     <TableCell>{o.nombre}</TableCell>
                     <TableCell>{o.descripcion}</TableCell>
-                    <TableCell>{o.requisitos}</TableCell> {/* Nuevo campo */}
+                    <TableCell>{o.requisitos}</TableCell>
                     <TableCell>{o.empresa}</TableCell>
-                    <TableCell>{o.carrera_destino}</TableCell> {/* Nuevo campo */}
-                    <TableCell>{o.nro_contacto}</TableCell> {/* Nuevo campo */}
-                    <TableCell>{o.correo_contacto}</TableCell> {/* Nuevo campo */}
+                    <TableCell>{o.carrera_destino}</TableCell>
+                    <TableCell>{o.nro_contacto}</TableCell>
+                    <TableCell>{o.correo_contacto}</TableCell>
                     <TableCell>{new Date(o.fecha_inicio).toLocaleDateString()}</TableCell>
                     <TableCell>{new Date(o.fecha_fin).toLocaleDateString()}</TableCell>
                     <TableCell align="center">
-                      {/* Ícono de Editar */}
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleOpenModal(o)}
-                      >
+                      <IconButton color="primary" onClick={() => handleOpenModal(o)}>
                         <EditIcon />
                       </IconButton>
-                      {/* Ícono de Eliminar */}
-                      <IconButton
-                        color="secondary"
-                        onClick={() => handleEliminar(o.id)}
-                      >
+                      <IconButton color="secondary" onClick={() => handleEliminar(o.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -202,23 +206,25 @@ const OfertaLaboralPage = () => {
                 ))}
               </TableBody>
             </Table>
+            {/* Componente de paginación */}
+            <TablePagination
+              component="div"
+              count={ofertas.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25]}
+            />
           </TableContainer>
         )}
 
-        {/* Modal para Crear/Editar Oferta Laboral */}
         <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
           <DialogTitle color="text.primary">
             {oferta ? 'Actualizar Oferta Laboral' : 'Crear Oferta Laboral'}
           </DialogTitle>
           <DialogContent>
-            {isLoading ? (
-              <CircularProgress />
-            ) : (
-              <FormularioOferta
-                oferta={oferta}
-                onSubmit={handleSubmit}
-              />
-            )}
+            {isLoading ? <CircularProgress /> : <FormularioOferta oferta={oferta} onSubmit={handleSubmit} />}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal} color="secondary">

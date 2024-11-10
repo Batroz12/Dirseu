@@ -128,10 +128,14 @@ export default function OptionsMenu() {
         >
           <MenuItem onClick={handleClose}>Perfil</MenuItem>
         </Link>
-        
-        <MenuItem onClick={handleClose}>Mi Cuenta</MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>Configuraciones</MenuItem>
+
+        <Link
+          to = "cambiar-password"
+          style={{ textDecoration: "none", color: "inherit" }}
+          replace
+        >
+          <MenuItem onClick={handleClose}>Cambiar Contraseña</MenuItem>
+        </Link>
         <Divider />
         <MenuItem
           onClick={handleClose}

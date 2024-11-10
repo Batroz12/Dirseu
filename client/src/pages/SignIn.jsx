@@ -11,13 +11,10 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
-
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-
 import { accesUserRequest } from "../api/api";
-import { useEffect } from "react";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
@@ -25,41 +22,54 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { isAuthenticated, saveUser } = useAuth();
+  const { saveUser, getUser } = useAuth();
   const goTo = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) goTo("/Home", { replace: true });
-    // return <Navigate to="/Home" replace />;
-  }, [isAuthenticated]);
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+    setIsLoading(true);
+  
+    if (!email || !password) {
+      setErrorResponse("Por favor, complete todos los campos.");
+      setIsLoading(false);
+      return;
+    }
+  
     try {
-      const response = await accesUserRequest({
-        email,
-        password,
-      });
-
-      if (response.ok) {
-        console.log("Acceso Exitoso");
-        setErrorResponse("");
-        const json = await response.json();
-
-        if (json.accessToken && json.refreshToken) {
-          console.log(json);
-          saveUser(json);
-        }
-      } else {
-        console.log("Algo Ocurrio");
-        const json = await response.json();
-        setErrorResponse(json.error);
+      const response = await accesUserRequest({ email, password });
+  
+      if (!response) {
+        setErrorResponse("Error al procesar la solicitud. Inténtelo de nuevo.");
+        setIsLoading(false);
         return;
       }
+  
+      if (response.ok) {
+        setErrorResponse("");
+        const json = await response.json();
+        if (json.accessToken && json.refreshToken) {
+          saveUser(json);
+  
+          // Redirigir según el tipo de usuario
+          const userType = json.user.role;
+          console.log(userType);
+          if (userType === "egresado") {
+            goTo("/Homes", { replace: true });
+          } else {
+            goTo("/Home", { replace: true });
+          }
+        }
+      } else {
+        const json = await response.json();
+        setErrorResponse(json.error || "Error en el inicio de sesión");
+      }
     } catch (error) {
+      setErrorResponse("Error de conexión con el servidor");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -73,25 +83,12 @@ export default function SignIn() {
           sm={4}
           md={7}
           sx={{
-            height: "100",
-            backgroundImage:
-              "url(https://mentor.pe/wp-content/uploads/2023/09/UAC-frontis.jpg)",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
+            backgroundImage: "url(https://mentor.pe/wp-content/uploads/2023/09/UAC-frontis.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            backdropFilter: "blur(3px)",
           }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              backdropFilter: "blur(3px)",
-            }}
-          />
-        </Grid>
+        />
         <Grid
           item
           xs={12}
@@ -102,7 +99,7 @@ export default function SignIn() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center", // Centra el contenido verticalmente
+            justifyContent: "center",
           }}
         >
           <Box
@@ -126,12 +123,7 @@ export default function SignIn() {
                 {errorResponse}
               </Alert>
             )}
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -165,18 +157,19 @@ export default function SignIn() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={isLoading}
               >
-                Sign In
+                {isLoading ? "Loading..." : "Sign In"}
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link to="/forgot-password" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link to={"/register"}>
-                    {"Don't have an account? Sign Up"}
+                  <Link to="/register">
+                    {"No tienes una cuenta? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>

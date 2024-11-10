@@ -97,6 +97,35 @@ export const getUserInfoRequest = async (accessToken) => {
     });
 };
 
+// API para cambio de contraseña
+export const changePasswordRequest = async (accessToken, userId, currentPassword, newPassword) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/user/change-password`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+                userId,         // Incluir userId
+                currentPassword,
+                newPassword,
+            }),
+        });
+
+        // Verificar si la respuesta es exitosa
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Error al cambiar la contraseña");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error en changePasswordRequest:", error);
+        throw error;
+    }
+};
+
 // API´s TO TABLES
 export const getTableRequest = async (table) => {
     return await fetch(`${BASE_URL}/api/table/get-table`, {

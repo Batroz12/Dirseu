@@ -54,27 +54,32 @@ const itemVariants = {
 export default function Coordinaciones() {
   const controls = useAnimation()
   const ref = React.useRef(null)
-  const isInView = useInView(ref, { once: false })
+  const isInView = useInView(ref, { once: false, amount: 0.5 })
 
   React.useEffect(() => {
-    if (isInView) {
-      controls.start("visible")
-    } else {
-      controls.start("hidden")
+    const handleResize = () => {
+      if (window.innerWidth >= 768) { 
+        if (isInView) {
+          controls.start("visible")
+        } else {
+          controls.start("hidden")
+        }
+      } else {
+        controls.start("visible")
+      }
+    }
+
+    handleResize() // Llamamos inicialmente para establecer el estado correcto
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
     }
   }, [controls, isInView])
 
   return (
     <div className="bg-gray-100" ref={ref}>
       <div className="container mx-auto px-4">
-        <motion.h2 
-          className="text-3xl font-bold text-center text-gray-800 mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={controls}
-          transition={{ duration: 0.5 }}
-        >
-          Nuestras Coordinaciones
-        </motion.h2>
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
           variants={containerVariants}

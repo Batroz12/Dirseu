@@ -1,7 +1,5 @@
 import * as React from 'react';
-
-import { Outlet } from "react-router-dom";
-
+import { Outlet, useLocation } from "react-router-dom";
 import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -9,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import AppNavbar from './components/BarraDesplegable';
 import Header from './components/Header';
 import SideMenu from './components/SideMenu';
+import BienvenidaDirseu from './components/Bienvenida';
 import AppTheme from './shared-theme/AppTheme';
 import {
   chartsCustomizations,
@@ -25,13 +24,15 @@ const xThemeComponents = {
 };
 
 export default function Dashboard(props) {
+  const location = useLocation();
+  const isHome = location.pathname === "/Home";
+
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
         <AppNavbar />
-        {/* Main content */}
         <Box
           component="main"
           sx={(theme) => ({
@@ -51,8 +52,8 @@ export default function Dashboard(props) {
             }}
           >
             <Header />
+              {isHome && <BienvenidaDirseu />}
             <Outlet />
-            {/* <MainGrid /> */}
           </Stack>
         </Box>
       </Box>

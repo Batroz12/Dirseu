@@ -4,7 +4,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
 import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
@@ -13,13 +12,10 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthProvider';
+import { useTheme } from '@mui/material/styles';
 
-// Función para generar atributos de accesibilidad
 function a11yProps(index) {
   return {
     id: `menu-item-${index}`,
@@ -29,12 +25,12 @@ function a11yProps(index) {
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, link: '' },
-  { 
-    text: 'Analitica', 
-    icon: <AnalyticsRoundedIcon />, 
-    link: 'analytics', 
-    condition: (auth) => auth.getUser()?.type === 'coordinador' || auth.isAdmin 
-  },
+  // { 
+  //   text: 'Analitica', 
+  //   icon: <AnalyticsRoundedIcon />, 
+  //   link: 'analytics', 
+  //   condition: (auth) => auth.getUser()?.type === 'coordinador' || auth.isAdmin 
+  // },
   { 
     text: 'Coordinadores', 
     icon: <PeopleRoundedIcon />, 
@@ -49,15 +45,14 @@ const mainListItems = [
   { 
     text: 'Empleador', 
     icon: <PeopleRoundedIcon />, 
-    link: 'empleador/Agregar-Empleo', 
-    condition: (auth) => auth.isAdmin || auth.getUser()?.type === 'empleador' // Visible para administradores y empleadores
+    link: 'empleador/dashboard',
+    condition: (auth) => auth.isAdmin || auth.getUser()?.type === 'empleador'
   },
   { 
     text: 'Inscripciones', 
     icon: <AssignmentRoundedIcon />, 
     link: 'inscripciones', 
-    condition: (auth) => 
-      auth.isAdmin 
+    condition: (auth) => auth.isAdmin
   },
   { 
     text: 'Modulos', 
@@ -86,15 +81,6 @@ const mainListItems = [
       auth.getUser()?.type === 'estudiante' ||
       auth.isAdmin 
   },
-  { 
-    text: 'Documentos de interes', 
-    icon: <AssignmentRoundedIcon />, 
-    link: 'Egresado/Formatos', 
-    condition: (auth) => 
-      auth.getUser()?.type === 'egresado' ||
-      auth.getUser()?.type === 'estudiante' ||
-      auth.isAdmin 
-  },
 ];
 
 const secondaryListItems = [
@@ -104,53 +90,54 @@ const secondaryListItems = [
 ];
 
 export default function MenuContent() {
-  const [open, setOpen] = React.useState(false);
-  const [openAdministradores, setOpenAdministradores] = React.useState(false); // Estado para el submenú
   const auth = useAuth();
-  const [value, setValue] = React.useState(0); // Estado para el elemento seleccionado
+  const [value, setValue] = React.useState(0);
+  const theme = useTheme();
+  const location = useLocation(); // Utilizar para obtener la ruta actual
 
   const handleChange = (index) => {
-    setValue(index); // Cambiar el valor seleccionado
-  };
-
-  const handleAdministradoresClick = () => {
-    setOpenAdministradores(!openAdministradores); // Abrir o cerrar el submenú
+    setValue(index);
   };
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
-      {/* Lista principal */}
       <List dense>
         {mainListItems
-          .filter(item => !item.condition || item.condition(auth)) // Filtrar según la condición
+          .filter((item) => !item.condition || item.condition(auth))
           .map((item, index) => (
             <React.Fragment key={index}>
               <ListItem disablePadding sx={{ display: 'block' }}>
-                {item.subItems ? ( // Si hay subItems, mostrar el menú desplegable
+                {item.subItems ? (
                   <>
                     <ListItemButton
                       selected={value === index}
-                      onClick={handleAdministradoresClick} // Controlar la apertura del submenú
-                      {...a11yProps(index)} // Atributos de accesibilidad
+                      {...a11yProps(index)}
                     >
                       <ListItemIcon>{item.icon}</ListItemIcon>
-                      <ListItemText primary={item.text} />
-                      {openAdministradores ? <ExpandLess /> : <ExpandMore />}
+                      <ListItemText
+                        primary={item.text}
+                        sx={{ color: theme.palette.text.primary }}
+                      />
                     </ListItemButton>
-                    <Collapse in={openAdministradores} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        {item.subItems.map((subItem, subIndex) => (
-                          <ListItemButton
-                            key={subIndex}
-                            sx={{ pl: 4 }}
-                            component={Link}
-                            to={subItem.link}
-                          >
-                            <ListItemText primary={subItem.text} />
-                          </ListItemButton>
-                        ))}
-                      </List>
-                    </Collapse>
+                    <List component="div" disablePadding>
+                      {item.subItems.map((subItem, subIndex) => (
+                        <ListItemButton
+                          key={subIndex}
+                          sx={{
+                            pl: 4,
+                            bgcolor: location.pathname.includes(subItem.link) ? theme.palette.action.selected : 'transparent',
+                            '& .MuiListItemText-root': {
+                              color: location.pathname.includes(subItem.link) ? 'black' : theme.palette.text.primary,
+                            },
+                          }}
+                          component={Link}
+                          to={subItem.link}
+                          onClick={() => handleChange(index)}
+                        >
+                          <ListItemText primary={subItem.text} />
+                        </ListItemButton>
+                      ))}
+                    </List>
                   </>
                 ) : (
                   <ListItemButton
@@ -158,18 +145,19 @@ export default function MenuContent() {
                     onClick={() => handleChange(index)}
                     component={Link}
                     to={item.link}
-                    {...a11yProps(index)} // Atributos de accesibilidad
+                    {...a11yProps(index)}
                   >
                     <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.text} />
+                    <ListItemText
+                      primary={item.text}
+                      sx={{ color: theme.palette.text.primary }}
+                    />
                   </ListItemButton>
                 )}
               </ListItem>
             </React.Fragment>
           ))}
       </List>
-
-      {/* Lista secundaria */}
       <List dense>
         {secondaryListItems.map((item, index) => (
           <ListItem key={index + mainListItems.length} disablePadding sx={{ display: 'block' }}>
@@ -178,10 +166,13 @@ export default function MenuContent() {
               onClick={() => handleChange(index + mainListItems.length)}
               component={Link}
               to={item.link}
-              {...a11yProps(index + mainListItems.length)} // Atributos de accesibilidad
+              {...a11yProps(index + mainListItems.length)}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemText
+                primary={item.text}
+                sx={{ color: theme.palette.text.primary }}
+              />
             </ListItemButton>
           </ListItem>
         ))}

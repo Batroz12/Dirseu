@@ -26,6 +26,8 @@ import TeacherForm from "./components/administrator/TeacherForm.jsx";
 
 import { RegisterProvider } from "./context/Register_context.jsx";
 import UserSettings from "./pages/UserSettings.jsx";
+import ChangePassword from "./pages/changeContraseña.jsx";
+
 import Inscripciones from "./pages/Inscripciones.jsx";
 import ListInscripciones from "./pages/ListInscripciones.jsx";
 import Tabla from "./pages/Tabla.jsx";
@@ -55,7 +57,6 @@ import VerInscritosVoluntariados from "./coordinadores/Voluntariados/verInscrito
 // Nuevas rutas de Empleador y Egresado
 import DashboardEmpleador from "./empleador/DashboardEmpleador.jsx";
 import AgregarOfertaLaboral from "./empleador/AgregarOfertaLaboral.jsx";
-// import Notificaciones from "./egresado/Notificaciones.jsx";
 
 import CreateUserEmpleador from "./coordinadores/empleadores/agregarEmpleador.jsx";
 import UserFormEmpleador from "./coordinadores/empleadores/userform.jsx";
@@ -63,6 +64,13 @@ import ListaOfertas from "./empleador/ListaOfertas.jsx";
 import EmpleosConModal from "./egresado/verEmpleos.jsx";
 import Convenios from "./egresado/convenios.jsx";
 import FormatosAcademicosActualizados from "./egresado/formatosAcademicos.jsx";
+
+import HomeCSE from "./paginas/SEgresado/HomeCSE.jsx";
+import Presentation from "./paginas/SEgresado/vistas/presentacion.jsx";
+import Procedimientos from "./paginas/SEgresado/vistas/procedimientos.jsx";
+import Bolsa from "./paginas/SEgresado/vistas/bolsa.jsx";
+import EducacionContinua from "./paginas/SEgresado/vistas/educacionContinua.jsx";
+import ConveniosInterfaz from "./paginas/SEgresado/vistas/convenioss.jsx";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -76,7 +84,8 @@ export default function App() {
         <Route path="/Desarrollo-Sostenible" element={<DSostenible />} />
         <Route path="/Extension-Universitaria" element={<ExtensionU />} />
         <Route path="/SeguimientoAlEgresado" element={<SEgresado />} />
-        <Route path="/Homes" element={<Home />} />
+
+        <Route path="/Homes2" element={<Home />} />
         <Route path="/login" element={<SignIn />} />
 
         <Route path="register" element={<SignUp />}>
@@ -91,6 +100,12 @@ export default function App() {
         <Route
           element={<ProtectedRoute validate={isAuthenticated} to="login" />}
         >
+          <Route path="/Homes" element={<HomeCSE />} />
+          <Route path="presentacion" element={<Presentation />} />
+          <Route path="procedimietos" element={<Procedimientos />} />
+          <Route path="Bolsa-Laboral" element={<Bolsa />} />
+          <Route path="Capacitaciones" element={<EducacionContinua />} />
+          <Route path="convenios" element={<ConveniosInterfaz />} />
           <Route path="/Home" element={<Dashboard />} >
             <Route path="modules" element={<Modules />} >
               <Route path="list/:table" element={<ListModule />} />
@@ -121,22 +136,13 @@ export default function App() {
             </Route>
             {/* Rutas del Empleador */}
             <Route path="empleador">
-              <Route path="Agregar-Empleo" element={<AgregarOfertaLaboral />} />
-              <Route path="dashboard" element={<DashboardEmpleador />} >
-                <Route path="AgregarEmpleo" element={<FormularioOfertaLaboral />} />
-              </Route>
-              
-              {/* <Route path="editar-oferta/:id" element={<EditarOferta />} />
-              <Route path="estadisticas" element={<EstadisticasEmpleador />} />
-              <Route path="listar" element={<ListaOfertas />} /> */}
+              <Route path="dashboard" element={<DashboardEmpleador />} />
             </Route>
             {/* Rutas del Egresado */}
             <Route path="Egresado">
               <Route path="empleos" element={<EmpleosConModal />} />
               <Route path="convenios" element={<Convenios />} />
               <Route path="Formatos" element={<FormatosAcademicosActualizados />} />
-
-              {/* <Route path="notificaciones" element={<Notificaciones />} /> */}
             </Route>
 
             <Route path="inscripciones" element={<Inscripciones />}>
@@ -149,6 +155,7 @@ export default function App() {
               </ProtectedRoutes>
             } />
             <Route path="userInfo" element={<UserSettings />} />
+            <Route path="cambiar-password" element={<ChangePassword />} />
             <Route path="no-autorizado" element={<NotAuthorized />} />
           </Route>
         </Route>

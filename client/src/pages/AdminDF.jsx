@@ -42,18 +42,6 @@ const AdministrarDFormativo = () => {
         { label: 'Ver Eventos', path:'/Home/coordinadores/DesarrolloFormativo/verEventos' },
       ],
     },
-    {
-      title: 'Asistencia Instructores',
-      options: [
-        { label: 'Ver Asistencia', path:'Home/coordinadores/DesarrolloFormativo/verAsistencia' },
-      ],
-    },
-    {
-      title: 'Analítica',
-      options: [
-        { label: 'Ver Analitica', path:'Home/coordinadores/DesarrolloFormativo/verAnalitica' },
-      ],
-    },
   ];
 
   return (

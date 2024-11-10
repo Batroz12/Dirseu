@@ -46,14 +46,13 @@ const AdministrarSEgresado = () => {
     {
       title: 'Bolsa Laboral',
       options: [
-        { label: 'Ver Postulantes', path:'/Home/coordinadores/SeguimientoEgresado/verPostulantes' },
         { label: 'Ver Bolsa Laboral', path:'/Home/coordinadores/SeguimientoEgresado/verOfertas'}
       ],
     },
-    {
-      title: 'Vinculación',
-      options: ['Ver Inscritos', 'Enviar Mensaje'],
-    },
+    // {
+    //   title: 'Vinculación',
+    //   options: ['Ver Inscritos', 'Enviar Mensaje'],
+    // },
   ];
 
   return (
