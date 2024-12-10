@@ -21,7 +21,7 @@ const NotAuthorized = () => {
       <Typography variant="body1" gutterBottom>
         No tienes permiso para acceder a esta página.
       </Typography>
-      <Button variant="contained" component={Link} to="/Home">
+      <Button variant="contained" component={Link} to="/">
         Volver al Inicio
       </Button>
     </Box>

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Logo from "../../paginas/images/UAC.png";
 import generatePDF from "./cvTemplate"; // Importar la función de generación de PDF
 import { useAuth } from "../../context/AuthProvider";
 
@@ -44,6 +45,7 @@ export default function FormularioPDF(props) {
       habilidades,
       otros,
       descripcion,
+      logo: Logo,
     });
   };
 

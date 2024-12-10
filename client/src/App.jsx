@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "./context/AuthProvider.jsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate, Outlet } from "react-router-dom";
 
 import './styles/global.css';
 
@@ -14,11 +15,9 @@ import SignUp from "./pages/SignUp.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 
-import Home from "./pages/Home.jsx";
 import Analytics from "./pages/Analytics.jsx";
 import Modules from "./pages/Modules.jsx";
 import ListModule from "./pages/ListModule.jsx";
-import Administrator from "./pages/Administrator.jsx";
 import UserForm from "./components/administrator/UserForm.jsx";
 import TypeUserTab from "./components/administrator/TypeUserTab.jsx";
 import StudentForm from "./components/administrator/StudentForm.jsx";
@@ -42,13 +41,11 @@ import AdministrarDFormativo from "./pages/AdminDF.jsx";
 import AdministrarDSostenible from "./pages/AdminDSostenible.jsx";
 import AdministrarEUniversitaria from "./pages/AdminEUniv.jsx";
 import AdministrarSEgresado from "./pages/AdminSEgresado.jsx";
-import FormularioVoluntariado from "./coordinadores/Voluntariados/AgregarVoluntariados.jsx";
 import TallerPage from "./coordinadores/talleres/VerTalleres.jsx";
-import FormularioTaller from "./coordinadores/talleres/AgregarTalleres.jsx";
-import FormularioOfertaLaboral from "./coordinadores/bolsaLaboral/AgregarEmpleos.jsx";
 import OfertaLaboralPage from "./coordinadores/bolsaLaboral/VerEmpleos.jsx";
 import CapacitacionPage from "./coordinadores/capacitaciones/VerCapacitaciones.jsx";
 import EventoPage from "./coordinadores/eventos/VerEventos.jsx";
+import VerCalendarioAmbiental from "./coordinadores/calendarioAmbiental/VerEventosCalendario.jsx";
 
 import VerInscritosCapacitaciones from "./coordinadores/capacitaciones/verInscritos.jsx";
 import VerInscritosTalleres from "./coordinadores/talleres/verInscritos.jsx";
@@ -60,17 +57,33 @@ import AgregarOfertaLaboral from "./empleador/AgregarOfertaLaboral.jsx";
 
 import CreateUserEmpleador from "./coordinadores/empleadores/agregarEmpleador.jsx";
 import UserFormEmpleador from "./coordinadores/empleadores/userform.jsx";
-import ListaOfertas from "./empleador/ListaOfertas.jsx";
 import EmpleosConModal from "./egresado/verEmpleos.jsx";
-import Convenios from "./egresado/convenios.jsx";
-import FormatosAcademicosActualizados from "./egresado/formatosAcademicos.jsx";
 
 import HomeCSE from "./paginas/SEgresado/HomeCSE.jsx";
+import InicioAlumni from "./paginas/SEgresado/vistas/inicio.jsx";
 import Presentation from "./paginas/SEgresado/vistas/presentacion.jsx";
 import Procedimientos from "./paginas/SEgresado/vistas/procedimientos.jsx";
 import Bolsa from "./paginas/SEgresado/vistas/bolsa.jsx";
 import EducacionContinua from "./paginas/SEgresado/vistas/educacionContinua.jsx";
 import ConveniosInterfaz from "./paginas/SEgresado/vistas/convenioss.jsx";
+import EncuestasPublicadas from "./paginas/SEgresado/vistas/encuestasPublicadas.jsx";
+
+// Rutas para las encuestas
+import SurveyList from "./coordinadores/encuestas/listarEncuestas.jsx";
+import PreguntasPorEncuesta from "./coordinadores/encuestas/listarPreguntas.jsx";
+
+// Rutas Responder Encuestas
+import EncuestaResponder from "./coordinadores/encuestas/visualizacion/responderEncuestas.jsx";
+import EncuestasList from "./coordinadores/encuestas/visualizacion/encuestasDisponibles.jsx";
+import ReportesEncuesta from "./coordinadores/encuestas/reporteEncuestas.jsx";
+
+// Ruta para instructores
+import PanelInstructores from "./instructores/AdmiInstructor.jsx";
+// Rutas para el registro de asistencia de los talleres
+import TalleresInstructores from "./instructores/talleresInstructores.jsx";
+import VerSesiones from "./instructores/sesiones/VerSesiones.jsx";
+import ReportesAsistenciaSesion from "./instructores/sesiones/reporteAsistenciaSesion.jsx";
+import ReportePortaller from "./instructores/sesiones/ReportePorTaller.jsx";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -84,15 +97,13 @@ export default function App() {
         <Route path="/Desarrollo-Sostenible" element={<DSostenible />} />
         <Route path="/Extension-Universitaria" element={<ExtensionU />} />
         <Route path="/SeguimientoAlEgresado" element={<SEgresado />} />
-
-        <Route path="/Homes2" element={<Home />} />
         <Route path="/login" element={<SignIn />} />
 
         <Route path="register" element={<SignUp />}>
           <Route path="" element={<UserForm />} />
           <Route path="type" element={<TypeUserTab />} >
-            <Route path="" element={<StudentForm />} />
-            <Route path="egresado" element={<EgresadoForm />} />
+            <Route path="" element={<EgresadoForm />} />
+            <Route path="estudiante" element={<StudentForm />} />
             <Route path="docente" element={<TeacherForm />} />
           </Route>
         </Route>
@@ -100,54 +111,69 @@ export default function App() {
         <Route
           element={<ProtectedRoute validate={isAuthenticated} to="login" />}
         >
-          <Route path="/Homes" element={<HomeCSE />} />
-          <Route path="presentacion" element={<Presentation />} />
-          <Route path="procedimietos" element={<Procedimientos />} />
-          <Route path="Bolsa-Laboral" element={<Bolsa />} />
-          <Route path="Capacitaciones" element={<EducacionContinua />} />
-          <Route path="convenios" element={<ConveniosInterfaz />} />
+          <Route path="no-autorizado" element={<NotAuthorized />} />
+          <Route path="/Alumni" element={<HomeCSE />}>
+            <Route path="Inicio" element={<InicioAlumni />} />
+            <Route path="presentacion" element={<Presentation />} />
+            <Route path="procedimietos" element={<Procedimientos />} />
+            <Route path="Bolsa-Laboral" element={<Bolsa />} />
+            <Route path="Capacitaciones" element={<EducacionContinua />} />
+            <Route path="convenios" element={<ConveniosInterfaz />} />
+            <Route path="encuestas" element={<EncuestasPublicadas />} />
+            <Route path="encuestas/:id" element={<EncuestaResponder />} />
+            <Route path="userInfo" element={<UserSettings />} />
+            <Route path="cambiar-password" element={<ChangePassword />} />
+          </Route>
           <Route path="/Home" element={<Dashboard />} >
             <Route path="modules" element={<Modules />} >
               <Route path="list/:table" element={<ListModule />} />
               <Route path="form/:table/:id" element={<DetailsModules />} />
-            </Route>
+            </Route>              
             {/* Rutas para los Coordinadores */}
-            <Route path="coordinadores">
+            <Route path="coordinadores" element={
+                <ProtectedRoutes allowedRoles={["admin", "coordinador"]}>
+                  <Outlet />
+                </ProtectedRoutes>
+              }
+            >
               <Route path="DesarrolloFormativo" element={<AdministrarDFormativo />}>
-                {/* Las rutas hijas  */}
                 <Route path="verTalleres" element={<TallerPage />} />
                 <Route path="verInscritos" element={<VerInscritosTalleres />} />
-                <Route path="verEventos" element={<EventoPage />} />
-                {/* <Route path="verAsistencia" element={<AsistenciaPage />} /> */}
-                {/* <Route path="verAnalitica" element={<AnaliticaPage />} /> */}
               </Route>
-              <Route path="DesarrolloSostenible" element={<AdministrarDSostenible />} />
+              <Route path="DesarrolloSostenible" element={<AdministrarDSostenible />} >
+                <Route path="ver-eventos-calendario" element={<VerCalendarioAmbiental />} />
+              </Route>
               <Route path="ExtensionUniversitaria" element={<AdministrarEUniversitaria />}>
                 <Route path="verVoluntariados" element={<VoluntariadoPage />} />
                 <Route path="verInscritos" element={<VerInscritosVoluntariados />} />
               </Route>
-              <Route path="SeguimientoEgresado" element={<AdministrarSEgresado />} >
+              <Route path="SeguimientoEgresado" element={<AdministrarSEgresado />}>
                 <Route path="verOfertas" element={<OfertaLaboralPage />} />
                 <Route path="verCapacitaciones" element={<CapacitacionPage />} />
                 <Route path="verInscritos" element={<VerInscritosCapacitaciones />} />
                 <Route path="userEmForm" element={<UserFormEmpleador />} />
                 <Route path="agregarEmpleador" element={<CreateUserEmpleador />} />
+                <Route path="verEventos" element={<EventoPage />} />
+                {/* Rutas para Encuestas */}
+                <Route path="ver-encuestas" element={<SurveyList />} />
+                <Route path="encuesta/:encuestaId" element={<PreguntasPorEncuesta />} />
+                <Route path="reporte/:encuestaId" element={<ReportesEncuesta />} />
               </Route>
             </Route>
             {/* Rutas del Empleador */}
             <Route path="empleador">
               <Route path="dashboard" element={<DashboardEmpleador />} />
             </Route>
-            {/* Rutas del Egresado */}
-            <Route path="Egresado">
-              <Route path="empleos" element={<EmpleosConModal />} />
-              <Route path="convenios" element={<Convenios />} />
-              <Route path="Formatos" element={<FormatosAcademicosActualizados />} />
-            </Route>
-
             <Route path="inscripciones" element={<Inscripciones />}>
               <Route path=":table" element={<ListInscripciones />} />
               <Route path="tables/:table/:id" element={<Tabla />} />
+            </Route>
+            {/* Rutas del Instructor */}
+            <Route path="instructor" element={<PanelInstructores />}>
+              <Route path="talleres" element={<TalleresInstructores />} />
+              <Route path="Ver-Sesiones/:tallerId" element={<VerSesiones />} />
+              <Route path="reporte/:tallerId/sesion/:sesionId" element={<ReportesAsistenciaSesion />} />
+              <Route path="Reporte/taller/:tallerId" element={<ReportePortaller />} />
             </Route>
             <Route path="analytics" element={
               <ProtectedRoutes allowedRoles={["admin"]}>
@@ -156,7 +182,6 @@ export default function App() {
             } />
             <Route path="userInfo" element={<UserSettings />} />
             <Route path="cambiar-password" element={<ChangePassword />} />
-            <Route path="no-autorizado" element={<NotAuthorized />} />
           </Route>
         </Route>
       </Routes>

@@ -50,6 +50,7 @@ export default function EgresadoForm() {
         lastName: userData.lastName,
         email: userData.email,
         password: userData.password,
+        role: userData.role,
         codigo,
         carrera,
         promocion,

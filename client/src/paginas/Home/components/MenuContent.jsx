@@ -60,26 +60,16 @@ const mainListItems = [
     link: 'modules', 
     condition: (auth) => 
       auth.getUser()?.type === 'docente' || 
-      auth.getUser()?.type === 'estudiante' || 
-      auth.getUser()?.type === 'egresado' ||
-      auth.isAdmin 
-  },
-  { 
-    text: 'Empleos', 
-    icon: <AssignmentRoundedIcon />, 
-    link: 'Egresado/empleos', 
-    condition: (auth) => 
-      auth.getUser()?.type === 'egresado' ||
-      auth.isAdmin 
-  },
-  { 
-    text: 'Convenios', 
-    icon: <AssignmentRoundedIcon />, 
-    link: 'Egresado/convenios', 
-    condition: (auth) => 
-      auth.getUser()?.type === 'egresado' ||
       auth.getUser()?.type === 'estudiante' ||
       auth.isAdmin 
+  },
+  {
+    text: 'Instructores',
+    icon: <AssignmentRoundedIcon />,
+    link: 'instructor',
+    condition: (auth) =>
+      auth.getUser()?.type === 'instructor' ||
+      auth.isAdmin
   },
 ];
 

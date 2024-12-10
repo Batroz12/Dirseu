@@ -89,7 +89,7 @@ export default function UserSettings() {
             px: { xs: 2, md: 4 },
           }}
         >
-          <Box p={{ xs: 2, md: 6 }} boxShadow={3} borderRadius={4} width="100%">
+          <Box p={{ xs: 2, md: 6 }} boxShadow={3} borderRadius={4} width="100%" sx={{ mt: 6 }}>
             <Typography
               variant="h4"
               gutterBottom

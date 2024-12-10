@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Palette, Music, Camera, Theater, Users, Mic, Globe, Users2, Music4, UserCircle, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUp, Palette, Music, Camera, Theater, Users, Mic, Globe, Users2, Music4, UserCircle, Award } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
@@ -30,9 +30,24 @@ const Workshop = ({ icon: Icon, title, description, onClick }) => (
 );
 
 const DFormativo = () => {
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [email, setEmail] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+
+  // Detectar el scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Función para volver al inicio
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -119,7 +134,7 @@ const DFormativo = () => {
         <NavbarLogo
           backgroundImage={Logo}
           overlayOpacity={0.5}
-          title="Coordinación de Desarrollo Formativo"
+          title="Coordinación de Atención al Desarrollo Formativo"
           subtitle="Potencia tus habilidades creativas a través de nuestros talleres artísticos."
           socialLinks={socialLinks}
           buttons={buttons}
@@ -201,6 +216,20 @@ const DFormativo = () => {
       <footer id="footer" className="py-6 bg-gray-800 text-white">
         <Footer />
       </footer>
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.button
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-5 right-5 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

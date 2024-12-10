@@ -56,7 +56,7 @@ export default function SignIn() {
           const userType = json.user.role;
           console.log(userType);
           if (userType === "egresado") {
-            goTo("/Homes", { replace: true });
+            goTo("/Alumni/Inicio", { replace: true });
           } else {
             goTo("/Home", { replace: true });
           }
@@ -164,7 +164,7 @@ export default function SignIn() {
               <Grid container>
                 <Grid item xs>
                   <Link to="/forgot-password" variant="body2">
-                    Forgot password?
+                    Olvidaste tu contraseña?
                   </Link>
                 </Grid>
                 <Grid item>

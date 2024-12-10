@@ -150,6 +150,10 @@ export function AuthProvider({ children }) {
     return userData;
   }
 
+  function hasRole(role) {
+    return user?.role === role;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -161,9 +165,10 @@ export function AuthProvider({ children }) {
         getUser,
         signOut,
         loading,
+        hasRole,
       }}
     >
-      {children}
+      {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
 }

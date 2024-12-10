@@ -1,4 +1,3 @@
-// src/coordinadores/capacitaciones/VerCapacitaciones.jsx
 import React, { useState, useEffect } from 'react';
 import FormularioCapacitacion from './AgregarCapacitaciones';
 import {

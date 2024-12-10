@@ -22,11 +22,11 @@ const Footer = () => {
             <form className="space-y-4">
               <div className="flex items-center">
                 <MapPin className="mr-2 text-gray-400" />
-                <p className="text-gray-400">Cusco, Perú</p> {/* Ejemplo de uso de MapPin */}
+                <p className="text-gray-400">Cusco, Perú</p>
               </div>
               <div className="flex items-center">
                 <Phone className="mr-2 text-gray-400" />
-                <p className="text-gray-400">+51 123 456 789</p> {/* Ejemplo de uso de Phone */}
+                <p className="text-gray-400">605000-ANEXO 1114</p>
               </div>
               <input
                 type="text"
@@ -87,7 +87,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-800 pt-8 text-center">
+        <div className="border-t border-gray-800 pt-4 text-center">
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} Dirección de Responsabilidad Social y Extensión Universitaria. Todos los derechos reservados.
           </p>

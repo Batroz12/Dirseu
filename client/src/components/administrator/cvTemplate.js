@@ -1,119 +1,106 @@
 import jsPDF from 'jspdf';
 
-const generatePDF = ({ egresadoData, experienciaLaboral, habilidades, otros, descripcion }) => {
+const generatePDF = ({ egresadoData, experienciaLaboral, habilidades, otros, descripcion, logo }) => {
     const { firstName, lastName, email, codigo, carrera, promocion, telefono, direccion } = egresadoData;
 
     const doc = new jsPDF();
 
-    // Función para dibujar divisores
-    const drawDivider = (y) => {
-        doc.setLineWidth(0.5);
-        doc.setDrawColor(0);
-        doc.line(20, y, 190, y);
+    // Configuración inicial
+    const marginX = 20; // Margen izquierdo
+    const pageHeight = doc.internal.pageSize.height; // Altura de la página
+    const lineHeight = 7; // Altura de cada línea de texto
+    let currentY = 20; // Coordenada Y inicial
+
+    // Colores UAC
+    const azulUAC = [28, 67, 120];
+    const celesteUAC = [0, 0, 0, 0]; // Cambié este color para hacerlo más vibrante
+    const gris = [169, 169, 169]; // Color gris para pie de página
+
+    // Agregar encabezado con logo y título
+    if (logo) {
+        const logoWidth = 30; // Ancho del logo
+        const logoHeight = 15; // Alto del logo
+        const centerX = doc.internal.pageSize.width / 2; // Centro horizontal
+
+        // Logo en la esquina superior izquierda
+        doc.addImage(logo, 'PNG', marginX, currentY, logoWidth, logoHeight);
+
+        // Título centrado
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(24);
+        doc.setTextColor(...azulUAC);
+        doc.text('Currículum Vitae', centerX, currentY + 20, { align: 'center' });
+    }
+
+    currentY += 40; // Espacio después del encabezado
+
+    // Función para comprobar si hay espacio suficiente en la página
+    const checkPageHeight = (requiredHeight) => {
+        if (currentY + requiredHeight > pageHeight - 20) {
+            doc.addPage();
+            currentY = 20;
+        }
     };
 
-    // Encabezado
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(24);
-    doc.setTextColor(33, 150, 243); // Color azul
-    doc.setFillColor(255, 255, 255); // Fondo blanco
-    doc.rect(20, 15, 170, 18, 'F'); // Rectángulo de fondo para el título
-    doc.text('Currículum Vitae', 105, 25, { align: 'center' });
+    // Función para dibujar secciones
+    const drawSection = (title, content, bgColor = celesteUAC, textColor = [0, 0, 0]) => {
+        // Título
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(...azulUAC);
+        doc.text(title, marginX, currentY);
+        currentY += lineHeight;
+
+        const contentLines = doc.splitTextToSize(content, 170);
+        const boxHeight = contentLines.length * lineHeight + 5;
+
+        checkPageHeight(boxHeight + 10);
+
+        // Fondo de la sección
+        doc.setFillColor(...bgColor);
+        doc.rect(marginX - 2, currentY - 5, 170 + 4, boxHeight, 'F'); // Borde alrededor de la caja
+
+        // Contenido
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        doc.setTextColor(...textColor);
+        doc.text(contentLines, marginX + 5, currentY);
+
+        currentY += boxHeight + 10;
+    };
 
     // Información Personal
-    doc.setTextColor(0, 0, 0); // Color negro
-    doc.setFontSize(12);
-    doc.setFillColor(245, 245, 245); // Fondo gris claro
-    const personalLines = doc.splitTextToSize(`Nombre: ${firstName} ${lastName}\nEmail: ${email}`, 150);
-    doc.rect(20, 30, 170, personalLines.length * 10, 'F'); // Rectángulo de fondo para la sección
-    doc.text(personalLines, 25, 40);
-    drawDivider(40 + personalLines.length * 10); // Divisor después de Información Personal
+    drawSection(
+        'Información Personal',
+        `Nombre: ${firstName} ${lastName}\nEmail: ${email}\nTeléfono: ${telefono}\nDirección: ${direccion}`
+    );
 
     // Datos Académicos
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(33, 150, 243); // Color azul
-    doc.setFillColor(255, 255, 255); // Fondo blanco
-    doc.rect(20, 50 + personalLines.length * 10, 80, 10, 'F'); // Rectángulo de fondo para el título
-    doc.text('Datos Académicos', 35, 55 + personalLines.length * 10);
-
-    doc.setTextColor(0, 0, 0); // Color negro
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setFillColor(245, 245, 245); // Fondo gris claro
-    const academicLines = doc.splitTextToSize(`Código Alumno: ${codigo}\nCarrera: ${carrera}\nPromoción: ${promocion}\nTeléfono: ${telefono}\nDirección: ${direccion}`, 150);
-    doc.rect(20, 60 + personalLines.length * 10, 170, academicLines.length * 10, 'F'); // Rectángulo de fondo para la sección
-    doc.text(academicLines, 25, 70 + personalLines.length * 10);
-    drawDivider(70 + personalLines.length * 10 + academicLines.length * 10); // Divisor después de Datos Académicos
+    drawSection(
+        'Datos Académicos',
+        `Código Alumno: ${codigo}\nCarrera: ${carrera}\nPromoción: ${promocion}`
+    );
 
     // Experiencia Laboral
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(33, 150, 243); // Color azul
-    doc.setFillColor(255, 255, 255); // Fondo blanco
-    doc.rect(20, 140, 80, 10, 'F'); // Rectángulo de fondo para el título
-    doc.text('Experiencia Laboral', 35, 145);
-
-    doc.setTextColor(0, 0, 0); // Color negro
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setFillColor(245, 245, 245); // Fondo gris claro
-    doc.rect(20, 150, 80, 50, 'F'); // Rectángulo de fondo para la sección
-    const expLines = doc.splitTextToSize(experienciaLaboral, 70); // Dividir texto en líneas de 70 de ancho
-    doc.text(expLines, 25, 160);
-    drawDivider(210); // Divisor después de Experiencia Laboral
+    drawSection('Experiencia Laboral', experienciaLaboral || 'No disponible');
 
     // Habilidades
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(33, 150, 243); // Color azul
-    doc.setFillColor(255, 255, 255); // Fondo blanco
-    doc.rect(20, 220, 80, 10, 'F'); // Rectángulo de fondo para el título
-    doc.text('Habilidades', 35, 225);
-
-    doc.setTextColor(0, 0, 0); // Color negro
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setFillColor(245, 245, 245); // Fondo gris claro
-    doc.rect(20, 230, 80, 30, 'F'); // Rectángulo de fondo para la sección
-    const skillsLines = doc.splitTextToSize(habilidades, 70); // Dividir texto en líneas de 70 de ancho
-    doc.text(skillsLines, 25, 240);
-    drawDivider(270); // Divisor después de Habilidades
+    drawSection('Habilidades', habilidades || 'No disponible');
 
     // Otros
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(33, 150, 243); // Color azul
-    doc.setFillColor(255, 255, 255); // Fondo blanco
-    doc.rect(110, 220, 80, 10, 'F'); // Rectángulo de fondo para el título
-    doc.text('Otros', 145, 225);
-
-    doc.setTextColor(0, 0, 0); // Color negro
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setFillColor(245, 245, 245); // Fondo gris claro
-    doc.rect(110, 230, 80, 30, 'F'); // Rectángulo de fondo para la sección
-    const otrosLines = doc.splitTextToSize(otros, 70); // Dividir texto en líneas de 70 de ancho
-    doc.text(otrosLines, 115, 240);
+    drawSection('Otros', otros || 'No disponible');
 
     // Descripción Adicional
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(33, 150, 243); // Color azul
-    doc.setFillColor(255, 255, 255); // Fondo blanco
-    doc.rect(110, 140, 80, 10, 'F'); // Rectángulo de fondo para el título
-    doc.text('Descripción Adicional', 115, 145);
+    drawSection('Descripción Adicional', descripcion || 'No disponible');
 
-    doc.setTextColor(0, 0, 0); // Color negro
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setFillColor(245, 245, 245); // Fondo gris claro
-    doc.rect(110, 150, 80, 40, 'F'); // Rectángulo de fondo para la sección
-    const descLines = doc.splitTextToSize(descripcion, 70); // Dividir texto en líneas de 70 de ancho
-    doc.text(descLines, 115, 160);
+    // Pie de página
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(10);
+    doc.setTextColor(...gris);
+    doc.text('Generado por el sistema de egresados de la UAC', marginX, pageHeight - 10);
 
-    // Guardar y descargar el PDF
-    doc.save('cv.pdf');
+    // Descargar el PDF
+    doc.save('curriculum_vitae.pdf');
 };
 
 export default generatePDF;

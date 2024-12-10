@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Leaf, Users, BookOpen, Globe, ChevronDown, ChevronUp } from 'lucide-react';
+import { Leaf, Users, BookOpen, Globe, ChevronDown, ChevronUp, ArrowUp } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
 
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
 import Mof from '../componentes/mof/mof';
+import MissionVisionCards from '../componentes/cardMV/cardMV';
+import CalendarioAmbiental from './componentes/CalendarioAmbiental';
+import DocumentosInteres from './componentes/DocumentosInteres';
+import InstitucionesCooperantes from './componentes/institucionesCooperantes';
 
 const DSostenible = () => {
   const [email, setEmail] = useState('');
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  // Detectar el scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Función para volver al inicio
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const purpose = 'Programar y desarrollar las actividades inherentes a la cooperación del desarrollo sostenible que permitan integrar y vincular a la universidad, con la sociedad a través de planes, programas y proyectos de carácter sociales o ambientales a favor de la población local, regional y nacional.';
   const functions = [
@@ -24,10 +43,9 @@ const DSostenible = () => {
     'Coordinar y establecer vínculos de cooperación con investigadores y entidades nacionales e internacionales, que financian o trabajan en proyectos para el desarrollo sostenible de la región.',
     'Proponer nuevos programas de servicio social que puedan incorporarse y ser orientados a la currícula de las escuelas profesionales.',
     'Promover debates sobre desarrollo sostenible y medio ambiente, así como la preservación de la herencia cultural, en el ámbito universitario local.',
-    'Convocar y organizar programas de voluntariado con los estudiantes y/o docentes de la Universidad, para atender las necesidades latentes que afectan a la población local y regional menos favorecida del Cusco.'
+    'Convocar y organizar programas de voluntariado con los estudiantes y/o docentes de la Universidad, para atender las necesidades latentes que afectan a la población local y regional menos favorecida del Cusco.',
   ];
 
-  // Configuración de redes sociales
   const socialLinks = [
     { icon: <Facebook size={16} />, url: 'https://facebook.com', hoverColor: 'text-blue-400' },
     { icon: <Youtube size={16} />, url: 'https://youtube.com', hoverColor: 'text-red-500' },
@@ -50,13 +68,24 @@ const DSostenible = () => {
         <NavbarLogo
           backgroundImage={Logo}
           overlayOpacity={0.5}
-          title="Coordinación de Desarrollo Sostenible"
+          title="Coordinación de cooperación para el desarrollo sostenible"
           subtitle=""
           socialLinks={socialLinks}
           buttons={buttons}
         />
       </header>
-      <main className="bg-[#B6BEC2]">
+      <main className="">
+        <section id="conocemas" className="w-full md:py-6 lg:py-0 bg-gray-100">
+          <div className="container mx-auto px-1 md:px-6">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 mx-auto">
+            Misión y Visión
+          </h2>
+          <MissionVisionCards
+            mission="La Dirección de Responsabilidad Social y Extensión Universitaria de la Universidad Andina del Cusco planifica, organiza y dirige las actividades de responsabilidad social y extensión universitaria, promoviendo y articulando las iniciativas de los estudiantes, docentes, egresados y graduados de la Universidad Andina del Cusco, para contribuir al desarrollo sostenible de la comunidad local, regional y nacional."
+            vision="La Dirección de Responsabilidad Social y Extensión Universitaria de la Universidad Andina del Cusco al 2025, será líder en la gestión ética y eficaz del impacto generado por la universidad contribuyendo al desarrollo sostenible de la sociedad, en base al ejercicio de sus funciones sustantivas de formación profesional, de investigación, de servicios de extensión y proyección social."
+          />
+          </div>
+        </section>
         {/* Sección de Mof */}
         <div className="h-auto bg-gray-100 ">
           <Mof purpose={purpose} functions={functions}
@@ -78,7 +107,7 @@ const DSostenible = () => {
             >
               <Users className="w-12 h-12 text-green-500 mx-auto mb-4" />
               <h3 className="text-xl font-semibold mb-2">Comunidad Impactada</h3>
-              <p>Más de 10,000 personas beneficiadas por nuestros programas</p>
+              <p>Más de 19 000 de estudiantes beneficiadas por nuestros programas</p>
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -98,30 +127,33 @@ const DSostenible = () => {
             </motion.div>
           </div>
         </motion.section>
-
-        <section className="py-5">
-          <h2 className="py-5 text-3xl font-bold text-center text-black mb-8">Participa</h2>
-          <div className="text-center">
-            <p className="py-5 text-lg mb-6">
-              ¿Quieres ser parte del cambio? Únete a nuestros programas de voluntariado 
-              y contribuye al desarrollo sostenible de nuestra región.
-            </p>
-            <Link to="/Home/modules/list/voluntariados"> {/* Cambia aquí a la ruta deseada */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition duration-300"
-              >
-                Inscríbete como Voluntario
-              </motion.button>
-            </Link>
-          </div>
+        <section className="py-5">    
+          <CalendarioAmbiental />
+        </section>
+        <section className="py-5">    
+          <DocumentosInteres />
+        </section>
+        <section className="py-5">    
+          <InstitucionesCooperantes />
         </section>
       </main>
-
       <footer id="footer" className="py-6 bg-gray-800 text-white">
         <Footer />
       </footer>
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.button
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-5 right-5 p-3 rounded-full bg-green-600 text-white shadow-lg hover:bg-blue-700"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

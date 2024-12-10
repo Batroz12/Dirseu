@@ -157,6 +157,16 @@ export const getUsersInscriptionRequest = async (data) => {
     });
 };
 
+export const getEgresadosInscriptionRequest = async (data) => {
+    return await fetch(`${BASE_URL}/api/table/egresados-inscription`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data) // Aquí se pasa un objeto con las propiedades table e id
+    });
+};
+
 export const registerInscriptionRequest = async (data) => {
     return await fetch(`${BASE_URL}/api/table/register-inscription`, {
         method: 'POST',
@@ -167,5 +177,49 @@ export const registerInscriptionRequest = async (data) => {
     });
 };
 
+export const registerInscriptionEgresados = async (data) => {
+    return await fetch(`${BASE_URL}/api/table/register-inscripcionEgresados`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    });
+};
 
+// Crear nueva opción de pregunta
+export const createOptionRequest = async (data) => {
+    return await fetch(`${BASE_URL}/api/opciones_pregunta`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+};
 
+// Para Mostrar los Nombres y Apellidos de los alumnos inscritos en cada taller
+export const getTallerUsersRequest = async (tallerId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/table/talleres/${tallerId}/inscritos`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        // Verificar si la respuesta es ok (200-299)
+        if (!response.ok) {
+            // Si la respuesta no es ok, leer el cuerpo de la respuesta como texto (HTML en caso de error)
+            const errorText = await response.text();
+            console.error('Error en la solicitud:', errorText);
+            throw new Error('Error al obtener los usuarios inscritos');
+        }
+
+        // Intentar convertir la respuesta en JSON
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};

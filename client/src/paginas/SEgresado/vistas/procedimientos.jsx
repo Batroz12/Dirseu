@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Menu, X, ArrowUp, Mail, Phone, MapPin } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import Logo2 from '../../images/UAC.png';
-import RecursosAcademicos from '../componentes/recursosAcademicos';
 import FormatosAcademicosActualizados from '../../../egresado/formatosAcademicos';
 import Navbar from '../componentes/nav';
 
@@ -45,7 +43,7 @@ export default function Procedimientos() {
                     <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
                         <h1 className="text-5xl font-bold">Recursos Academicos</h1>
                         <p className="mt-2 text-lg">
-                            <Link to="/Homes" className="hover:underline">Home</Link> / {links.reduce((prev, curr) => [prev, ' / ', curr])}
+                            <Link to="/Alumni/Inicio" className="hover:underline">Alumni</Link> / {links.reduce((prev, curr) => [curr])}
                         </p>
                     </div>
                 </div>

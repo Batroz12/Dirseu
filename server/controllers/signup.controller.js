@@ -1,13 +1,12 @@
-// Contiene la lógica de controladores para manejar las solicitudes HTTP.
-
-import { getUserByEmail, registerUser, verifyEmailWithMailboxLayer , registerStudent, registerEgresado, registerDocente, registerEmpleador } from '../models/users.model.js';
+import { getUserByEmail, registerUser, verifyEmailWithMailboxLayer , 
+    registerStudent, registerEgresado, registerDocente, registerEmpleador } from '../models/users.model.js';
 
 export async function createUser(userData) {
     try {
-        const { firstName, lastName, email, password } = userData;
+        const { firstName, lastName, email, password, role } = userData;
 
         // Verificar que todos los campos requeridos estén presentes
-        if (!!!firstName || !!!lastName || !!!email || !!!password) {
+        if (!firstName || !lastName || !email || !password) {
             return {
                 statusCode: 400,
                 error: 'Todos los campos son requeridos'
@@ -35,7 +34,7 @@ export async function createUser(userData) {
         }
 
         // Registrar al usuario si el correo es válido
-        await registerUser({ firstName, lastName, email, password });
+        await registerUser({ firstName, lastName, email, password, role });
 
         return {
             statusCode: 200,

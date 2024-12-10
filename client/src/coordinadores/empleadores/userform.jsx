@@ -23,21 +23,17 @@ export default function UserFormEmpleador() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
 
   const activeStep = 0; // Puedes modificar esto según el flujo de tu aplicación
   const { setUserData } = useRegister();
   const navigate = useNavigate();
 
-  // Optional: Redirect if needed, e.g., if already authenticated
-  // useEffect(() => {
-  //   if (isAuthenticated) navigate("/", { replace: true });
-  // }, [isAuthenticated, navigate]);
-
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !password ) {
       setErrorResponse("Todos los campos son requeridos.");
       return;
     }
@@ -47,6 +43,7 @@ export default function UserFormEmpleador() {
       lastName,
       email,
       password,
+      role: "empleador",
     });
 
     navigate("/Home/coordinadores/SeguimientoEgresado/agregarEmpleador");
@@ -56,7 +53,7 @@ export default function UserFormEmpleador() {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      autoComplete="off" // Desactiva el autocompletado del formulario
+      autoComplete="off"
       sx={{
         p: 3,
         display: "flex",

@@ -7,10 +7,10 @@ import os from 'os'; // Para obtener una carpeta temporal
 // Crear un nuevo taller con imagen
 export async function crearTaller(req, res) {
   try {
-    const { nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo } = req.body;
+    const { nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, codigo_instructor } = req.body;
 
     // Validar que todos los campos estén presentes
-    if (!nombre || !descripcion || !fecha_inicio || !fecha_fin || !lugar || !cupo_maximo) {
+    if (!nombre || !descripcion || !fecha_inicio || !fecha_fin || !lugar || !cupo_maximo || !codigo_instructor ) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
     }
 
@@ -21,7 +21,8 @@ export async function crearTaller(req, res) {
       fecha_fin,
       lugar,
       cupo_maximo,
-      imagen: req.file ? `/uploads/${req.file.filename}` : null
+      imagen: req.file ? `/uploads/${req.file.filename}` : null,
+      codigo_instructor
     };
 
     if (req.file) {
@@ -89,7 +90,7 @@ export async function obtenerTaller(req, res) {
 export async function actualizarTaller(req, res) {
   try {
     const { id } = req.params;
-    const { nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo } = req.body;
+    const { nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, codigo_instructor } = req.body;
 
     // Obtener el taller existente
     let taller = await Taller.obtenerPorId(id);
@@ -104,6 +105,7 @@ export async function actualizarTaller(req, res) {
     taller.fecha_fin = fecha_fin || taller.fecha_fin;
     taller.lugar = lugar || taller.lugar;
     taller.cupo_maximo = cupo_maximo || taller.cupo_maximo;
+    taller.codigo_instructor = codigo_instructor || taller.codigo_instructor;
 
     // Manejar la imagen si se subió una nueva
     if (req.file) {

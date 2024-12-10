@@ -35,10 +35,6 @@ function stringToColor(string) {
 
 function stringAvatar(name) {
   const initials = name.match(/\b\w/g).slice(0, 2).join("");
-  // 1. name.match(/\b\w/g): Busca todas las letras que forman palabras completas en el nombre.
-  //    - \b: Coincide con un límite de palabra.
-  //    - \w: Coincide con cualquier carácter de palabra.
-  //    - g: Realiza la búsqueda globalmente en toda la cadena.
   return {
     sx: {
       bgcolor: stringToColor(name),
@@ -52,6 +48,7 @@ export default function OptionsMenu() {
   const open = Boolean(anchorEl);
 
   const auth = useAuth();
+  const role = auth.getUser()?.role;
 
   async function handleSignOut(e) {
     e.preventDefault();
@@ -70,9 +67,15 @@ export default function OptionsMenu() {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // Define las rutas según el rol
+  const userInfoRoute = role === 'egresado' ? '/Alumni/userInfo' : 'userInfo';
+  const changePasswordRoute = role === 'egresado' ? '/Alumni/cambiar-password' : 'cambiar-password';
+
   return (
     <React.Fragment>
       <MenuButton
@@ -122,20 +125,22 @@ export default function OptionsMenu() {
           </Typography>
         </MenuItem>
         <Link
-          to = "userInfo"
+          to={userInfoRoute}
           style={{ textDecoration: "none", color: "inherit" }}
           replace
         >
           <MenuItem onClick={handleClose}>Perfil</MenuItem>
         </Link>
 
+        {/* Redirección condicional a Cambiar Contraseña */}
         <Link
-          to = "cambiar-password"
+          to={changePasswordRoute}
           style={{ textDecoration: "none", color: "inherit" }}
           replace
         >
           <MenuItem onClick={handleClose}>Cambiar Contraseña</MenuItem>
         </Link>
+
         <Divider />
         <MenuItem
           onClick={handleClose}

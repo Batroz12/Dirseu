@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import Logo2 from '../images/UAC.png';
-import { Facebook, Youtube, Instagram, Phone, Menu, X, ArrowUp, Mail, MapPin } from 'lucide-react';
+import { Phone, Menu, X, ArrowUp, Mail, MapPin } from 'lucide-react';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import Carousel from 'react-material-ui-carousel';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 import Navbar from './componentes/nav';
 import Organigrama from './componentes/organigrama';
 
 const comunicados = [
-    {
-        image: "https://scontent.fcuz2-1.fna.fbcdn.net/v/t39.30808-6/461830014_122169791852156263_5647760676410302820_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHsAJlEkEhlhq6pP9r2m-Ft8A8UQO6jKSDwDxRA7qMpIJGI5jmfu9bA9OurAYhtPDbXGNDWGpUGYwAqAqFPFYxg&_nc_ohc=ogwhVicv91EQ7kNvgF9Myhq&_nc_zt=23&_nc_ht=scontent.fcuz2-1.fna&_nc_gid=AtXqK4ITA8cwHaKcIEzq8fH&oh=00_AYCpoA9hbk36AqC-qVblGVvSwVSstII_NsxHtJfUOoNCAg&oe=672DE0B4", // Reemplaza con la URL de tu imagen
-    },
     {
         image: "https://z-p3-scontent.flim4-3.fna.fbcdn.net/v/t39.30808-6/462779840_122170978466156263_9139584553876081795_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEzW4HQcXG3RIWFDkillWuODsjiuVlHiGsOyOK5WUeIa0QS9xbhNi7nDApUaEkXa8iRMnNrwdVrroyEiPpidhKu&_nc_ohc=KDUyb6E5x2oQ7kNvgFlGPEB&_nc_zt=23&_nc_ht=z-p3-scontent.flim4-3.fna&_nc_gid=A_zhSmspqq5OH1ga4A162ns&oh=00_AYCQkb8RaNhzRg_pip95p2bnvwvUkOYhDr4ubo_vsFrezg&oe=6732C79C",
     },
@@ -20,10 +16,10 @@ const comunicados = [
         image: "https://scontent.flim19-1.fna.fbcdn.net/v/t39.30808-6/266578991_4909484112445675_1962966390412107378_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFV6UL1SpCckGMDhUM_9t9Y0T4p5kuGs_7RPinmS4az_jlwW_O1nrfIxzPl2ge-umSaIAnA0frSPzZ9oeITO-YB&_nc_ohc=rXm4bKrvBZkQ7kNvgG9UAIs&_nc_zt=23&_nc_ht=scontent.flim19-1.fna&_nc_gid=Ar8WbQ41TSnec_tAiSIO5EG&oh=00_AYCZ6Iwjx7unySMg9vHujanDpa4oYLrVU2HX1N0Fj1nYpw&oe=672FE45F", // Otra imagen
     },
     {
-        image: "https://scontent.flim19-1.fna.fbcdn.net/v/t39.30808-6/285736443_5455290727865008_7291072959320722000_n.png?stp=dst-png_p526x296&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEC91OLy8BErH1E4U2f_mUrdgW0Qxoik712BbRDGiKTvWEiPLAiZSln-ei1pEgiOHnKCUfFPWznhpQ1K-uCujHT&_nc_ohc=mN6IkhTy2PwQ7kNvgGvSExW&_nc_zt=23&_nc_ht=scontent.flim19-1.fna&_nc_gid=A_hLnV9xKW2r50dmbcJddo9&oh=00_AYDNbkRtWacDmyAwYlBPlaERjYeItZbmoGbbND04Ys15KQ&oe=672FF1E1", // Otra imagen
+        image: "",
     },
     {
-        image: "https://scontent.flim19-1.fna.fbcdn.net/v/t39.30808-6/397558847_6673722526037769_5069168641539854984_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeERA5RSqDb7b7Tmbm9bnZWZRc5txmLTm-VFzm3GYtOb5Tg5TmW5U918_eH15MPrIJfpVp59VU9lEfdFyKhWjceM&_nc_ohc=gO5Uvpf6WsgQ7kNvgHrK3Io&_nc_zt=23&_nc_ht=scontent.flim19-1.fna&_nc_gid=AETqSJtWnPS9dmROOqf1Vms&oh=00_AYBsom2UnYKhJCBhVaR8PAlJ8Tf29yVWdDTgzjMl1uwjuw&oe=672FE483", // Otra imagen
+        image: "",
     },
     
 ];
@@ -131,27 +127,12 @@ const HomeCSE = () => {
         <div className="min-h-screen">
             {/* Navbar */}
             <Navbar />
-
-            {/* Header */}
-            <header className="mt-20">
-                <div
-                    className="relative bg-cover bg-center h-72"
-                    style={{ backgroundImage: `url(${image2})` }}
-                >
-                    <div className="absolute inset-0 bg-blue-900 bg-opacity-80 backdrop-blur-md"></div>
-                    <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
-                        <h1 className="text-5xl font-bold">ALUMNI</h1>
-                        <p className="mt-2 text-lg">
-                        </p>
-                    </div>
-                </div>
-            </header>
-            <main className='py-0'>
-                <CardComponent />
-                {/* Carrusel de Comunicados */}
+            <main className=''>
+                <Outlet />
+                {/* <CardComponent />
                 <h1 className='text-center py-4'>Comunicados</h1>
                 <ComunicadoCarousel />
-                <Organigrama />
+                <Organigrama /> */}
             </main>
             {/* Back to top button */}
             <button 
@@ -160,25 +141,7 @@ const HomeCSE = () => {
             >
                 <ArrowUp className="h-5 w-5" />
             </button>
-            {/* Footer */}
-            <footer className="bg-blue-900 text-white py-4">
-                <div className="mx-auto text-center py-6">
-                    <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
-                        <div className="flex items-center bg-blue-800 p-4 rounded-lg shadow-lg w-full md:w-auto">
-                            <MapPin className="mr-2" />
-                            <p>Dirección: Larapa, Cusco</p>
-                        </div>
-                        <div className="flex items-center bg-blue-800 p-4 rounded-lg shadow-lg w-full md:w-auto">
-                            <Phone className="mr-2" />
-                            <p>60 5000-Anexo 1114</p>
-                        </div>
-                        <div className="flex items-center bg-blue-800 p-4 rounded-lg shadow-lg w-full md:w-auto">
-                            <Mail className="mr-2" />
-                            <p>ovillena@uandina.edu.pe</p>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            
         </div>
     );
 };

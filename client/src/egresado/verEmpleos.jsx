@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import Box from "@mui/material/Box";
 import { X, Briefcase, Phone, Mail, Info } from 'lucide-react';
 import { Typography, Divider, Button, useTheme, MenuItem, Select, InputLabel, FormControl, TextField, Grid } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { motion } from 'framer-motion';
+import ContactPageIcon from "@mui/icons-material/ContactPage";
+import Backdrop from "@mui/material/Backdrop";
 import dayjs from 'dayjs';
+import FormularioPDF from "../components/administrator/FormularioPDF";
 
 export default function EmpleosConPaginacion() {
   const [jobs, setJobs] = useState([]);
@@ -88,6 +92,15 @@ export default function EmpleosConPaginacion() {
     }
   };
 
+  const [open, setOpen] = React.useState(false);
+  const [openCV, setOpenCV] = React.useState(false);
+
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+
+  const handleCloseCV = () => setOpenCV(false);
+  const handleOpenCV = () => setOpenCV(true);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="container mx-auto p-4">
@@ -138,6 +151,7 @@ export default function EmpleosConPaginacion() {
                 onClick={() => openModal(job)}
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300 }}
+                style={{ cursor: 'pointer' }}
               >
                 <h2 className="text-2xl font-semibold mb-2 text-black">{job.nombre}</h2>
                 <p className="text-sm mb-2 ">{job.descripcion}</p>
@@ -227,9 +241,19 @@ export default function EmpleosConPaginacion() {
                 <strong>Hasta:</strong> {formatDate(selectedJob.fecha_fin)}
               </p>
 
-              {/* <Button variant="contained" color="primary" fullWidth onClick={closeModal}>
-                Aplicar
-              </Button> */}
+              <Button
+                  variant="contained"
+                  endIcon={<ContactPageIcon />}
+                  onClick={handleOpenCV}
+                  sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
+                >
+                  Generar CV
+                </Button>
+                <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openCV}>
+                  <Box>
+                    <FormularioPDF func={handleCloseCV} />
+                  </Box>
+                </Backdrop>
             </motion.div>
           </motion.div>
         )}

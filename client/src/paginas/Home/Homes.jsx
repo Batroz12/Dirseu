@@ -52,7 +52,7 @@ export default function Dashboard(props) {
             }}
           >
             <Header />
-              {isHome && <BienvenidaDirseu />}
+              {/* {isHome && <BienvenidaDirseu />} */}
             <Outlet />
           </Stack>
         </Box>

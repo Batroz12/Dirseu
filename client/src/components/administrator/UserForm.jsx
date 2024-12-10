@@ -51,6 +51,7 @@ export default function UserForm() {
         lastName,
         email,
         password,
+        role: "egresado",
       });
 
       goTo("type");

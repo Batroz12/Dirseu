@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, BookOpen, Briefcase, Users, Mail, Phone, MapPin, Book, FileText, Scale, Microscope, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUp, Calendar, BookOpen, Briefcase, Users, Mail, Phone, Book, FileText, Scale, Microscope, Search } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import { Facebook, Youtube, Instagram } from 'lucide-react';
 import FormatosAcademicosActualizados from '../../egresado/formatosAcademicos';
@@ -9,11 +9,12 @@ import Footer from '../componentes/footer/footer';
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
 import RecursosAcademicos from './componentes/recursosAcademicos';
 import Mof from '../componentes/mof/mof';
+import Separador from '../componentes/separador';
 import axios from 'axios';
 
 // Sección reutilizable con icono y título
 const Section = ({ id, title, icon: Icon, children }) => (
-  <section id={id} className="py-16 bg-white">
+  <section id={id} className="py-4 bg-white">
     <div className="container mx-auto px-4">
       <div className="flex items-center justify-center mb-8">
         <Icon className="w-8 h-8 text-blue-600 mr-2" />
@@ -25,7 +26,7 @@ const Section = ({ id, title, icon: Icon, children }) => (
 );
 
 // Componente para una tarjeta con animación
-const Card = ({ title, description, link }) => (
+const Card = ({ title, description, link, showLink = true }) => (
   <motion.div 
     className="bg-white p-6 rounded-lg shadow-lg"
     whileHover={{ scale: 1.05 }}
@@ -33,12 +34,17 @@ const Card = ({ title, description, link }) => (
   >
     <h3 className="text-xl font-semibold mb-2">{title}</h3>
     <p className="text-gray-600 mb-4">{description}</p>
-    <a href={link} className="text-blue-600 hover:underline">Más información</a>
+    {showLink && (
+      <a href={link} className="text-blue-600 hover:underline">Más información</a>
+    )}
   </motion.div>
 );
 
 const SEgresado = () => {
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [capacitaciones, setCapacitaciones] = useState([]);
+  const [empleos, setEmpleos] = useState([]);
+  const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -83,13 +89,24 @@ const SEgresado = () => {
   ];
 
   useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Función para volver al inicio
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
     const fetchCapacitaciones = async () => {
       try {
         const response = await axios.get('http://localhost:4000/api/capacitaciones/');
         if (Array.isArray(response.data)) {
-          // Ordena las capacitaciones por fecha de inicio (fecha_inicio) de manera descendente
           const capacitacionesOrdenadas = response.data.sort((a, b) => new Date(b.fecha_inicio) - new Date(a.fecha_inicio));
-          // Obtiene las 3 capacitaciones más recientes
           const tresMasRecientes = capacitacionesOrdenadas.slice(0, 3);
           setCapacitaciones(tresMasRecientes);
         } else {
@@ -101,8 +118,40 @@ const SEgresado = () => {
         setLoading(false);
       }
     };
-
+  
+    const fetchEmpleos = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/empleos/');
+        if (Array.isArray(response.data)) {
+          const empleosOrdenados = response.data.sort((a, b) => new Date(b.fecha_inicio) - new Date(a.fecha_inicio));
+          const tresMasRecientes = empleosOrdenados.slice(0, 3);
+          setEmpleos(tresMasRecientes);
+        } else {
+          console.error('La respuesta de la API no es un arreglo', response.data);
+        }
+      } catch (err) {
+        setError('Error al cargar los empleos.');
+      }
+    };
+  
+    const fetchEventos = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/eventos/');
+        if (Array.isArray(response.data)) {
+          const eventosOrdenados = response.data.sort((a, b) => new Date(b.fecha_evento) - new Date(a.fecha_evento));
+          const tresMasRecientes = eventosOrdenados.slice(0, 3);
+          setEventos(tresMasRecientes);
+        } else {
+          console.error('La respuesta de la API no es un arreglo', response.data);
+        }
+      } catch (err) {
+        setError('Error al cargar los eventos.');
+      }
+    };
+  
     fetchCapacitaciones();
+    fetchEmpleos();
+    fetchEventos();
   }, []);
 
   return (
@@ -112,42 +161,33 @@ const SEgresado = () => {
         <NavbarLogo
           backgroundImage={Logo}
           overlayOpacity={0.5}
-          title="Coordinación de Seguimiento al Egresado"
+          title="Coordinación de la Unidad de Seguimiento al Egresado y Graduado"
           socialLinks={socialLinks}
           buttons={buttons}
           showLoginButton={true}
         />
       </header>
       <main className="">
-        {/* Sección de Mof */}
-        {/* <div className="h-auto bg-gray-100">
-          <Mof purpose={purpose} functions={functions} />
-        </div> */}
         {/* Convenios */}
-        <section className="py-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-0 mx-auto px-4 sm:px-6 lg:px-8">
           <Convenios />
         </section>
         {/* Sección de Eventos */}
         <Section id="eventos" title="Próximos Eventos" icon={Calendar}>
+          {loading && <div>Cargando eventos...</div>}
+          {error && <div>{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card 
-              title="Reunión Anual de Egresados"
-              description="Únete a nosotros para una noche de networking y reconocimientos."
-              link="Home/Egresado/empleos"
-            />
-            <Card 
-              title="Feria de Empleo Virtual"
-              description="Conecta con empleadores de primer nivel en nuestra feria virtual."
-              link="Home/Egresado/empleos"
-            />
-            <Card 
-              title="Conferencia de Liderazgo"
-              description="Aprende de líderes de la industria en nuestra conferencia anual."
-              link="Home/Egresado/empleos"
-            />
+            {Array.isArray(eventos) && eventos.map((evento) => (
+              <Card 
+                key={evento.id} // Usa un identificador único
+                title={evento.nombre}
+                description={evento.descripcion}
+                showLink={false}
+              />
+            ))}
           </div>
         </Section>
-
+        <Separador />
         {/* Sección de Capacitaciones */}
         <Section id="capacitaciones" title="Capacitaciones" icon={BookOpen}>
           {loading && <div>Cargando capacitaciones...</div>}
@@ -158,33 +198,28 @@ const SEgresado = () => {
               key={capacitacion.id} // Asegúrate de que `id` es el identificador único
               title={capacitacion.nombre}
               description={capacitacion.descripcion}
-              link="Home/modules" // Cambia esto si necesitas una ruta específica
+              link="Alumni/Capacitaciones" // Cambia esto si necesitas una ruta específica
             />
           ))}
           </div>
         </Section>
-
+        <Separador />
         {/* Sección de Oportunidades de Empleo */}
-        <Section id="oportunidades" title="Oportunidades de Empleo" icon={Briefcase}>
+        <Section id="empleos" title="Oportunidades de Empleo" icon={Briefcase}>
+          {loading && <div>Cargando oportunidades de empleo...</div>}
+          {error && <div>{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card 
-              title="Ingeniero de Software Senior"
-              description="Empresa líder en tecnología busca ingeniero con experiencia en desarrollo web."
-              link="Home/Egresado/empleos"
-            />
-            <Card 
-              title="Gerente de Marketing Digital"
-              description="Agencia de publicidad busca profesional para liderar equipo de marketing digital."
-              link="Home/Egresado/empleos"
-            />
-            <Card 
-              title="Analista Financiero"
-              description="Banco internacional busca analista financiero para su sede en la ciudad."
-              link="Home/Egresado/empleos"
-            />
+            {Array.isArray(empleos) && empleos.map((empleo) => (
+              <Card 
+                key={empleo.id}
+                title={empleo.nombre}
+                description={empleo.descripcion}
+                link="Alumni/Bolsa-Laboral"
+              />
+            ))}
           </div>
         </Section>
-
+        <Separador />
         {/* Formatos académicos */}
         <section className="bg-gray-50">
           <div className="container mx-auto px-4 flex flex-col items-center">
@@ -209,10 +244,23 @@ const SEgresado = () => {
           </div>
         </section>
       </main>
-
       <footer id="footer" className="py-6 bg-gray-800 text-white">
         <Footer />
       </footer>
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.button
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-5 right-5 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

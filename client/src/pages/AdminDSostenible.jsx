@@ -4,10 +4,12 @@ import {
   useTheme, ThemeProvider, CssBaseline
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 const AdministrarDSostenible = () => {
   const [anchorEls, setAnchorEls] = React.useState([null]);
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleClick = (event, index) => {
     const newAnchorEls = [...anchorEls];
@@ -21,10 +23,18 @@ const AdministrarDSostenible = () => {
     setAnchorEls(newAnchorEls);
   };
 
+  const handleMenuItemClick = (path) => {
+    navigate(path); // Navegar a la ruta correspondiente
+    setAnchorEls([null]); // Cerrar el menú desplegable
+  };
+
   const menuItems = [
     {
-      title: 'Voluntariado',
-      options: ['Ver Inscritos', 'Agregar Voluntariados', 'Ver Voluntariados'],
+      title: 'Calendario Ambiental',
+      options: [
+        { label: 'Ver Eventos del Calendario Ambiental', 
+          path: '/Home/coordinadores/DesarrolloSostenible/ver-eventos-calendario' },
+      ],
     },
   ];
 
@@ -59,8 +69,8 @@ const AdministrarDSostenible = () => {
                   onClose={() => handleClose(index)}
                 >
                   {menu.options.map((option, optionIndex) => (
-                    <MenuItem key={optionIndex} onClick={() => handleClose(index)}>
-                      {option}
+                    <MenuItem key={optionIndex} onClick={() => handleMenuItemClick(option.path)}>
+                      {option.label}
                     </MenuItem>
                   ))}
                 </Menu>
@@ -69,9 +79,9 @@ const AdministrarDSostenible = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        {/* Contenido adicional puede ir aquí */}
-      </Container>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Outlet /> 
+      </Box>
     </ThemeProvider>
   );
 };

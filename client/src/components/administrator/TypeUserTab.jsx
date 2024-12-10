@@ -47,7 +47,7 @@ const Card = styled(MuiCard)(({ theme, selected }) => ({
 }));
 
 export default function TypeUserTab() {
-  const [Type, setType] = React.useState("estudiante");
+  const [Type, setType] = React.useState("egresado");
 
   const handleTypeChange = (event) => {
     setType(event.target.value);
@@ -69,9 +69,9 @@ export default function TypeUserTab() {
             justifyContent: "space-between",
           }}
         >
-          <Card selected={Type === "estudiante"} component={Link} to="" sx={{}}>
+          <Card selected={Type === "egresado"} component={Link} to="" sx={{}}>
             <CardActionArea
-              onClick={() => setType("estudiante")}
+              onClick={() => setType("egresado")}
               sx={{
                 ".MuiCardActionArea-focusHighlight": {
                   backgroundColor: "transparent",
@@ -89,23 +89,23 @@ export default function TypeUserTab() {
                   sx={(theme) => ({
                     color:
                       theme.palette.mode === "light" ? "grey.400" : "grey.600",
-                    ...(Type === "estudiante" && {
+                    ...(Type === "egresado" && {
                       color: "primary.main",
                     }),
                   })}
                 />
-                <Typography fontWeight="medium">Estudiante</Typography>
+                <Typography fontWeight="medium">Egresado</Typography>
               </CardContent>
             </CardActionArea>
           </Card>
-          <Card
-            selected={Type === "egresado"}
+          {/* <Card
+            selected={Type === "estudiante"}
             component={Link}
-            to="egresado"
+            to="estudiante"
             sx={{}}
           >
             <CardActionArea
-              onClick={() => setType("egresado")}
+              onClick={() => setType("estudiante")}
               sx={{
                 ".MuiCardActionArea-focusHighlight": {
                   backgroundColor: "transparent",
@@ -123,45 +123,15 @@ export default function TypeUserTab() {
                   sx={(theme) => ({
                     color:
                       theme.palette.mode === "light" ? "grey.400" : "grey.600",
-                    ...(Type === "egresado" && {
+                    ...(Type === "estudiante" && {
                       color: "primary.main",
                     }),
                   })}
                 />
-                <Typography fontWeight="medium">Egresado</Typography>
+                <Typography fontWeight="medium">Estudiante</Typography>
               </CardContent>
             </CardActionArea>
-          </Card>
-          <Card selected={Type === "docente"} component={Link} to="docente">
-            <CardActionArea
-              onClick={() => setType("docente")}
-              sx={{
-                ".MuiCardActionArea-focusHighlight": {
-                  backgroundColor: "transparent",
-                },
-                "&:focus-visible": {
-                  backgroundColor: "action.hover",
-                },
-              }}
-            >
-              <CardContent
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <LocalLibraryIcon
-                  fontSize="small"
-                  sx={(theme) => ({
-                    color:
-                      theme.palette.mode === "light" ? "grey.400" : "grey.600",
-                    ...(Type === "docente" && {
-                      color: "primary.main",
-                    }),
-                  })}
-                />
-                <Typography fontWeight="medium">Docente</Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-          
+          </Card>           */}
         </RadioGroup>
       </FormControl>
       <Box

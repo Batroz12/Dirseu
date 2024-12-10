@@ -3,7 +3,7 @@ import { Grid, Card, Typography, Button, Modal, Box, IconButton } from "@mui/mat
 import { DataGrid } from "@mui/x-data-grid";
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import * as XLSX from "xlsx";
-import { getTableRequest, getUsersInscriptionRequest } from "../../api/api";
+import { getTableRequest, getEgresadosInscriptionRequest } from "../../api/api";
 import { useTheme } from '@mui/material/styles';
 
 export default function VerInscritosCapacitaciones() {
@@ -34,7 +34,7 @@ export default function VerInscritosCapacitaciones() {
   // Función para abrir el modal y cargar los inscritos
   const handleOpenModal = async (capacitacionId) => {
     try {
-      const response = await getUsersInscriptionRequest({
+      const response = await getEgresadosInscriptionRequest({
         table: "capacitaciones",
         id: capacitacionId,
       });
@@ -66,7 +66,7 @@ export default function VerInscritosCapacitaciones() {
     e.preventDefault();
 
     try {
-      const response = await getUsersInscriptionRequest({
+      const response = await getEgresadosInscriptionRequest({
         table: "capacitaciones",
         id: selectedCapacitacion,
       });
@@ -84,10 +84,12 @@ export default function VerInscritosCapacitaciones() {
   }
 
   const columns = [
-    { field: "Nombre", headerName: "Nombre Estudiante", width: 180 },
-    { field: "Codigo", headerName: "Código", width: 110 },
+    { field: "Nombre", headerName: "Nombre del Egresante", width: 180 },
+    { field: "Codigo", headerName: "Código", width: 80 },
     { field: "Carrera", headerName: "Carrera", width: 120 },
-    { field: "Semestre", headerName: "Semestre", width: 80 },
+    { field: "Promocion", headerName: "Promo", width: 60 },
+    { field: "Telefono", headerName: "Teléfono", width: 100 },
+    { field: "Direccion", headerName: "Dirección", width: 80 },
     { field: "Fecha_Inscripcion", headerName: "Fecha Inscripción", width: 120 },
   ];
 

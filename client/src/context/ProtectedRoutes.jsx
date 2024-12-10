@@ -1,37 +1,29 @@
-// src/components/ProtectedRoute.jsx
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "./AuthProvider";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
-/**
- * ProtectedRoute Component
- * @param {React.Component} children - Componente a renderizar si el usuario está autorizado.
- * @param {Array} allowedRoles - Arreglo de roles permitidos para acceder a la ruta.
- * @returns Componente protegido o redirección.
- */
-const ProtectedRoutes = ({ children, allowedRoles }) => {
-  const auth = useAuth(); // Obtenemos el contexto de autenticación
-  const location = useLocation(); // Obtenemos la ubicación actual
+const ProtectedRoutes = ({ allowedRoles }) => {
+  const { isAuthenticated, loading, getUser } = useAuth();
+  const location = useLocation();
+  const user = getUser(); // Obtener información del usuario
 
-  const user = auth.getUser(); // Obtenemos el usuario autenticado
-  const userAdmin = auth.isAdmin;
-  if (userAdmin) {
-    return children; // Si el usuario es admin, se le permite acceder a cualquier ruta
+  // Mientras el estado de autenticación se verifica
+  if (loading) {
+    return <div>Loading...</div>; // Mostrar algo mientras se carga
   }
 
-  if (!auth.isAuthenticated) {
-    // Si el usuario no está autenticado, redirigimos al login
+  // Si el usuario no está autenticado, redirigir al login
+  if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (!allowedRoles.includes(user?.role)) {
-    // Si el rol del usuario no está permitido, lo redirigimos a "No autorizado"
-    return <Navigate to="/home/no-autorizado" replace />;
-    // return <Navigate to="/home/no-autorizado" replace />;
+  // Si el usuario no tiene un rol permitido, redirigir a "No autorizado"
+  if (allowedRoles && !allowedRoles.includes(user?.role)) {
+    return <Navigate to="/no-autorizado" replace />;
   }
 
-  // Si está autenticado y tiene el rol adecuado, renderizamos el componente hijo
-  return children;
+  // Renderizar el contenido permitido (rutas hijas)
+  return <Outlet />;
 };
 
 export default ProtectedRoutes;

@@ -14,7 +14,7 @@ const Card = ({ title, content, Icon }) => {
   )
 }
 
-const MissionVisionCards = () => {
+const MissionVisionCards = ({ mission, vision }) => {
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef(null)
 
@@ -68,7 +68,7 @@ const MissionVisionCards = () => {
         >
           <Card
             title="Misión"
-            content="La Dirección de Responsabilidad Social y Extensión Universitaria de la Universidad Andina del Cusco planifica, organiza y dirige las actividades de responsabilidad social y extensión universitaria, promoviendo y articulando las iniciativas de los estudiantes, docentes, egresados y graduados de la Universidad Andina del Cusco, para contribuir al desarrollo sostenible de la comunidad local, regional y nacional."
+            content={mission}
             Icon={LuBook}
           />
         </motion.div>
@@ -80,7 +80,7 @@ const MissionVisionCards = () => {
         >
           <Card
             title="Visión"
-            content="La Dirección de Responsabilidad Social y Extensión Universitaria de la Universidad Andina del Cusco al 2025, será líder en la gestión ética y eficaz del impacto generado por la universidad contribuyendo al desarrollo sostenible de la sociedad, en base al ejercicio de sus funciones sustantivas de formación profesional, de investigación, de servicios de extensión y proyección social."
+            content={vision}
             Icon={LuEye}
           />
         </motion.div>

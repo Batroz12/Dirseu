@@ -90,6 +90,7 @@ const TallerPage = () => {
         if (data.imagen) {
           formData.append('imagen', data.imagen);
         }
+        formData.append('codigo_instructor', data.codigo_instructor);
 
         response = await actualizarTaller(taller.id, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -107,6 +108,7 @@ const TallerPage = () => {
         if (data.imagen) {
           formData.append('imagen', data.imagen);
         }
+        formData.append('codigo_instructor', data.codigo_instructor);
 
         response = await crearTaller(formData, {
           headers: { 'Content-Type': 'multipart/form-data' },

@@ -24,8 +24,8 @@ const AdministrarDFormativo = () => {
   };
 
   const handleMenuItemClick = (path) => {
-    navigate(path); // Navegar a la ruta correspondiente
-    setAnchorEls([null]); // Cerrar el menú desplegable
+    navigate(path);
+    setAnchorEls([null]);
   };
 
   const menuItems = [
@@ -34,12 +34,6 @@ const AdministrarDFormativo = () => {
       options: [
         { label: 'Ver Inscritos', path:'/Home/coordinadores/DesarrolloFormativo/verInscritos' },
         { label: 'Ver Talleres', path: '/Home/coordinadores/DesarrolloFormativo/verTalleres' },
-      ],
-    },
-    {
-      title: 'Eventos',
-      options: [
-        { label: 'Ver Eventos', path:'/Home/coordinadores/DesarrolloFormativo/verEventos' },
       ],
     },
   ];

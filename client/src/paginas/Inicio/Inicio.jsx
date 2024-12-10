@@ -1,14 +1,13 @@
-import React, { useRef } from 'react';
-
-import '../Inicio/Inicio.css';
-
+import React, { useRef, useState, useEffect } from 'react';
 import { LuUsers, LuHeart, LuMail, LuBriefcase, LuGlobe } from 'react-icons/lu';
-import SliderSection from '../componentes/slider/slider';
-import CardsMV from '../componentes/cardMV/cardMV';
+import { motion, AnimatePresence } from 'framer-motion';
+import MissionVisionCards from '../componentes/cardMV/cardMV';
+
+import { ArrowUp, Facebook, Youtube, Instagram, Phone } from 'lucide-react';
+import { FaArrowCircleUp } from 'react-icons/fa';
+
 import Footer from '../componentes/footer/footer';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
-import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
-
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
 import Logo2 from '../images/UAC.png';
 import Politicas from '../componentes/politicas/politicas';
@@ -22,6 +21,22 @@ const Inicio = () => {
   const programasRef = useRef(null);
   const impactoRef = useRef(null);
   const contactoRef = useRef(null);
+
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  // Detectar el scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Función para volver al inicio
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Configuración de redes sociales
   const socialLinks = [
@@ -63,7 +78,10 @@ const Inicio = () => {
           <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 mx-auto">
             Nuestra Misión y Visión
           </h2>
-              <CardsMV />
+          <MissionVisionCards
+            mission="La Dirección de Responsabilidad Social y Extensión Universitaria de la Universidad Andina del Cusco planifica, organiza y dirige las actividades de responsabilidad social y extensión universitaria, promoviendo y articulando las iniciativas de los estudiantes, docentes, egresados y graduados de la Universidad Andina del Cusco, para contribuir al desarrollo sostenible de la comunidad local, regional y nacional."
+            vision="La Dirección de Responsabilidad Social y Extensión Universitaria de la Universidad Andina del Cusco al 2025, será líder en la gestión ética y eficaz del impacto generado por la universidad contribuyendo al desarrollo sostenible de la sociedad, en base al ejercicio de sus funciones sustantivas de formación profesional, de investigación, de servicios de extensión y proyección social."
+          />
           </div>
         </section>
         <section className="py-0 bg-gray-100">
@@ -124,6 +142,20 @@ const Inicio = () => {
       <footer ref={contactoRef} id="footer" className="py-6 bg-gray-800 text-white">
         <Footer />
       </footer>
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.button
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-5 right-5 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

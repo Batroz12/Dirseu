@@ -39,12 +39,13 @@ const Navbar = () => {
                 <img src={Logo2} alt="Logo UAC" className="h-10" />
             </div>
             <div className="hidden md:flex space-x-8 font-bold text-[#1a3e72]">
-                <Link to="/Homes" className="hover:underline">INICIO</Link>
-                <Link to="/presentacion" className="hover:underline">PRESENTACION +</Link>
-                <Link to="/Bolsa-Laboral" className="hover:underline">BOLSA LABORAL +</Link>
-                <Link to="/procedimietos" className="hover:underline">RECURSOS +</Link>
-                <Link to="/convenios" className="hover:underline">CONVENIOS +</Link>
-                <Link to="/Capacitaciones" className="hover:underline">EDUCACION CONTINUA +</Link>
+                <Link to="/Alumni/Inicio" className="hover:underline">INICIO</Link>
+                <Link to="/Alumni/presentacion" className="hover:underline">PRESENTACION +</Link>
+                <Link to="/Alumni/Bolsa-Laboral" className="hover:underline">BOLSA LABORAL +</Link>
+                <Link to="/Alumni/procedimietos" className="hover:underline">RECURSOS +</Link>
+                <Link to="/Alumni/convenios" className="hover:underline">CONVENIOS +</Link>
+                <Link to="/Alumni/Capacitaciones" className="hover:underline">EDUCACION CONTINUA +</Link>
+                <Link to="/Alumni/encuestas" className="hover:underline">ENCUESTAS +</Link>
             </div>
 
             {/* Nueva sección para el Avatar y nombre del usuario */}
@@ -85,12 +86,13 @@ const Navbar = () => {
             {isOpen && (
                 <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white shadow-md p-4">
                     <ul className="space-y-4 font-bold text-[#1a3e72]">
-                        <li><Link to="/Homes" className="hover:underline">INICIO</Link></li>
-                        <li><Link to="/presentacion" className="hover:underline">PRESENTACION +</Link></li>
-                        <li><Link to="/Bolsa-Laboral" className="hover:underline">BOLSA LABORAL +</Link></li>
-                        <li><Link to="/procedimietos" className="hover:underline">RECURSOS +</Link></li>
-                        <Link to="/convenios" className="hover:underline">CONVENIOS +</Link>
-                        <li><Link to="/Capacitaciones" className="hover:underline">EDUCACION CONTINUA +</Link></li>
+                        <li><Link to="/Alumni" className="hover:underline">INICIO</Link></li>
+                        <li><Link to="/Alumni/presentacion" className="hover:underline">PRESENTACION +</Link></li>
+                        <li><Link to="/Alumni/Bolsa-Laboral" className="hover:underline">BOLSA LABORAL +</Link></li>
+                        <li><Link to="/Alumni/procedimietos" className="hover:underline">RECURSOS +</Link></li>
+                        <li><Link to="/Alumni/convenios" className="hover:underline">CONVENIOS +</Link></li>
+                        <li><Link to="/Alumni/Capacitaciones" className="hover:underline">EDUCACION CONTINUA +</Link></li>
+                        <li><Link to="/Alumni/encuestas" className="hover:underline">ENCUESTAS +</Link></li>
                     </ul>
                 </div>
             )}

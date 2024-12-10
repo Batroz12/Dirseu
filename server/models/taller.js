@@ -10,21 +10,23 @@ class Taller {
     this.lugar = taller.lugar;
     this.cupo_maximo = taller.cupo_maximo;
     this.imagen = taller.imagen;
+    this.codigo_instructor = taller.codigo_instructor;
   }
 
   static async crear(nuevoTaller) {
     try {
       // Insertar el nuevo Taller
       const [result] = await execute(
-        'INSERT INTO talleres (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO talleres (nombre, descripcion, fecha_inicio, fecha_fin, lugar, cupo_maximo, imagen, codigo_instructor) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
         [
-          nuevoTaller.nombre || null,
+          nuevoTaller.nombre,
           nuevoTaller.descripcion || null,
           nuevoTaller.fecha_inicio || null,
           nuevoTaller.fecha_fin || null,
           nuevoTaller.lugar || null,
           nuevoTaller.cupo_maximo || null,
-          nuevoTaller.imagen || null
+          nuevoTaller.imagen || null,
+          nuevoTaller.codigo_instructor, 
         ]
       );
       
@@ -62,8 +64,8 @@ class Taller {
 
   async actualizar() {
     await execute(
-      'UPDATE talleres SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, lugar = ?, cupo_maximo = ? WHERE id = ?',
-      [this.nombre, this.descripcion, this.fecha_inicio, this.fecha_fin, this.lugar, this.cupo_maximo, this.id]
+      'UPDATE talleres SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, lugar = ?, cupo_maximo = ?, codigo_instructor = ? WHERE id = ?',
+      [this.nombre, this.descripcion, this.fecha_inicio, this.fecha_fin, this.lugar, this.cupo_maximo, this.codigo_instructor, this.id]
     );
   }
 

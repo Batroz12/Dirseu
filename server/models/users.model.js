@@ -19,12 +19,17 @@ export const verifyEmailWithMailboxLayer = async (email) => {
 };
 
 // Función para registrar un nuevo usuario
-export const registerUser = async ({ firstName, lastName, email, password }) => {
+export const registerUser = async ({ firstName, lastName, email, password, role }) => {
     try {
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await pool.query('INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', [firstName, lastName, email, hashedPassword, 'student']);
+        // Usar el rol proporcionado o establecer un valor predeterminado si no se pasa
+        // const userRole = role || 'egresado';
+
+        await pool.query(
+            'INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', 
+            [firstName, lastName, email, hashedPassword, role]
+        );
 
         // Devuelve una respuesta de éxito
         return { success: true, message: 'User registered successfully.' };
@@ -83,6 +88,12 @@ export const getDataByEmail = async (email) => {
 
         if (rows[0]) {
             return { type: 'empleador', ...rows[0] };
+        }
+        // Probar si es instructor
+        [rows] = await pool.query('SELECT * FROM users u INNER JOIN instructores e ON e.user_id = u.id WHERE u.email = ?', [email]);
+
+        if (rows[0]) {
+            return { type: 'instructor', ...rows[0] };
         }
 
     } catch (error) {

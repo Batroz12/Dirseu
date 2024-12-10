@@ -14,7 +14,6 @@ export const pool = new createPool({
 
 export const execute = async (sql, params) => {
     const [rows, fields] = await pool.execute(sql, params);
-    console.log('Resultado de execute:', rows, fields);
     return [rows, fields];
   };
   

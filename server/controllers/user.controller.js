@@ -39,13 +39,10 @@ export const getUserInfo = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     const { userId, currentPassword, newPassword } = req.body;
-    console.log("Request Body:", req.body);
-    console.log("Received User ID:", userId);
+
     if (!userId || !currentPassword || !newPassword) {
         return res.status(400).json({ message: 'Por favor complete todos los campos' });
     }
-
-     // Verificar en el backend
 
     try {
         const response = await changeUserPassword(userId, currentPassword, newPassword);

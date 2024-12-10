@@ -84,7 +84,7 @@ const ChangePassword = () => {
                 .change-password-container {
                     max-width: 400px;
                     margin: auto;
-                    margin-top: 50px;
+                    margin-top: 100px;
                     padding: 20px;
                     border: 1px solid #ddd;
                     border-radius: 8px;

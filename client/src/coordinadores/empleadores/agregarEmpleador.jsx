@@ -48,6 +48,7 @@ export default function EmployerForm() {
         lastName: userData.lastName,
         email: userData.email,
         password: userData.password,
+        role: userData.role,
         codigo_empleador,
         nombre_empresa,
         telefono,

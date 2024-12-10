@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, Alert } from '@mui/material';
+import { TextField, Button, Box, Typography, Alert, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import {
   Favorite as FavoriteIcon,
   ErrorOutline as ErrorOutlineIcon,
@@ -16,6 +16,7 @@ const FormularioTaller = ({ taller, onSubmit }) => {
     lugar: '',
     cupo_maximo: '',
     imagen: null, // Estado para la imagen
+    codigo_instructor: '',
   });
 
   // Estados para manejar errores y mensajes de éxito
@@ -36,7 +37,8 @@ const FormularioTaller = ({ taller, onSubmit }) => {
           : '',
         lugar: taller.lugar || '',
         cupo_maximo: taller.cupo_maximo || '',
-        imagen: null, // Reiniciar la imagen al editar
+        imagen: null,
+        codigo_instructor: taller.codigo_instructor || '',
       });
     } else {
       setFormData({
@@ -46,7 +48,8 @@ const FormularioTaller = ({ taller, onSubmit }) => {
         fecha_fin: '',
         lugar: '',
         cupo_maximo: '',
-        imagen: null, // Reiniciar la imagen al crear
+        imagen: null,
+        codigo_instructor: '',
       });
     }
   }, [taller]);
@@ -78,7 +81,8 @@ const FormularioTaller = ({ taller, onSubmit }) => {
       !formData.fecha_inicio ||
       !formData.fecha_fin ||
       !formData.lugar ||
-      !formData.cupo_maximo
+      !formData.cupo_maximo ||
+      !formData.codigo_instructor
     ) {
       setError('Por favor, completa todos los campos obligatorios.');
       setSuccess(false);
@@ -109,9 +113,22 @@ const FormularioTaller = ({ taller, onSubmit }) => {
         lugar: '',
         cupo_maximo: '',
         imagen: null,
+        codigo_instructor: '',
       });
     }
   };
+
+  const instructores = [
+    { codigo: 'INSAV', nombre: 'Instructor de Artes Visuales' },
+    { codigo: 'INSOS', nombre: 'Instructor de Orquesta Sinfónica' },
+    { codigo: 'INSCoro', nombre: 'Instructor de Coro' },
+    { codigo: 'INSDM', nombre: 'Instructor de Danza Moderna' },
+    { codigo: 'INSDF', nombre: 'Instructor de Danza Folclórica' },
+    { codigo: 'INSTeatro', nombre: 'Instructor de Teatro' },
+    { codigo: 'INSTF', nombre: 'Instructor de Tuna Femenina' },
+    { codigo: 'INSTU', nombre: 'Instructor de Tuna Universitaria' },
+    { codigo: 'INSRC', nombre: 'Instructor de Ritmo y Conexión' },
+  ];
 
   return (
     <Box
@@ -244,6 +261,24 @@ const FormularioTaller = ({ taller, onSubmit }) => {
             inputProps={{ min: 1 }}
             fullWidth
           />
+
+          <FormControl fullWidth required>
+            <InputLabel id="codigo-instructor-label">Código de Instructor*</InputLabel>
+            <Select
+              labelId="codigo-instructor-label"
+              id="codigo_instructor"
+              name="codigo_instructor"
+              value={formData.codigo_instructor}
+              onChange={handleChange}
+              label="Código de Instructor*"
+            >
+              {instructores.map((instructor) => (
+                <MenuItem key={instructor.codigo} value={instructor.codigo}>
+                  {instructor.codigo} - {instructor.nombre}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           {/* Campo para subir imagen */}
           <Button

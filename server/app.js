@@ -13,6 +13,7 @@ import todos from './routes/todos.routes.js';
 import refreshToken from './routes/refreshToken.routes.js';
 import { authenticate } from './utils/authenticate.js';
 
+import calendarioRoutes from './routes/calendario.route.js';
 import voluntariadosRoutes from './routes/voluntariados.routes.js';
 import capacitacionesRoutes from './routes/capacitaciones.routes.js';
 import eventosRoutes from './routes/eventos.routes.js';
@@ -21,6 +22,17 @@ import talleresRoutes from './routes/talleres.routes.js';
 import ofertasRoutes from './routes/ofertasRoutes.js';
 import Tables from './routes/Tables.routes.js';
 
+// rutas para encuestas
+import encuestasRoutes from './routes/encuestas.routes.js';
+import preguntasRoutes from './routes/preguntas.routes.js';
+import opcionesRoutes from './routes/opciones.routes.js';
+import publicacionesRoutes from './routes/publicaciones.routes.js';
+import respuestasRoutes from './routes/respuestas.routes.js';
+import respuestaDetalleRoutes from './routes/respuestaDetalle.routes.js';
+
+// Rutas para asistencias talleres
+import asistenciaRoutes from './routes/asistencia.routes.js';
+import sesionesRoutes from './routes/sesionTaller.routes.js';
 
 const app = express();
 
@@ -44,9 +56,22 @@ app.use('/api/eventos', eventosRoutes);
 app.use('/api/empleos', ofertasLaboralesRoutes);
 app.use('/api/talleres', talleresRoutes);
 app.use('/api/voluntariados', voluntariadosRoutes);
+app.use('/api/calendario', calendarioRoutes);
 
 // Rutas Nuevas
 app.use('/api/ofertas', ofertasRoutes);
+
+// Rutas Encuestas
+app.use('/api/encuestas', encuestasRoutes);
+app.use('/api/preguntas', preguntasRoutes);
+app.use('/api/opciones_pregunta', opcionesRoutes);
+app.use('/api/publicaciones', publicacionesRoutes);
+app.use('/api/respuestas', respuestasRoutes);
+app.use('/api/respuesta_Detalles', respuestaDetalleRoutes);
+
+//Rutas Asistencias
+app.use('/api/sesiones', sesionesRoutes);
+app.use('/api/asistencias', asistenciaRoutes);
 
 
 // TABLES END POINTS
