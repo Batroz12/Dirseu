@@ -36,6 +36,12 @@ const AdministrarEUniversitaria = () => {
         { label: 'Ver Voluntariados', path: '/Home/coordinadores/ExtensionUniversitaria/verVoluntariados' },
       ],
     },
+    {
+      title: 'Eventos',
+      options: [
+        { label: 'Ver Eventos', path:'/Home/coordinadores/ExtensionUniversitaria/verEventos' },
+      ],
+    },
   ];
 
   return (

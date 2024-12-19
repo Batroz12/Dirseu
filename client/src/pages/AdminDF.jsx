@@ -36,6 +36,12 @@ const AdministrarDFormativo = () => {
         { label: 'Ver Talleres', path: '/Home/coordinadores/DesarrolloFormativo/verTalleres' },
       ],
     },
+    {
+      title: 'Eventos',
+      options: [
+        { label: 'Ver Eventos', path:'/Home/coordinadores/DesarrolloFormativo/verEventos' },
+      ],
+    },
   ];
 
   return (

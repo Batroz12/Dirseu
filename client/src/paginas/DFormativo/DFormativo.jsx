@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, Palette, Music, Camera, Theater, Users, Mic, Globe, Users2, Music4, UserCircle, Award } from 'lucide-react';
+import { ArrowUp, Calendar, Palette, Music, Camera, Theater, Users, Mic, Globe, Users2, Music4, UserCircle, Award } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
@@ -13,12 +13,13 @@ import Orquesta from '../componentes/horariosTalleres/orquesta';
 import Ritmo from '../componentes/horariosTalleres/ritmo';
 import Coro from '../componentes/horariosTalleres/coro';
 import ArtesVisuales from '../componentes/horariosTalleres/artesVisuales';
+import axios from 'axios';
 
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
 
 const Workshop = ({ icon: Icon, title, description, onClick }) => (
   <motion.div 
-    className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+    className="p-6 rounded-lg shadow-lg hover:shadow-xl bg-white duration-300 cursor-pointer"
     onClick={onClick}
     whileHover={{ scale: 1.05 }}
     transition={{ type: "spring", stiffness: 300 }}
@@ -29,11 +30,45 @@ const Workshop = ({ icon: Icon, title, description, onClick }) => (
   </motion.div>
 );
 
+const Section = ({ id, title, icon: Icon, children }) => (
+  <section id={id} className="py-4">
+    <div className="container mx-auto px-4">
+      <div className="flex items-center justify-center mb-8">
+        <Icon className="w-8 h-8 text-blue-600 mr-2" />
+        <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
+      </div>
+      {children}
+    </div>
+  </section>
+);
+
+// Componente para una tarjeta con animación
+const Card = ({ title, description, image, link, showLink = true }) => (
+  <motion.div 
+    className="bg-white p-6 rounded-lg shadow-lg"
+    whileHover={{ scale: 1.05 }}
+    transition={{ type: "spring", stiffness: 300 }}
+  >
+    {image && (
+      <img 
+        src={image} 
+        alt={title} 
+        className="w-full h-96 object-cover mb-4 rounded-t-lg" 
+      />
+    )}
+    <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
+    <p className="text-gray-600 mb-4">{description}</p>
+    {showLink && (
+      <a href={link} className="text-blue-600 hover:underline">Más información</a>
+    )}
+  </motion.div>
+);
+
 const DFormativo = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [email, setEmail] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+  const [eventos, setEventos] = useState([]);
 
   // Detectar el scroll
   useEffect(() => {
@@ -44,15 +79,35 @@ const DFormativo = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/eventos/coordinador/C001');
+        
+        if (Array.isArray(response.data)) {
+          // Ordenamos los eventos por la cercanía a la fecha actual
+          const eventosOrdenados = response.data.sort((a, b) => {
+            const diffA = Math.abs(new Date(a.fecha) - new Date()); // Diferencia con la fecha actual
+            const diffB = Math.abs(new Date(b.fecha) - new Date());
+            return diffA - diffB; // Ordenamos de menor a mayor distancia temporal
+          });
+    
+          // Seleccionamos los tres eventos más cercanos
+          const tresMasCercanos = eventosOrdenados.slice(0, 3);
+          setEventos(tresMasCercanos);
+        } else {
+          console.error('La respuesta de la API no es un arreglo', response.data);
+        }
+      } catch (err) {
+        setError('Error al cargar los eventos.');
+      }
+    };
+    fetchEventos();
+  }, []);
+
   // Función para volver al inicio
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Submitted email:', email);
-    setEmail('');
   };
 
   const openModal = (workshop) => {
@@ -129,7 +184,7 @@ const DFormativo = () => {
   };
 
   return (
-    <div className="min-h-screen bg-indigo-50">
+    <div className="min-h-screen bg-gray-100">
       <header>
         <NavbarLogo
           backgroundImage={Logo}
@@ -141,7 +196,7 @@ const DFormativo = () => {
         />
       </header>
 
-      <main className="bg-[#B6BEC2]">
+      <main className="">
       {/* Sección de talleres */}
       <section id="talleres" className="py-0">
           <div className="container mx-auto px-4">
@@ -196,20 +251,21 @@ const DFormativo = () => {
             </div>
           </div>
         </section>
-
-        <section id="contacto" className="py-16">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">¿Listo para Empezar?</h2>
-            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-              <button 
-                type="submit" 
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300"
-              >
-                Más Información
-              </button>
-            </form>
+        <Section id="eventos" title="Próximos Eventos" icon={Calendar}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.isArray(eventos) && 
+              eventos.map((evento) => (
+                <Card
+                  key={evento.id}
+                  title={evento.nombre}
+                  description={evento.descripcion}
+                  image={`http://localhost:4000${evento.imagen}`} // Concatenamos la URL base con la ruta de la imagen
+                  showLink={false}
+                />
+              ))
+            }
           </div>
-        </section>
+        </Section>
       </main>
 
 

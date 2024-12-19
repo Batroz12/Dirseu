@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearTaller, obtenerTalleres, obtenerTaller, actualizarTaller, eliminarTaller } from '../controllers/talleresController.js'; // Cambiado a talleres
+import { crearTaller, obtenerTalleres, obtenerTalleresPorCodigoInstructor, obtenerTaller, actualizarTaller, eliminarTaller } from '../controllers/talleresController.js'; // Cambiado a talleres
 import multer from 'multer';
 import path from 'path';
 
@@ -43,6 +43,9 @@ router.post('/', upload.single('imagen'), crearTaller); // Aplicar Multer aquí
 
 // Obtener todos los talleres
 router.get('/', obtenerTalleres);
+
+// Obtener talleres por código de instructor
+router.get('/instructor/:codigo_instructor', obtenerTalleresPorCodigoInstructor);
 
 // Obtener un taller específico
 router.get('/:id', obtenerTaller);

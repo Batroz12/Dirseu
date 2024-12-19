@@ -64,7 +64,7 @@ export function AuthProvider({ children }) {
       }
       throw new Error(response.statusText);
     } catch (error) {
-      console.log("Auth: ".error);
+      console.log("Auth: ", error);
       return null;
     }
   }

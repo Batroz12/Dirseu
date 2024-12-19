@@ -9,24 +9,24 @@ class Evento {
     this.hora = evento.hora;
     this.lugar = evento.lugar;
     this.imagen = evento.imagen;
+    this.codigo_coordinador = evento.codigo_coordinador; // Nueva columna
   }
 
   static async crear(nuevoEvento) {
     try {
-      // Insertar el nuevo Evento en la tabla 'eventos'
       const [result] = await execute(
-        'INSERT INTO eventos (nombre, descripcion, fecha, hora, lugar, imagen) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO eventos (nombre, descripcion, fecha, hora, lugar, imagen, codigo_coordinador) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
           nuevoEvento.nombre || null,
           nuevoEvento.descripcion || null,
           nuevoEvento.fecha || null,
           nuevoEvento.hora || null,
           nuevoEvento.lugar || null,
-          nuevoEvento.imagen || null
+          nuevoEvento.imagen || null,
+          nuevoEvento.codigo_coordinador || null // Nuevo campo
         ]
       );
 
-      // Obtener el Evento recién insertado
       const [eventoRows] = await execute('SELECT * FROM eventos WHERE id = ?', [result.insertId]);
       
       if (eventoRows.length === 0) {
@@ -56,10 +56,29 @@ class Evento {
     return new Evento(eventos[0]);
   }
 
+  static async obtenerPorCodigoCoordinador(codigoCoordinador) {
+    try {
+      const [eventos] = await execute('SELECT * FROM eventos WHERE codigo_coordinador = ?', [codigoCoordinador]);
+      return eventos.map(evento => new Evento(evento));
+    } catch (error) {
+      console.error('Error en Evento.obtenerPorCodigoCoordinador:', error);
+      throw error;
+    }
+  }
+
   async actualizar() {
     await execute(
-      'UPDATE eventos SET nombre = ?, descripcion = ?, fecha = ?, hora = ?, lugar = ?, imagen = ? WHERE id = ?',
-      [this.nombre, this.descripcion, this.fecha, this.hora, this.lugar, this.imagen, this.id]
+      'UPDATE eventos SET nombre = ?, descripcion = ?, fecha = ?, hora = ?, lugar = ?, imagen = ?, codigo_coordinador = ? WHERE id = ?',
+      [
+        this.nombre, 
+        this.descripcion, 
+        this.fecha, 
+        this.hora, 
+        this.lugar, 
+        this.imagen, 
+        this.codigo_coordinador, // Nuevo campo
+        this.id
+      ]
     );
   }
 

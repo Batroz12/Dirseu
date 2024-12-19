@@ -17,8 +17,6 @@ const FormularioEvento = ({ evento, onSubmit }) => {
     imagen: null,
   });
 
-  const [imagenActual, setImagenActual] = useState(null);
-
   // Estados para manejar errores y mensajes de éxito
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -28,18 +26,14 @@ const FormularioEvento = ({ evento, onSubmit }) => {
     if (evento) {
       setFormData({
         nombre: evento.nombre || '',
-        descripcion: evento.descripcion || '', // Aquí estaba el error
+        descripcion: evento.descripcion || '',
         fecha: evento.fecha
           ? evento.fecha.split('T')[0]
           : '',
         hora: evento.hora || '',
         lugar: evento.lugar || '',
-        imagen: null, // No pre-llenar el archivo de imagen
+        imagen: null,
       });
-  
-      if (evento.imagen) {
-        setImagenActual(`http://localhost:4000${evento.imagen}`);
-      }
     } else {
       setFormData({
         nombre: '',
@@ -49,9 +43,9 @@ const FormularioEvento = ({ evento, onSubmit }) => {
         lugar: '',
         imagen: null,
       });
-      setImagenActual(null);
     }
   }, [evento]);
+
   // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,9 +61,6 @@ const FormularioEvento = ({ evento, onSubmit }) => {
       ...prevData,
       imagen: file,
     }));
-
-    // Ocultar la imagen actual cuando se selecciona una nueva
-    setImagenActual(null);
   };
 
   // Manejar el envío del formulario
@@ -103,7 +94,6 @@ const FormularioEvento = ({ evento, onSubmit }) => {
         lugar: '',
         imagen: null,
       });
-      setImagenActual(null);
     }
   };
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { useAuth } from '../../../context/AuthProvider';
 import { Link } from "react-router-dom";
 
@@ -13,18 +12,32 @@ import Typography from '@mui/material/Typography';
 
 import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
+
+// Paleta de colores actualizada
+const colors = {
+  brand: {
+    light: '#00CDFF', // Celeste UAC (botones)
+    main: '#1C4378', // Azul UAC (fondo principal)
+    dark: '#122B4E', // Azul más oscuro derivado
+    contrastText: '#FFFFFF', // Texto en fondos oscuros
+  },
+  accent: {
+    green: '#66BB6A',
+    red: '#EF5350',
+  },
+  text: {
+    primary: '#263238', // Texto principal
+    secondary: '#546E7A', // Texto secundario
+  },
+  divider: '#B0BEC5', // Color de líneas divisorias
+};
 
 function stringToColor(string) {
   let hash = 0;
-  // Calcula un valor hash basado en el string
   for (let i = 0; i < string.length; i++) {
-    // Suma los códigos ASCII de los caracteres y aplica desplazamiento a la izquierda y resta
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
-
-  // Convierte el hash en un color hexadecimal
   const color = `#${((hash & 0x00ffffff) | 0x1000000).toString(16).slice(1)}`;
   return color;
 }
@@ -34,22 +47,25 @@ function stringAvatar(name) {
   return {
     sx: {
       bgcolor: stringToColor(name),
+      color: colors.brand.contrastText,
     },
     children: initials,
   };
 }
-const drawerWidth = 240;
 
-const Drawer = styled(MuiDrawer)({
+const drawerWidth = 220;
+
+const Drawer = styled(MuiDrawer)(({ theme }) => ({
   width: drawerWidth,
   flexShrink: 0,
   boxSizing: 'border-box',
-  mt: 10,
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
-    boxSizing: 'border-box',
+    backgroundColor: colors.brand.main, // Azul UAC
+    color: colors.brand.contrastText, // Texto blanco
+    boxShadow: theme.shadows[3],
   },
-});
+}));
 
 export default function SideMenu() {
   const auth = useAuth();
@@ -58,9 +74,6 @@ export default function SideMenu() {
       variant="permanent"
       sx={{
         display: { xs: 'none', md: 'block' },
-        [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'background.alternate',
-        },
       }}
     >
       <Box
@@ -72,33 +85,37 @@ export default function SideMenu() {
       >
         <SelectContent />
       </Box>
-      <Divider />
+      <Divider sx={{ borderColor: colors.divider }} />
       <MenuContent />
-      {/* <CardAlert /> */}
       <Stack
         direction="row"
         sx={{
           p: 2,
           gap: 1,
           alignItems: 'center',
-          borderTop: '1px solid',
-          borderColor: 'divider',
+          borderTop: `1px solid ${colors.divider}`,
         }}
       >
         <Avatar
-            sizes="small"
-            alt="Riley Carter"
-            sx={{
-              width: 24,
-              height: 24,
-              mr: 1,
-            }}
-            {...stringAvatar(
-              `${auth.getUser()?.firstName} ${auth.getUser()?.lastName}`
-            )}
+          sizes="small"
+          alt="User Avatar"
+          sx={{
+            width: 32,
+            height: 32,
+            boxShadow: 2,
+          }}
+          {...stringAvatar(`${auth.getUser()?.firstName} ${auth.getUser()?.lastName}`)}
         />
-        <Typography component="p" variant="subtitle2" sx={{ ml: 2 }}>
-            {auth.getUser()?.firstName || ""}
+        <Typography 
+          component="p" 
+          variant="subtitle2" 
+          sx={{ 
+            ml: 2, 
+            color: colors.brand.contrastText,
+            fontWeight: 'bold',
+          }}
+        >
+          {auth.getUser()?.firstName || "Invitado"}
         </Typography>
         <OptionsMenu />
       </Stack>

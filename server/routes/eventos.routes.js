@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, eliminarEvento } from '../controllers/eventosController.js'; // Asegúrate de que la ruta es correcta
+import { crearEvento, obtenerEventos, obtenerEvento, obtenerEventosPorCoordinador, actualizarEvento, eliminarEvento } from '../controllers/eventosController.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 // Función para validar tipos de archivos
 function checkFileType(file, cb) {
-  const filetypes = /jpeg|jpg|png|gif|webp/; // Incluí webp para admitir el nuevo formato
+  const filetypes = /jpeg|jpg|png|gif|webp/; // Asegúrate de incluir webp
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
@@ -43,6 +43,8 @@ router.post('/', upload.single('imagen'), crearEvento); // Aplicar Multer aquí,
 
 // Obtener todos los eventos
 router.get('/', obtenerEventos);
+
+router.get('/coordinador/:codigo_coordinador', obtenerEventosPorCoordinador);
 
 // Obtener un evento específico
 router.get('/:id', obtenerEvento);

@@ -5,6 +5,7 @@ import {
   actualizarEvento,
   eliminarEvento
 } from '../../api/eventos';
+import { useAuth } from '../../context/AuthProvider';
 import FormularioEvento from './AgregarEventos';
 import {
   Button,
@@ -23,37 +24,38 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  TablePagination
 } from '@mui/material';
 import { Event as EventIcon } from '@mui/icons-material';
 
-// Creación del tema personalizado de MUI
 const theme = createTheme({
   palette: {
     mode: 'light',
-    primary: {
-      main: '#007BFF', // Azul principal
-    },
-    secondary: {
-      main: '#f50057', // Rosa secundario
-    },
+    primary: { main: '#007BFF' },
+    secondary: { main: '#f50057' },
   },
 });
 
 const EventosPage = () => {
+  const { getUser } = useAuth();
+  const userData = getUser();
+  const codigo_coordinador = userData?.codigo_coordinador;
+
   const [eventos, setEventos] = useState([]);
-  const [evento, setEvento] = useState(null); // Evento a editar
+  const [evento, setEvento] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openModal, setOpenModal] = useState(false); // Controla la apertura del modal
+  const [openModal, setOpenModal] = useState(false);
+  const [page, setPage] = useState(0); // Página actual
+  const [rowsPerPage, setRowsPerPage] = useState(6); // Elementos por página
 
-  // Función para cargar los eventos
   const cargarEventos = async () => {
     try {
       const response = await obtenerEventos();
       setEventos(response.data);
     } catch (error) {
-      console.error('Error al obtener eventos:', error.response ? error.response.data : error.message);
+      console.error('Error al obtener eventos:', error);
       setError('Error al obtener los eventos');
     } finally {
       setIsLoading(false);
@@ -64,49 +66,61 @@ const EventosPage = () => {
     cargarEventos();
   }, []);
 
-  // Maneja la apertura del modal para crear o editar
   const handleOpenModal = (evento = null) => {
     setEvento(evento);
     setOpenModal(true);
   };
 
-  // Maneja el cierre del modal
   const handleCloseModal = () => {
     setEvento(null);
     setOpenModal(false);
   };
 
-  // Maneja el envío del formulario
-  const handleSubmit = async (data, formDataImage) => {
+  const handleSubmit = async (data) => {
     try {
+      const formData = new FormData();
+      formData.append('nombre', data.nombre);
+      formData.append('descripcion', data.descripcion);
+      formData.append('fecha', data.fecha);
+      formData.append('hora', data.hora);
+      formData.append('lugar', data.lugar);
+      formData.append('codigo_coordinador', codigo_coordinador);
+
+      if (data.imagen) {
+        formData.append('imagen', data.imagen);
+      }
+
       if (evento) {
-        await actualizarEvento(evento.id, data, formDataImage);
+        await actualizarEvento(evento.id, formData);
         alert('Evento actualizado exitosamente');
       } else {
-        await crearEvento(data, formDataImage);
+        await crearEvento(formData);
         alert('Evento creado exitosamente');
       }
-      setEvento(null);
+
       setOpenModal(false);
+      setEvento(null);
       await cargarEventos();
     } catch (error) {
-      console.error('Error al guardar el evento:', error.response ? error.response.data : error.message);
+      console.error('Error al guardar el evento:', error);
       setError('Error al guardar el evento');
     }
   };
 
-  // Maneja la eliminación de un evento
   const handleEliminar = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este evento?')) {
       try {
         await eliminarEvento(id);
         await cargarEventos();
       } catch (error) {
-        console.error('Error al eliminar el evento:', error.response ? error.response.data : error.message);
+        console.error('Error al eliminar el evento:', error);
         setError('Error al eliminar el evento');
       }
     }
   };
+
+  // Eventos por página
+  const eventosPorPagina = eventos.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <ThemeProvider theme={theme}>
@@ -121,7 +135,6 @@ const EventosPage = () => {
           </Typography>
         )}
 
-        {/* Botón para abrir el modal de creación */}
         <Box display="flex" justifyContent="flex-end" mb={2}>
           <Button
             variant="contained"
@@ -133,7 +146,6 @@ const EventosPage = () => {
           </Button>
         </Box>
 
-        {/* Tabla de Eventos */}
         {isLoading ? (
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
@@ -153,7 +165,7 @@ const EventosPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {eventos.map((e) => (
+                {eventosPorPagina.map((e) => (
                   <TableRow key={e.id}>
                     <TableCell>{e.nombre}</TableCell>
                     <TableCell>{e.descripcion}</TableCell>
@@ -161,9 +173,9 @@ const EventosPage = () => {
                     <TableCell>{e.hora}</TableCell>
                     <TableCell>{e.lugar}</TableCell>
                     <TableCell>
-                      {e.Imagen ? (
+                      {e.imagen ? (
                         <img
-                          src={e.imagen}
+                          src={`http://localhost:4000${e.imagen}`}
                           alt={e.nombre}
                           style={{ width: '100px', height: 'auto' }}
                         />
@@ -192,19 +204,24 @@ const EventosPage = () => {
                 ))}
               </TableBody>
             </Table>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component="div"
+              count={eventos.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={(event, newPage) => setPage(newPage)}
+              onRowsPerPageChange={(event) => setRowsPerPage(parseInt(event.target.value, 10))}
+            />
           </TableContainer>
         )}
 
-        {/* Modal para Crear/Editar Evento */}
         <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
           <DialogTitle color="text.primary">
             {evento ? 'Actualizar Evento' : 'Crear Evento'}
           </DialogTitle>
           <DialogContent>
-            <FormularioEvento
-              evento={evento}
-              onSubmit={handleSubmit}
-            />
+            <FormularioEvento evento={evento} onSubmit={handleSubmit} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal} color="secondary">

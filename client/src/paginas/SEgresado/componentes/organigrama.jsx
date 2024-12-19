@@ -65,7 +65,7 @@ export default function Organigrama() {
       {/* Nodo principal */}
       <OrganigramaNode label="UAC">
         <img
-          src="https://z-p3-scontent.flim4-2.fna.fbcdn.net/v/t39.30808-6/411939894_122103224786156263_3044910087426618547_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeG8JZHNmoQn2JuA83sjMssgmXJTGZ2v392ZclMZna_f3bk1ky8ctjC6JiLLH3jCdmbumr4ablDQKPlWXA6Uks5H&_nc_ohc=vexJwiSOMN8Q7kNvgElDXQq&_nc_zt=23&_nc_ht=z-p3-scontent.flim4-2.fna&_nc_gid=A3a7KfGZOdjaD7nH7CxNK-1&oh=00_AYDPORtAwiwSBT6QW-DFqRL03c2Rf8hEwX3eTngOAAnXnw&oe=6732C8E5"
+          src="https://th.bing.com/th/id/OIP.45nMfjEDv4Rh9c-H-eG3MQHaGt?rs=1&pid=ImgDetMain"
           alt="UAC"
           style={{
             position: 'absolute',

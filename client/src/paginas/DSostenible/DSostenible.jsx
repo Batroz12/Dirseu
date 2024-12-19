@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Leaf, Users, BookOpen, Globe, ChevronDown, ChevronUp, ArrowUp } from 'lucide-react';
+import { Calendar, Leaf, Users, BookOpen, Globe, ChevronDown, ChevronUp, ArrowUp } from 'lucide-react';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import Footer from '../componentes/footer/footer';
 import { Facebook, Youtube, Instagram, Phone } from 'lucide-react';
@@ -12,10 +12,45 @@ import MissionVisionCards from '../componentes/cardMV/cardMV';
 import CalendarioAmbiental from './componentes/CalendarioAmbiental';
 import DocumentosInteres from './componentes/DocumentosInteres';
 import InstitucionesCooperantes from './componentes/institucionesCooperantes';
+import axios from 'axios';
+
+const Section = ({ id, title, icon: Icon, children }) => (
+  <section id={id} className="py-4">
+    <div className="container mx-auto px-4">
+      <div className="flex items-center justify-center mb-8">
+        <Icon className="w-8 h-8 text-blue-600 mr-2" />
+        <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
+      </div>
+      {children}
+    </div>
+  </section>
+);
+
+// Componente para una tarjeta con animación
+const Card = ({ title, description, image, link, showLink = true }) => (
+  <motion.div 
+    className="bg-white p-6 rounded-lg shadow-lg"
+    whileHover={{ scale: 1.05 }}
+    transition={{ type: "spring", stiffness: 300 }}
+  >
+    {image && (
+      <img 
+        src={image} 
+        alt={title} 
+        className="w-full object-contain mb-4 rounded-t-lg"
+      />
+    )}
+    <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
+    <p className="text-gray-600 mb-4">{description}</p>
+    {showLink && (
+      <a href={link} className="text-blue-600 hover:underline">Más información</a>
+    )}
+  </motion.div>
+);
 
 const DSostenible = () => {
-  const [email, setEmail] = useState('');
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [eventos, setEventos] = useState([]);
 
   // Detectar el scroll
   useEffect(() => {
@@ -24,6 +59,32 @@ const DSostenible = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/eventos/coordinador/C003');
+        
+        if (Array.isArray(response.data)) {
+          // Ordenamos los eventos por la cercanía a la fecha actual
+          const eventosOrdenados = response.data.sort((a, b) => {
+            const diffA = Math.abs(new Date(a.fecha) - new Date()); // Diferencia con la fecha actual
+            const diffB = Math.abs(new Date(b.fecha) - new Date());
+            return diffA - diffB; // Ordenamos de menor a mayor distancia temporal
+          });
+    
+          // Seleccionamos los tres eventos más cercanos
+          const tresMasCercanos = eventosOrdenados.slice(0, 3);
+          setEventos(tresMasCercanos);
+        } else {
+          console.error('La respuesta de la API no es un arreglo', response.data);
+        }
+      } catch (err) {
+        setError('Error al cargar los eventos.');
+      }
+    };
+    fetchEventos();
   }, []);
 
   // Función para volver al inicio
@@ -62,7 +123,7 @@ const DSostenible = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-indigo-50">
+    <div className="min-h-screen bg-gray-100">
       <header>
         {/* Incorporar NavbarLogo aquí */}
         <NavbarLogo
@@ -74,8 +135,8 @@ const DSostenible = () => {
           buttons={buttons}
         />
       </header>
-      <main className="">
-        <section id="conocemas" className="w-full md:py-6 lg:py-0 bg-gray-100">
+      <main className="bg-gray-100">
+        <section id="conocemas" className="w-full md:py-6 lg:py-0">
           <div className="container mx-auto px-1 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 mx-auto">
             Misión y Visión
@@ -87,7 +148,7 @@ const DSostenible = () => {
           </div>
         </section>
         {/* Sección de Mof */}
-        <div className="h-auto bg-gray-100 ">
+        <div className="h-auto">
           <Mof purpose={purpose} functions={functions}
           backgroundImage='https://imgix-prod.sgs.com/-/media/sgscorp/images/temporary/tree-held-by-hands-1600px.cdn.en-PH.1.png?fit=crop&crop=edges&auto=format&w=1200&h=630'
           />
@@ -133,6 +194,21 @@ const DSostenible = () => {
         <section className="py-5">    
           <DocumentosInteres />
         </section>
+        <Section id="eventos" title="Próximos Eventos" icon={Calendar}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.isArray(eventos) && 
+              eventos.map((evento) => (
+                <Card
+                  key={evento.id}
+                  title={evento.nombre}
+                  description={evento.descripcion}
+                  image={`http://localhost:4000${evento.imagen}`} // Concatenamos la URL base con la ruta de la imagen
+                  showLink={false}
+                />
+              ))
+            }
+          </div>
+        </Section>
         <section className="py-5">    
           <InstitucionesCooperantes />
         </section>

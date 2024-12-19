@@ -75,6 +75,7 @@ export default function OptionsMenu() {
   // Define las rutas según el rol
   const userInfoRoute = role === 'egresado' ? '/Alumni/userInfo' : 'userInfo';
   const changePasswordRoute = role === 'egresado' ? '/Alumni/cambiar-password' : 'cambiar-password';
+  const cvDigital = role === 'egresado' ? '/Alumni/CV-digital' : '';
 
   return (
     <React.Fragment>
@@ -140,6 +141,16 @@ export default function OptionsMenu() {
         >
           <MenuItem onClick={handleClose}>Cambiar Contraseña</MenuItem>
         </Link>
+        {/* Redirección para crear el CV digital */}
+        {role === 'egresado' && (
+          <Link
+            to={cvDigital}
+            style={{ textDecoration: "none", color: "inherit" }}
+            replace
+          >
+            <MenuItem onClick={handleClose}>Crear CV</MenuItem>
+          </Link>
+        )}
 
         <Divider />
         <MenuItem

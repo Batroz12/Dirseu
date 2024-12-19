@@ -45,7 +45,7 @@ const mainListItems = [
   { 
     text: 'Empleador', 
     icon: <PeopleRoundedIcon />, 
-    link: 'empleador/dashboard',
+    link: 'empleador',
     condition: (auth) => auth.isAdmin || auth.getUser()?.type === 'empleador'
   },
   { 
@@ -73,17 +73,19 @@ const mainListItems = [
   },
 ];
 
-const secondaryListItems = [
-  { text: 'Configuración', icon: <SettingsRoundedIcon /> },
-  { text: 'Acerca', icon: <InfoRoundedIcon /> },
-  { text: 'Retroalimentación', icon: <HelpRoundedIcon /> },
-];
+const colors = {
+  brand: {
+    light: '#7B90AF', // Celeste UAC (botones)
+    main: '#1C4378', // Azul UAC (fondo principal)
+    contrastText: '#FFFFFF', // Texto en fondos oscuros
+    blanco: '#00CDFF',
+  },
+};
 
 export default function MenuContent() {
   const auth = useAuth();
   const [value, setValue] = React.useState(0);
-  const theme = useTheme();
-  const location = useLocation(); // Utilizar para obtener la ruta actual
+  const location = useLocation(); // Obtener la ruta actual
 
   const handleChange = (index) => {
     setValue(index);
@@ -101,13 +103,26 @@ export default function MenuContent() {
                   <>
                     <ListItemButton
                       selected={value === index}
-                      {...a11yProps(index)}
+                      sx={{
+                        bgcolor: value === index ? colors.brand.light : 'transparent',
+                        color: value === index ? colors.brand.contrastText : 'inherit',
+                        '&:hover': {
+                          bgcolor: colors.brand.light,
+                          color: colors.brand.contrastText,
+                        },
+                      }}
+                      onClick={() => handleChange(index)}
                     >
-                      <ListItemIcon>{item.icon}</ListItemIcon>
-                      <ListItemText
-                        primary={item.text}
-                        sx={{ color: theme.palette.text.primary }}
-                      />
+                      <ListItemIcon
+                        sx={{
+                          color: value === index
+                            ? colors.brand.contrastText
+                            : colors.brand.contrastText, // Asegura que siempre sea blanco
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={item.text} />
                     </ListItemButton>
                     <List component="div" disablePadding>
                       {item.subItems.map((subItem, subIndex) => (
@@ -115,15 +130,30 @@ export default function MenuContent() {
                           key={subIndex}
                           sx={{
                             pl: 4,
-                            bgcolor: location.pathname.includes(subItem.link) ? theme.palette.action.selected : 'transparent',
-                            '& .MuiListItemText-root': {
-                              color: location.pathname.includes(subItem.link) ? 'black' : theme.palette.text.primary,
+                            bgcolor: location.pathname.includes(subItem.link)
+                              ? colors.brand.light
+                              : 'transparent',
+                            color: location.pathname.includes(subItem.link)
+                              ? colors.brand.contrastText
+                              : 'inherit',
+                            '&:hover': {
+                              bgcolor: colors.brand.light,
+                              color: colors.brand.contrastText,
                             },
                           }}
                           component={Link}
                           to={subItem.link}
                           onClick={() => handleChange(index)}
                         >
+                          <ListItemIcon
+                            sx={{
+                              color: location.pathname.includes(subItem.link)
+                                ? colors.brand.contrastText
+                                : colors.brand.contrastText, // Siempre blanco
+                            }}
+                          >
+                            {subItem.icon}
+                          </ListItemIcon>
                           <ListItemText primary={subItem.text} />
                         </ListItemButton>
                       ))}
@@ -135,37 +165,30 @@ export default function MenuContent() {
                     onClick={() => handleChange(index)}
                     component={Link}
                     to={item.link}
-                    {...a11yProps(index)}
+                    sx={{
+                      bgcolor: value === index ? colors.brand.light : 'transparent',
+                      color: value === index ? colors.brand.contrastText : 'inherit',
+                      '&:hover': {
+                        bgcolor: colors.brand.light,
+                        color: colors.brand.contrastText,
+                      },
+                    }}
                   >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText
-                      primary={item.text}
-                      sx={{ color: theme.palette.text.primary }}
-                    />
+                    <ListItemIcon
+                      sx={{
+                        color: value === index
+                          ? colors.brand.blanco
+                          : colors.brand.gris
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.text} />
                   </ListItemButton>
                 )}
               </ListItem>
             </React.Fragment>
           ))}
-      </List>
-      <List dense>
-        {secondaryListItems.map((item, index) => (
-          <ListItem key={index + mainListItems.length} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              selected={value === index + mainListItems.length}
-              onClick={() => handleChange(index + mainListItems.length)}
-              component={Link}
-              to={item.link}
-              {...a11yProps(index + mainListItems.length)}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText
-                primary={item.text}
-                sx={{ color: theme.palette.text.primary }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
       </List>
     </Stack>
   );

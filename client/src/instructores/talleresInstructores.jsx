@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { obtenerTalleres } from '../api/talleres';
+import { obtenerTalleresPorCodigoInstructor } from '../api/talleres';
+import { useAuth } from '../context/AuthProvider';
 import {
     Button,
     Box,
@@ -30,29 +31,35 @@ const theme = createTheme({
 });
 
 const TalleresInstructores = () => {
+    const { getUser } = useAuth();
+    const userData = getUser();
+    const codigo_instructor = userData?.codigo_instructor;
     const [talleres, setTalleres] = useState([]);
-    const [tallerSeleccionada, setTallerSeleccionada] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
 
     const cargarTalleres = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-            const response = await obtenerTalleres();
+            const response = await obtenerTalleresPorCodigoInstructor(codigo_instructor);
             setTalleres(response.data);
             setError('');
-        }   catch {
+        } catch {
             setError('Error al cargar los talleres. Intente de nuevo.');
-        }   finally {
+        } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        cargarTalleres();
-    }, []);
+        if (codigo_instructor) {
+            cargarTalleres();
+        } else {
+            console.log('Esperando datos del usuario...');
+        }
+    }, [codigo_instructor]);
 
     const manejarReporte = (idTaller) => {
         navigate(`/Home/instructor/Reporte/taller/${idTaller}`);
@@ -65,12 +72,19 @@ const TalleresInstructores = () => {
     return (
         <ThemeProvider theme={theme}>
             <Box p={6} minHeight="100vh">
+                {/* Botón para regresar atrás */}
+                <Box mb={2}>
+                    <Button variant="contained" color="secondary" onClick={() => navigate(-1)}>
+                        Regresar
+                    </Button>
+                </Box>
+
                 <Typography variant="h4" fontWeight="bold" gutterBottom align="center">
                     Talleres Artísticos
                 </Typography>
 
                 {error && (
-                    <Typography color ="error" gutterBottom align="center">
+                    <Typography color="error" gutterBottom align="center">
                         {error}
                     </Typography>
                 )}
@@ -94,7 +108,7 @@ const TalleresInstructores = () => {
                                     <TableRow key={taller.id}>
                                         <TableCell>{taller.nombre}</TableCell>
                                         <TableCell>
-                                            <Button variant="contained" color ="primary" onClick={() => manejarReporte(taller.id)}>
+                                            <Button variant="contained" color="primary" onClick={() => manejarReporte(taller.id)}>
                                                 Ver Reporte
                                             </Button>
                                         </TableCell>

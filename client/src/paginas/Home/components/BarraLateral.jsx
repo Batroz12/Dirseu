@@ -42,7 +42,7 @@ export default function SideMenu() {
           p: 1.5,
         }}
       >
-        <SelectContent />
+      <SelectContent />
       </Box>
       <Divider />
       <MenuContent />

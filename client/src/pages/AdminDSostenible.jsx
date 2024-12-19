@@ -36,6 +36,12 @@ const AdministrarDSostenible = () => {
           path: '/Home/coordinadores/DesarrolloSostenible/ver-eventos-calendario' },
       ],
     },
+    {
+      title: 'Eventos',
+      options: [
+        { label: 'Ver Eventos', path:'/Home/coordinadores/DesarrolloSostenible/verEventos' },
+      ],
+    },
   ];
 
   return (

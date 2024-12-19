@@ -3,18 +3,51 @@ import { LuUsers, LuHeart, LuMail, LuBriefcase, LuGlobe } from 'react-icons/lu';
 import { motion, AnimatePresence } from 'framer-motion';
 import MissionVisionCards from '../componentes/cardMV/cardMV';
 
-import { ArrowUp, Facebook, Youtube, Instagram, Phone } from 'lucide-react';
-import { FaArrowCircleUp } from 'react-icons/fa';
+import { ArrowUp, Facebook, Youtube, Instagram, Phone, Calendar } from 'lucide-react';
 
 import Footer from '../componentes/footer/footer';
 import NavbarLogo from '../componentes/navbarLogo/navbarlogo';
 import Logo from '../images/UNIVERSIDAD-ANDINA-DEL-CUSCO.jpeg';
-import Logo2 from '../images/UAC.png';
 import Politicas from '../componentes/politicas/politicas';
 import Coordinaciones from '../componentes/queHacenCoor/hacerCoordinaciones';
 import Programas from './Voluntariados';
 import Capacitaciones from './CapacitacionesCarrusel';
 import Talleres from './TalleresCarrusel';
+import axios from 'axios';
+
+const Section = ({ id, title, icon: Icon, children }) => (
+  <section id={id} className="py-4">
+    <div className="container mx-auto px-4">
+      <div className="flex items-center justify-center mb-8">
+        <Icon className="w-8 h-8 text-blue-600 mr-2" />
+        <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
+      </div>
+      {children}
+    </div>
+  </section>
+);
+
+// Componente para una tarjeta con animación
+const Card = ({ title, description, image, link, showLink = true }) => (
+  <motion.div 
+    className="bg-white p-6 rounded-lg shadow-lg"
+    whileHover={{ scale: 1.05 }}
+    transition={{ type: "spring", stiffness: 300 }}
+  >
+    {image && (
+      <img 
+        src={image} 
+        alt={title} 
+        className="w-full h-96 object-cover mb-4 rounded-t-lg" 
+      />
+    )}
+    <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
+    <p className="text-gray-600 mb-4">{description}</p>
+    {showLink && (
+      <a href={link} className="text-blue-600 hover:underline">Más información</a>
+    )}
+  </motion.div>
+);
 
 const Inicio = () => {
   const conocemasRef = useRef(null);
@@ -23,6 +56,8 @@ const Inicio = () => {
   const contactoRef = useRef(null);
 
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [eventos, setEventos] = useState([]);
+  const [error, setError] = useState(null);
 
   // Detectar el scroll
   useEffect(() => {
@@ -38,10 +73,37 @@ const Inicio = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/eventos');
+        
+        if (Array.isArray(response.data)) {
+          // Ordenamos los eventos por la cercanía a la fecha actual
+          const eventosOrdenados = response.data.sort((a, b) => {
+            const diffA = Math.abs(new Date(a.fecha) - new Date()); // Diferencia con la fecha actual
+            const diffB = Math.abs(new Date(b.fecha) - new Date());
+            return diffA - diffB; // Ordenamos de menor a mayor distancia temporal
+          });
+    
+          // Seleccionamos los tres eventos más cercanos
+          const tresMasCercanos = eventosOrdenados.slice(0, 3);
+          setEventos(tresMasCercanos);
+        } else {
+          console.error('La respuesta de la API no es un arreglo', response.data);
+        }
+      } catch (err) {
+        setError('Error al cargar los eventos.');
+      }
+    };
+
+    fetchEventos();
+  }, []);
+
   // Configuración de redes sociales
   const socialLinks = [
-    { icon: <Facebook size={16} />, url: 'https://facebook.com', hoverColor: 'text-blue-400' },
-    { icon: <Youtube size={16} />, url: 'https://youtube.com', hoverColor: 'text-red-500' },
+    { icon: <Facebook size={16} />, url: 'https://www.facebook.com/profile.php?id=61554687909365', hoverColor: 'text-blue-400' },
+    { icon: <Youtube size={16} />, url: 'https://www.youtube.com/@CuscoUAndina', hoverColor: 'text-red-500' },
     { icon: <Instagram size={16} />, url: 'https://instagram.com', hoverColor: 'text-pink-500' },
     { icon: <Phone size={16} />, url: 'https://wa.me/yourphonenumber', hoverColor: 'text-green-400' },
   ];
@@ -68,10 +130,6 @@ const Inicio = () => {
       </header>
 
       <main className="">
-        {/* Carrusel de imágenes */}
-        {/* <section className="w-full">
-          <SliderSection />
-        </section> */}
         {/* Nueva sección de Misión y Visión */}
         <section ref={conocemasRef} id="conocemas" className="w-full md:py-12 lg:py-12 bg-gray-100">
           <div className="container mx-auto px-1 md:px-6">
@@ -137,6 +195,22 @@ const Inicio = () => {
             </div>
           </div>
         </section>
+        <Section id="eventos" title="Próximos Eventos" icon={Calendar}>
+          {error && <div>{error}</div>}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.isArray(eventos) && 
+              eventos.map((evento) => (
+                <Card
+                  key={evento.id}
+                  title={evento.nombre}
+                  description={evento.descripcion}
+                  image={`http://localhost:4000${evento.imagen}`} // Concatenamos la URL base con la ruta de la imagen
+                  showLink={false}
+                />
+              ))
+            }
+          </div>
+        </Section>
       </main>
 
       <footer ref={contactoRef} id="footer" className="py-6 bg-gray-800 text-white">

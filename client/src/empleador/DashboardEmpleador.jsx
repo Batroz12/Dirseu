@@ -170,7 +170,6 @@ const DashboardEmpleador = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Nombre</TableCell>
-                  <TableCell>Descripción</TableCell>
                   <TableCell>Requisitos</TableCell>
                   <TableCell>Empresa</TableCell>
                   <TableCell>Carrera Destino</TableCell>
@@ -185,7 +184,6 @@ const DashboardEmpleador = () => {
                 {ofertas.map((o) => (
                   <TableRow key={o.id}>
                     <TableCell>{o.nombre}</TableCell>
-                    <TableCell>{o.descripcion}</TableCell>
                     <TableCell>{o.requisitos}</TableCell>
                     <TableCell>{o.empresa}</TableCell>
                     <TableCell>{o.carrera_destino}</TableCell>

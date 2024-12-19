@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Box from "@mui/material/Box";
 import { X, Briefcase, Phone, Mail, Info } from 'lucide-react';
-import { Typography, Divider, Button, useTheme, MenuItem, Select, InputLabel, FormControl, TextField, Grid } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Divider, Button, useTheme, MenuItem, Select, InputLabel, FormControl, TextField, Grid } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { motion } from 'framer-motion';
@@ -9,6 +9,8 @@ import ContactPageIcon from "@mui/icons-material/ContactPage";
 import Backdrop from "@mui/material/Backdrop";
 import dayjs from 'dayjs';
 import FormularioPDF from "../components/administrator/FormularioPDF";
+import { registerPostulacionEgresados } from '../api/api';
+import { useAuth } from '../context/AuthProvider';
 
 export default function EmpleosConPaginacion() {
   const [jobs, setJobs] = useState([]);
@@ -18,6 +20,15 @@ export default function EmpleosConPaginacion() {
   const [selectedCareer, setSelectedCareer] = useState('');
   const [careers, setCareers] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
+  const openConfirmDialog = () => setConfirmDialogOpen(true);
+  const closeConfirmDialog = () => setConfirmDialogOpen(false);
+
+  const { getUser } = useAuth();
+  const userData = getUser();
+  const idEgresado = userData?.id;
 
   const theme = useTheme();
 
@@ -100,6 +111,30 @@ export default function EmpleosConPaginacion() {
 
   const handleCloseCV = () => setOpenCV(false);
   const handleOpenCV = () => setOpenCV(true);
+
+  const handlePostulacion = async () => {
+    closeConfirmDialog();
+
+    if (!selectedJob || !idEgresado) {
+        console.error('Error: No se ha seleccionado un empleo o el ID del egresado no está disponible.');
+        return;
+    }
+
+    const postulacionData = {
+        egresado_id: idEgresado,
+        oferta_id: selectedJob.id,
+    };
+
+    try {
+        const response = await registerPostulacionEgresados(postulacionData);
+
+        // Aquí asumimos que `registerPostulacionEgresados` lanza un error si la respuesta no es exitosa.
+        alert('Postulación realizada exitosamente.');
+    } catch (error) {
+        console.error('Error en la postulación:', error.message || error);
+        alert(error.message || 'Ocurrió un error al intentar postularse.');
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -242,18 +277,51 @@ export default function EmpleosConPaginacion() {
               </p>
 
               <Button
-                  variant="contained"
-                  endIcon={<ContactPageIcon />}
-                  onClick={handleOpenCV}
-                  sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
-                >
+                variant="contained"
+                endIcon={<ContactPageIcon />}
+                onClick={handleOpenCV}
+                sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
+              >
                   Generar CV
-                </Button>
-                <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openCV}>
-                  <Box>
-                    <FormularioPDF func={handleCloseCV} />
-                  </Box>
-                </Backdrop>
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={openConfirmDialog}
+                sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
+              >
+                Postularme
+              </Button>
+
+              {/* Diálogo de confirmación */}
+              <Dialog
+                open={confirmDialogOpen}
+                onClose={closeConfirmDialog}
+                aria-labelledby="confirm-postulacion-title"
+                aria-describedby="confirm-postulacion-description"
+              >
+                <DialogTitle id="confirm-postulacion-title">
+                  Confirmar Postulación
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="confirm-postulacion-description">
+                    ¿Estás seguro de que deseas postularte a este empleo?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={closeConfirmDialog} color="secondary">
+                    Cancelar
+                  </Button>
+                  <Button onClick={handlePostulacion} color="primary" autoFocus>
+                    Confirmar
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openCV}>
+                <Box>
+                  <FormularioPDF func={handleCloseCV} />
+                </Box>
+              </Backdrop>
             </motion.div>
           </motion.div>
         )}

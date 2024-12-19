@@ -2,13 +2,12 @@ import React from 'react';
 import Stack from '@mui/material/Stack';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import CustomDatePicker from './fecha';
-import NavbarBreadcrumbs1 from './NavbarMoviles';
+import NavbarBreadcrumbs from '../../../components/components/NavbarBreadcrumbs';
 import MenuButton from './notificaciones';
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import Search from './Search';
-import NavbarBreadcrumbs from '../../../components/components/NavbarBreadcrumbs';
 
-const Header = () => {
+const Header = ({ showNotifications = true, maxWidth = '1700px' }) => {
   return (
     <Stack
       direction="row"
@@ -17,20 +16,25 @@ const Header = () => {
         width: '100%',
         alignItems: { xs: 'flex-start', md: 'center' },
         justifyContent: 'space-between',
-        maxWidth: { sm: '100%', md: '1700px' },
+        maxWidth,
         pt: 1.5,
       }}
       spacing={2}
     >
-      {/* <NavbarBreadcrumbs1 /> */}
+      {/* Componente de breadcrumbs */}
       <NavbarBreadcrumbs />
+
+      {/* Sección de acciones del header */}
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search />
+        {/* Selector de fecha */}
         <CustomDatePicker />
-        <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
-        </MenuButton>
-        <ColorModeIconDropdown />
+        
+        {/* Notificaciones (opcional) */}
+        {showNotifications && (
+          <MenuButton showBadge aria-label="Open notifications">
+            <NotificationsRoundedIcon />
+          </MenuButton>
+        )}
       </Stack>
     </Stack>
   );

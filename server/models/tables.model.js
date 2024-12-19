@@ -93,7 +93,7 @@ export const registerInscriptionRequest = async ({ table, entidad_id, estudiante
         const validTables = ['talleres', 'voluntariados']; // Lista de tablas válidas
 
         if (!validTables.includes(table)) {
-            throw new Error('Invalid table name');
+            throw new Error('Nombre de la tabla invalida');
         }
 
         // Construir dinámicamente la consulta SQL
@@ -163,7 +163,7 @@ export const getEgresadosInscriptionRequest = async (table, id) => {
     const validTables = ['capacitaciones', 'ofertas_laborales']; // Lista de tablas válidas
 
     if (!validTables.includes(table)) {
-        throw new Error('Invalid table name');
+        throw new Error('Nombre de la tabla invalida');
     }
 
     const entity_id_column = 'entidad_id'; // Nombre de la columna que almacena el ID de la entidad en las tablas de inscripciones

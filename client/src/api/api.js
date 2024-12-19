@@ -187,6 +187,31 @@ export const registerInscriptionEgresados = async (data) => {
     });
 };
 
+// Postulaciones
+export const registerPostulacionEgresados = async (data) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/postulaciones/`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        // Verificar si la respuesta es exitosa
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Error en la solicitud: ${response.status} - ${errorMessage}`);
+        }
+
+        // Retornar los datos procesados en JSON
+        return await response.json();
+    } catch (error) {
+        console.error("Error al registrar la postulación:", error);
+        throw error; // Propagar el error al llamador
+    }
+};
+
 // Crear nueva opción de pregunta
 export const createOptionRequest = async (data) => {
     return await fetch(`${BASE_URL}/api/opciones_pregunta`, {

@@ -26,6 +26,7 @@ import TeacherForm from "./components/administrator/TeacherForm.jsx";
 import { RegisterProvider } from "./context/Register_context.jsx";
 import UserSettings from "./pages/UserSettings.jsx";
 import ChangePassword from "./pages/changeContraseña.jsx";
+import CV from "./pages/CV.jsx";
 
 import Inscripciones from "./pages/Inscripciones.jsx";
 import ListInscripciones from "./pages/ListInscripciones.jsx";
@@ -53,6 +54,8 @@ import VerInscritosVoluntariados from "./coordinadores/Voluntariados/verInscrito
 
 // Nuevas rutas de Empleador y Egresado
 import DashboardEmpleador from "./empleador/DashboardEmpleador.jsx";
+import AdministrarEmpleador from "./empleador/AdminEmpleador.jsx";
+import VerPostulantes from "./empleador/verPostulantes.jsx";
 import AgregarOfertaLaboral from "./empleador/AgregarOfertaLaboral.jsx";
 
 import CreateUserEmpleador from "./coordinadores/empleadores/agregarEmpleador.jsx";
@@ -123,6 +126,7 @@ export default function App() {
             <Route path="encuestas/:id" element={<EncuestaResponder />} />
             <Route path="userInfo" element={<UserSettings />} />
             <Route path="cambiar-password" element={<ChangePassword />} />
+            <Route path="CV-digital" element={<CV />} />
           </Route>
           <Route path="/Home" element={<Dashboard />} >
             <Route path="modules" element={<Modules />} >
@@ -139,13 +143,16 @@ export default function App() {
               <Route path="DesarrolloFormativo" element={<AdministrarDFormativo />}>
                 <Route path="verTalleres" element={<TallerPage />} />
                 <Route path="verInscritos" element={<VerInscritosTalleres />} />
+                <Route path="verEventos" element={<EventoPage />} />
               </Route>
               <Route path="DesarrolloSostenible" element={<AdministrarDSostenible />} >
                 <Route path="ver-eventos-calendario" element={<VerCalendarioAmbiental />} />
+                <Route path="verEventos" element={<EventoPage />} />
               </Route>
               <Route path="ExtensionUniversitaria" element={<AdministrarEUniversitaria />}>
                 <Route path="verVoluntariados" element={<VoluntariadoPage />} />
                 <Route path="verInscritos" element={<VerInscritosVoluntariados />} />
+                <Route path="verEventos" element={<EventoPage />} />
               </Route>
               <Route path="SeguimientoEgresado" element={<AdministrarSEgresado />}>
                 <Route path="verOfertas" element={<OfertaLaboralPage />} />
@@ -161,8 +168,9 @@ export default function App() {
               </Route>
             </Route>
             {/* Rutas del Empleador */}
-            <Route path="empleador">
-              <Route path="dashboard" element={<DashboardEmpleador />} />
+            <Route path="empleador" element={<AdministrarEmpleador />}>
+              <Route path="empleos" element={<DashboardEmpleador />} />
+              <Route path="postulantes" element={<VerPostulantes />} />
             </Route>
             <Route path="inscripciones" element={<Inscripciones />}>
               <Route path=":table" element={<ListInscripciones />} />

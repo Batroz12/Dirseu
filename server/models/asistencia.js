@@ -2,7 +2,7 @@ import { execute, query } from '../utils/db.js';
 
 class Asistencia {
   constructor(asistencia) {
-    this.id = asistencia.id || null; // Asignar null si no está definido
+    this.id = asistencia.id;
     this.id_taller = asistencia.id_taller;
     this.id_estudiante = asistencia.id_estudiante;
     this.id_sesion = asistencia.id_sesion;

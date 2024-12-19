@@ -71,6 +71,32 @@ export async function obtenerTalleres(req, res) {
   }
 }
 
+// Obtener todos los talleres por código de instructor
+export async function obtenerTalleresPorCodigoInstructor(req, res) {
+  try {
+    const { codigo_instructor } = req.params;
+
+    // Validar que el parámetro existe
+    if (!codigo_instructor) {
+      return res.status(400).json({ error: 'El código del instructor es obligatorio.' });
+    }
+
+    // Llamar al método de la clase Taller
+    const talleres = await Taller.obtenerPorCodigoInstructor(codigo_instructor);
+
+    // Verificar si se encontraron talleres
+    if (talleres.length === 0) {
+      return res.status(404).json({ mensaje: 'No se encontraron talleres para este instructor.' });
+    }
+
+    // Devolver los talleres encontrados
+    res.json(talleres);
+  } catch (error) {
+    console.error('Error en obtenerTalleresPorCodigoInstructor:', error.message);
+    res.status(500).json({ error: 'Error al obtener los talleres del instructor.' });
+  }
+}
+
 // Obtener un taller por ID
 export async function obtenerTaller(req, res) {
   try {

@@ -56,6 +56,33 @@ class Taller {
     }
   }
 
+  static async obtenerPorCodigoInstructor(codigo_instructor) {
+    try {
+      // Validar que el código del instructor sea válido
+      if (!codigo_instructor) {
+        throw new Error('El código del instructor es obligatorio.');
+      }
+  
+      // Ejecutar la consulta SQL de manera segura
+      const [talleres] = await execute(
+        'SELECT * FROM talleres WHERE codigo_instructor = ?',
+        [codigo_instructor]
+      );
+  
+      // Si no hay talleres encontrados, devolver una lista vacía
+      if (!talleres || talleres.length === 0) {
+        console.warn(`No se encontraron talleres para el codigo_instructor: ${codigo_instructor}`);
+        return [];
+      }
+  
+      // Mapear los resultados a instancias de la clase Taller
+      return talleres.map(taller => new Taller(taller));
+    } catch (error) {
+      console.error('Error en obtenerPorCodigoInstructor:', error.message);
+      throw new Error('Ocurrió un error al obtener los talleres. Inténtalo de nuevo.');
+    }
+  }
+
   static async obtenerPorId(id) {
     const [talleres] = await execute('SELECT * FROM talleres WHERE id = ?', [id]);
     if (talleres.length === 0) return null;

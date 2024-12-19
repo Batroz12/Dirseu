@@ -34,6 +34,14 @@ import respuestaDetalleRoutes from './routes/respuestaDetalle.routes.js';
 import asistenciaRoutes from './routes/asistencia.routes.js';
 import sesionesRoutes from './routes/sesionTaller.routes.js';
 
+// Rutas para el cv digital
+import experienciasLaboralesRoutes from './routes/experienciasLaborales.routes.js';
+import formacionAcademicaRoutes from './routes/formacionAcademica.routes.js';
+import habilidadesRoutes from './routes/habilidades.routes.js';
+import idiomasRoutes from './routes/idiomas.routes.js';
+import logrosRoutes from './routes/logros.routes.js';
+import postulacionesRoutes from './routes/postulaciones.routes.js';
+
 const app = express();
 
 app.use(cors());
@@ -73,6 +81,13 @@ app.use('/api/respuesta_Detalles', respuestaDetalleRoutes);
 app.use('/api/sesiones', sesionesRoutes);
 app.use('/api/asistencias', asistenciaRoutes);
 
+// Rutas para el cv digital
+app.use('/api/experiencias', experienciasLaboralesRoutes);
+app.use('/api/formaciones', formacionAcademicaRoutes);
+app.use('/api/habilidades', habilidadesRoutes);
+app.use('/api/idiomas', idiomasRoutes);
+app.use('/api/logros', logrosRoutes);
+app.use('/api/postulaciones', postulacionesRoutes);
 
 // TABLES END POINTS
 app.use('/api/table', Tables);
