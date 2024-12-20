@@ -126,7 +126,7 @@ const InicioAlumni = () => {
                                   key={evento.id}
                                   title={evento.nombre}
                                   description={evento.descripcion}
-                                  image={`http://localhost:4000${evento.imagen}`} // Concatenamos la URL base con la ruta de la imagen
+                                  image={`http://localhost:4000${evento.imagen}`}
                                   showLink={false}
                                 />
                             ))

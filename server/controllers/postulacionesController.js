@@ -5,24 +5,29 @@ export const createPostulacion = async (req, res) => {
   const { egresado_id, oferta_id } = req.body;
 
   try {
-    // Validar datos obligatorios
     if (!egresado_id || !oferta_id) {
-
-      return res.status(400).json({ message: 'Faltan datos obligatorios.' });
+      return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
 
-    // Crear la nueva postulación con valores automáticos
+    // Verificar si ya existe una postulación previa
+    const postulacionExistente = await Postulacion.verificarPostulacion(egresado_id, oferta_id);
+
+    if (postulacionExistente) {
+      return res.status(200).json({ message: "Ya se realizó una postulación previa." });
+    }
+
+    // Crear la nueva postulación
     const nuevaPostulacion = await Postulacion.crear({
       egresado_id,
       oferta_id,
-      estado_postulacion: 'Recibido', // Valor predeterminado
-      fecha_postulacion: new Date(),  // Fecha actual automáticamente
+      estado_postulacion: "Recibido",
+      fecha_postulacion: new Date(),
     });
 
-    res.status(201).json(nuevaPostulacion);
+    return res.status(201).json(nuevaPostulacion);
   } catch (error) {
-    console.error('Error al crear la postulación:', error.message);
-    res.status(500).json({ message: 'Error al crear la postulación', error: error.message });
+    console.error("Error al crear la postulación:", error.message);
+    return res.status(500).json({ message: "Error al crear la postulación", error: error.message });
   }
 };
 

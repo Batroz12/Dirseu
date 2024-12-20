@@ -47,7 +47,7 @@ export default function ListModule() {
       </Box>
   
       {/* Cards grid */}
-      <Grid container spacing={3} sx={{ textAlign: "center" }}>
+      <Grid container spacing={10} sx={{ textAlign: "center" }}>
         {items.map((item) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
             <Box
@@ -80,16 +80,6 @@ const data = [
   {
     title: "talleres",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
-    to: "",
-  },
-  {
-    title: "capacitaciones",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
-    to: "",
-  },
-  {
-    title: "ofertas_laborales",
-    image: "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
     to: "",
   },
   {

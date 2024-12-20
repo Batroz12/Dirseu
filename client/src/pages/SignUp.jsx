@@ -9,10 +9,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { Outlet } from "react-router-dom";
 
-import UserForm from "../components/administrator/UserForm";
-import PaymentForm from "../components/administrator/PaymentForm";
-import Review from "../components/administrator/Review";
-
 const defaultTheme = createTheme();
 
 export default function SignUp() {
@@ -25,21 +21,6 @@ export default function SignUp() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
-  const steps = ["Datos de Cuenta", "Datos de Usuario", "Review your order"];
-
-  function getStepContent(step) {
-    switch (step) {
-      case 0:
-        return <UserForm />;
-      case 1:
-        return <PaymentForm />;
-      case 2:
-        return <Review />;
-      default:
-        throw new Error("Unknown step");
-    }
-  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -80,7 +61,7 @@ export default function SignUp() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center", // Centra el contenido verticalmente
+            justifyContent: "center",
           }}
         >
           <Box

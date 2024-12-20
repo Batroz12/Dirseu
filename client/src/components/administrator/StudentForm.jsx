@@ -46,12 +46,12 @@ export default function StudentForm() {
         goTo("/register", { replace: true });
         return;
       }
-
       const response = await createStudentRequest({
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
         password: userData.password,
+        role: userData.role,
         codigo,
         matricula,
         carrera,
@@ -62,7 +62,6 @@ export default function StudentForm() {
       });
 
       if (response.ok) {
-        console.log("Estudiante Creado Exitosamente");
         setErrorResponse("");
 
         goTo("/login");

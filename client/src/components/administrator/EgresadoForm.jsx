@@ -44,7 +44,7 @@ export default function EgresadoForm() {
         goTo("/register", { replace: true });
         return;
       }
-
+      console.log(userData.role)
       const response = await createEgresadoRequest({
         firstName: userData.firstName,
         lastName: userData.lastName,

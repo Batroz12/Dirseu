@@ -174,6 +174,14 @@ export default function SignIn() {
                 </Grid>
               </Grid>
             </Box>
+            {/* Botón para regresar */}
+            <Button
+              variant="outlined"
+              sx={{ mt: 5 }}
+              onClick={() => goTo(-1)} // Navegar a la página anterior
+            >
+              Regresar
+            </Button>
           </Box>
         </Grid>
       </Grid>

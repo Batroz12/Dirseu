@@ -190,25 +190,34 @@ export const registerInscriptionEgresados = async (data) => {
 // Postulaciones
 export const registerPostulacionEgresados = async (data) => {
     try {
-        const response = await fetch(`${BASE_URL}/api/postulaciones/`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-
-        // Verificar si la respuesta es exitosa
-        if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(`Error en la solicitud: ${response.status} - ${errorMessage}`);
+      const response = await fetch(`${BASE_URL}/api/postulaciones/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      // Manejar respuestas no exitosas
+      if (!response.ok) {
+        const contentType = response.headers.get("content-type");
+        let errorMessage;
+  
+        if (contentType && contentType.includes("application/json")) {
+          const errorJson = await response.json();
+          errorMessage = errorJson.message || "Ocurrió un error.";
+        } else {
+          errorMessage = await response.text();
         }
-
-        // Retornar los datos procesados en JSON
-        return await response.json();
+  
+        throw new Error(`Error en la solicitud: ${response.status} - ${errorMessage}`);
+      }
+  
+      // Retornar los datos procesados en JSON
+      return await response.json();
     } catch (error) {
-        console.error("Error al registrar la postulación:", error);
-        throw error; // Propagar el error al llamador
+      console.error("Error al registrar la postulación:", error);
+      throw error; // Propagar el error al llamador
     }
 };
 

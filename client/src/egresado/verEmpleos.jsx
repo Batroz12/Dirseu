@@ -26,9 +26,11 @@ export default function EmpleosConPaginacion() {
   const openConfirmDialog = () => setConfirmDialogOpen(true);
   const closeConfirmDialog = () => setConfirmDialogOpen(false);
 
-  const { getUser } = useAuth();
-  const userData = getUser();
-  const idEgresado = userData?.id;
+  const [errorResponse, setErrorResponse] = useState("");
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [alreadySubscribedDialogOpen, setAlreadySubscribedDialogOpen] = useState(false);
+  const auth = useAuth();
+  const idEgresado = auth.getUser()?.id;
 
   const theme = useTheme();
 
@@ -106,33 +108,47 @@ export default function EmpleosConPaginacion() {
   const [open, setOpen] = React.useState(false);
   const [openCV, setOpenCV] = React.useState(false);
 
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
-
   const handleCloseCV = () => setOpenCV(false);
   const handleOpenCV = () => setOpenCV(true);
 
   const handlePostulacion = async () => {
-    closeConfirmDialog();
-
-    if (!selectedJob || !idEgresado) {
-        console.error('Error: No se ha seleccionado un empleo o el ID del egresado no está disponible.');
+    try {
+      // Verificar si el usuario es un egresado
+      if (auth.getUser().type !== "egresado") {
+        setErrorResponse("Solo los egresados pueden postularse a ofertas laborales.");
+        setAlreadySubscribedDialogOpen(true); // Mostrar diálogo de error
         return;
-    }
-
-    const postulacionData = {
+      }
+  
+      // Validar datos requeridos
+      if (!selectedJob || !idEgresado) {
+        setErrorResponse("Debe seleccionar un empleo y asegurarse de que su ID esté disponible.");
+        return;
+      }
+  
+      // Crear los datos de la postulación
+      const postulacionData = {
         egresado_id: idEgresado,
         oferta_id: selectedJob.id,
-    };
-
-    try {
-        const response = await registerPostulacionEgresados(postulacionData);
-
-        // Aquí asumimos que `registerPostulacionEgresados` lanza un error si la respuesta no es exitosa.
-        alert('Postulación realizada exitosamente.');
+      };
+  
+      // Registrar la postulación
+      const json = await registerPostulacionEgresados(postulacionData);
+  
+      // Manejar respuesta exitosa o mensajes específicos
+      if (json.message === "Ya se realizó una postulación previa.") {
+        setErrorResponse("Ya te has postulado a esta oferta anteriormente.");
+        setAlreadySubscribedDialogOpen(true);
+        return;
+      }
+  
+      // Postulación exitosa
+      alert("Postulación realizada exitosamente.");
+      setErrorResponse("");
     } catch (error) {
-        console.error('Error en la postulación:', error.message || error);
-        alert(error.message || 'Ocurrió un error al intentar postularse.');
+      // Manejar errores en la solicitud
+      console.error("Error en la postulación:", error.message || error);
+      setErrorResponse(error.message || "Ocurrió un error al intentar postularse.");
     }
   };
 
@@ -276,22 +292,37 @@ export default function EmpleosConPaginacion() {
                 <strong>Hasta:</strong> {formatDate(selectedJob.fecha_fin)}
               </p>
 
-              <Button
-                variant="contained"
-                endIcon={<ContactPageIcon />}
-                onClick={handleOpenCV}
-                sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
-              >
+              <Box display="flex" justifyContent="center" gap={2}>
+                <Button
+                  variant="contained"
+                  endIcon={<ContactPageIcon />}
+                  onClick={handleOpenCV}
+                  sx={{
+                    width: { xs: "50%", sm: "40%" },
+                    fontSize: { xs: "0.8rem", sm: "1rem" },
+                    py: 0.8,
+                    backgroundColor: "#1976d2", // Azul
+                    color: "#fff", // Texto blanco
+                    "&:hover": { backgroundColor: "#1565c0" },
+                  }}
+                >
                   Generar CV
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={openConfirmDialog}
-                sx={{ width: { xs: "80%", sm: "60%" }, fontSize: { xs: "0.9rem", sm: "1.2rem" }, py: 1 }}
-              >
-                Postularme
-              </Button>
+                </Button>
+                <Button
+                  variant="contained"
+                  endIcon={<ContactPageIcon />}
+                  sx={{
+                    width: { xs: "50%", sm: "40%" },
+                    fontSize: { xs: "0.8rem", sm: "1rem" },
+                    py: 0.8,
+                    backgroundColor: "#fbc02d", // Amarillo
+                    color: "#000", // Texto negro
+                    "&:hover": { backgroundColor: "#f9a825" }, // Más oscuro en hover
+                  }}
+                >
+                  Postularme
+                </Button>
+              </Box>
 
               {/* Diálogo de confirmación */}
               <Dialog
@@ -317,6 +348,26 @@ export default function EmpleosConPaginacion() {
                   </Button>
                 </DialogActions>
               </Dialog>
+              {/* Diálogo de postulacion duplicada */}
+              <Dialog
+                open={alreadySubscribedDialogOpen}
+                onClose={() => setAlreadySubscribedDialogOpen(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">{"Error al Postularse"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    {errorResponse || "Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde."}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setAlreadySubscribedDialogOpen(false)} color="primary">
+                    Cerrar
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
               <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openCV}>
                 <Box>
                   <FormularioPDF func={handleCloseCV} />

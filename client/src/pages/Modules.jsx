@@ -26,7 +26,7 @@ export default function Modules() {
       </Box>
       {/* cards */}
 
-      <Grid container spacing={2} columns={9} sx={{ textAlign: "center" }}>
+      <Grid container spacing={2} columns={5} sx={{ textAlign: "center" }}>
         {data.map((card, index) => {
           const cardTypes = card.type.split(",");
 
@@ -60,20 +60,6 @@ const data = [
     title: "Taller",
     image: "https://tallerdigital.cl/wp-content/uploads/2020/06/movil01.png",
     to: "list/talleres",
-  },
-  {
-    type: "estudiante,docente",
-    title: "Capacitacion",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKuE9ZF_Roc-2BeI1cpIyOuglFDtq8la_jQ&s",
-    to: "list/capacitaciones",
-  },
-  {
-    type: "egresado,docente",
-    title: "Oferta Laboral",
-    image:
-      "https://www.unp.edu.pe/wp-content/uploads/2023/08/bolsa_trabajo.png",
-    to: "list/ofertas_laborales",
   },
   {
     type: "estudiante,docente",

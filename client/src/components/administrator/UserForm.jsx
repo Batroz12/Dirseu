@@ -25,8 +25,8 @@ export default function UserForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
-
-  const activeStep = 0;
+  const [activeStep, setActiveStep] = useState(0);
+  // const activeStep = 0;
 
   const { isAuthenticated } = useAuth();
   const { setUserData } = useRegister();
@@ -39,25 +39,30 @@ export default function UserForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+  
     try {
       if (!firstName || !lastName || !email || !password) {
-        setErrorResponse("Campos Requeridos");
+        setErrorResponse("Todos los campos son requeridos");
         return;
       }
-
+  
+      // Guardar los datos básicos del usuario sin el rol
       setUserData({
         firstName,
         lastName,
         email,
         password,
-        role: "egresado",
       });
-
+  
+      // Redirigir al siguiente paso (selección de tipo de usuario)
       goTo("type");
     } catch (error) {
       console.error(error);
     }
+  }
+
+  function handlePrevious() {
+    setActiveStep((prevStep) => Math.max(prevStep - 1, 0)); // Asegura que no baje de 0
   }
 
   return (
@@ -136,7 +141,7 @@ export default function UserForm() {
         sx={{
           display: "flex",
           flexDirection: { xs: "column-reverse", sm: "row" },
-          justifyContent: activeStep !== 0 ? "space-between" : "flex-end",
+          justifyContent: activeStep > 0 ? "space-between" : "flex-end",
           alignItems: "end",
           flexGrow: 1,
           gap: 1,
@@ -144,27 +149,13 @@ export default function UserForm() {
           mt: "60px",
         }}
       >
-        {" "}
-        {activeStep !== 0 && (
+        {activeStep > 0 && (
           <Button
             startIcon={<ChevronLeftRoundedIcon />}
-            onClick=""
+            onClick={handlePrevious}
             variant="text"
             sx={{
               display: { xs: "none", sm: "flex" },
-            }}
-          >
-            Previous
-          </Button>
-        )}
-        {activeStep !== 0 && (
-          <Button
-            startIcon={<ChevronLeftRoundedIcon />}
-            onClick=""
-            variant="outlined"
-            fullWidth
-            sx={{
-              display: { xs: "flex", sm: "none" },
             }}
           >
             Previous

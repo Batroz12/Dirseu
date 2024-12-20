@@ -92,6 +92,20 @@ class Postulacion {
     return new Postulacion(postulaciones[0]);
   }
 
+  // Verificar si un egresado ya se postuló a una oferta
+  static async verificarPostulacion(egresado_id, oferta_id) {
+    try {
+      const queryStr = 'SELECT * FROM postulaciones WHERE egresado_id = ? AND oferta_id = ?';
+      const [result] = await execute(queryStr, [egresado_id, oferta_id]);
+
+      // Retorna true si ya existe una postulación, de lo contrario false
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error en verificarPostulacion:', error);
+      throw error;
+    }
+  }
+
   // Actualizar una postulacion existente
   async actualizar() {
     try {

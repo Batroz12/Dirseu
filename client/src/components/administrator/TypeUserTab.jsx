@@ -11,10 +11,11 @@ import Typography from "@mui/material/Typography";
 
 import { styled } from "@mui/material/styles";
 
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import { Link, Outlet } from "react-router-dom";
+
+import { useRegister } from "../../context/Register_context";
 
 const Card = styled(MuiCard)(({ theme, selected }) => ({
   border: "1px solid",
@@ -47,10 +48,12 @@ const Card = styled(MuiCard)(({ theme, selected }) => ({
 }));
 
 export default function TypeUserTab() {
-  const [Type, setType] = React.useState("egresado");
+  const [Type, setType] = React.useState("");
+  const { setRole } = useRegister(); // Desestructura la función setRole del contexto
 
-  const handleTypeChange = (event) => {
-    setType(event.target.value);
+  const handleTypeChange = (role) => {
+    setType(role); // Actualiza el estado local
+    setRole(role); // Guarda el role en el contexto
   };
 
   return (
@@ -60,7 +63,6 @@ export default function TypeUserTab() {
           aria-label="Type options"
           name="Type"
           value={Type}
-          onChange={handleTypeChange}
           sx={{
             display: "flex",
             flexDirection: { xs: "column", sm: "row" },
@@ -71,7 +73,7 @@ export default function TypeUserTab() {
         >
           <Card selected={Type === "egresado"} component={Link} to="" sx={{}}>
             <CardActionArea
-              onClick={() => setType("egresado")}
+              onClick={() => handleTypeChange("egresado")} // Actualiza el role al hacer clic
               sx={{
                 ".MuiCardActionArea-focusHighlight": {
                   backgroundColor: "transparent",
@@ -98,14 +100,14 @@ export default function TypeUserTab() {
               </CardContent>
             </CardActionArea>
           </Card>
-          {/* <Card
-            selected={Type === "estudiante"}
+          <Card
+            selected={Type === "student"}
             component={Link}
             to="estudiante"
             sx={{}}
           >
             <CardActionArea
-              onClick={() => setType("estudiante")}
+              onClick={() => handleTypeChange("student")}
               sx={{
                 ".MuiCardActionArea-focusHighlight": {
                   backgroundColor: "transparent",
@@ -131,7 +133,7 @@ export default function TypeUserTab() {
                 <Typography fontWeight="medium">Estudiante</Typography>
               </CardContent>
             </CardActionArea>
-          </Card>           */}
+          </Card>
         </RadioGroup>
       </FormControl>
       <Box

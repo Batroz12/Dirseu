@@ -23,9 +23,6 @@ export const registerUser = async ({ firstName, lastName, email, password, role 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Usar el rol proporcionado o establecer un valor predeterminado si no se pasa
-        // const userRole = role || 'egresado';
-
         await pool.query(
             'INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', 
             [firstName, lastName, email, hashedPassword, role]
