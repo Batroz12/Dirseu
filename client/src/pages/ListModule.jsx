@@ -47,9 +47,9 @@ export default function ListModule() {
       </Box>
   
       {/* Cards grid */}
-      <Grid container spacing={10} sx={{ textAlign: "center" }}>
+      <Grid container spacing={7} sx={{ textAlign: "center" }}>
         {items.map((item) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
+          <Grid item xs={12} sm={4} md={4} lg={3} key={item.id}>
             <Box
               sx={{
                 padding: 2,
@@ -64,7 +64,7 @@ export default function ListModule() {
               <ButtonImgBase
                 title={item.nombre}
                 url={data.find((d) => d.title === table)?.image || null}
-                width="100%"
+                width="90%"
                 to={`/Home/modules/form/${table}/${item.id}`}
               />
             </Box>
