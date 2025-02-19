@@ -40,7 +40,11 @@ import {
     const cargarCalendarios = async () => {
       try {
         const response = await obtenerEventosCalendario();
-        setCalendarios(response.data);
+        if (Array.isArray(response)) {
+          setCalendarios(response);
+        } else {
+          setCalendarios([]);
+        }
       } catch (error) {
         setError('Error al obtener los eventos del calendario ambiental');
       } finally {

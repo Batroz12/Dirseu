@@ -22,6 +22,7 @@ export default function EncuestasList() {
     async function cargarEncuestas() {
       try {
         const response = await obtenerEncuestasValidas();
+        console.log("Datos de la API:", response.data);
         setEncuestas(response.data);
       } catch (error) {
         console.error("Error al cargar encuestas:", error);
